@@ -13,3 +13,6 @@ Proyecto desarrollado en PHP, HTML, CSS, JS y Bootstrap.
 - MySQL
 - Bootstrap
 - JavaScript
+
+
+Todavia queda pendiente esta estructura :c
