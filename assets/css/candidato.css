@@ -1,0 +1,94 @@
+body{
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+}
+
+/* PANEL IZQUIERDO */
+.left-panel{
+    background-color: #eef5ff;
+    padding: 40px;
+}
+
+/* IMAGEN */
+.login-image{
+    max-width: 250px;
+    border-radius: 100px;
+    
+}
+
+/* LOGIN BOX */
+.login-box{
+    width: 100%;
+    max-width: 420px;
+}
+
+.text-candidato{
+    color: #ff5d52 ;
+}
+
+.btn-candidato{
+    background-color: #ff5d52 ;
+    color: white;
+    border: none;
+}
+
+
+
+/* ICONO */
+.login-icon{
+    width: 80px;
+    height: 80px;
+    background-color: #ff5d52 ;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.login-icon i{
+    color: white;
+    font-size: 35px;
+}
+
+/* LINKS */
+.forgot-password{
+    text-decoration: none;
+    color: #ff5d52 ;
+    font-size: 14px;
+}
+
+/* SEGURIDAD */
+.security-box{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ALERTA */
+.alert-box{
+    background-color: #eef5ff;
+    padding: 15px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .left-panel{
+        display: none;
+    }
+
+}

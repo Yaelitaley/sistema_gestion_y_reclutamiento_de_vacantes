@@ -1,0 +1,95 @@
+body{
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+}
+
+/* PANEL IZQUIERDO */
+.left-panel{
+    background-color: #eef5ff;
+    padding: 40px;
+}
+
+/* IMAGEN */
+.login-image{
+    max-width: 250px;
+    border-radius: 100px;
+    
+}
+
+/* LOGIN BOX */
+.login-box{
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Este color es unico para palabras claves como "RECLUTADOR"*/
+.text-reclutador{
+    color: #8b5cf6;
+}
+
+.btn-reclutador{
+    background-color: #8b5cf6;
+    color: white;
+    border: none;
+}
+
+
+
+/* ICONO */
+.login-icon{
+    width: 80px;
+    height: 80px;
+    background-color: #AC75FF ;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.login-icon i{
+    color: white;
+    font-size: 35px;
+}
+
+/* LINKS */
+.forgot-password{
+    text-decoration: none;
+    color: #AC75FF ;
+    font-size: 14px;
+}
+
+/* SEGURIDAD */
+.security-box{
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ALERTA */
+.alert-box{
+    background-color: #eef5ff;
+    padding: 15px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* RESPONSIVE */
+@media(max-width:768px){
+
+    .left-panel{
+        display: none;
+    }
+
+}

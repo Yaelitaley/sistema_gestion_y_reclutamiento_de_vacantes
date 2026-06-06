@@ -1,0 +1,32 @@
+/* GENERAL */
+body{
+    background-color: rgb(255, 255, 255);
+}
+
+/* TITULOS */
+.text-purple{
+    color: #8b00ff !important;
+}
+/* IMAGENES */
+.imagen1{
+    background-color: #f3ecff;
+}
+
+/* CARDS */
+.card{
+    border-radius: 20px;
+}
+
+.card img{
+    max-width: 120px;
+}
+/* COLOR BUTTON */
+.btn-purple{
+    background-color: #8b00ff;
+    color: white;
+}
+
+.btn-purple:hover{
+    background-color: #7000cc;
+    color: white;
+}
