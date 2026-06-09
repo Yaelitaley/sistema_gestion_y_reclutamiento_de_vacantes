@@ -13,15 +13,10 @@ body{
 }
 /* PANEL IZQUIERDO */
 .left-panel{
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
-
-    color: white;
-
-    padding: 40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
 }
 /* IMAGEN */
 .login-image{
@@ -403,4 +398,9 @@ body{
         margin: 20px;
     }
 
+}
+
+.login-container .row,
+.register-container .row{
+    min-height: 100vh;
 }
