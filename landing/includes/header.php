@@ -32,6 +32,10 @@ href="../assets/css/global.css">
 
 <link rel="stylesheet"
 href="../assets/css/landing.css">
+
+<link rel="stylesheet"
+href="../assets/css/responsive.css">
+
 </head>
 
 <body>
