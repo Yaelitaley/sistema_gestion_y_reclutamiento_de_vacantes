@@ -312,7 +312,7 @@
 
 
                           <!-- CANDIDATO -->
-                         <a href="register-candidato.php"
+                         <a href="../candidatos/register.php"
            class="btn btn-success w-100 mb-3">
 
                               <i class="bi bi-people-fill me-2"></i>
@@ -326,7 +326,7 @@
 
 
                          <!-- ADMIN -->
-                            <a href="register-admin.php"
+                            <a href="../admin/register.php"
                               class="btn btn-dark w-100 mb-3">
 
                              <i class="bi bi-shield-lock-fill me-2"></i>
@@ -340,7 +340,7 @@
 
 
                          <!-- VACANTES -->
-                         <a href="vacantes.php"
+                         <a href="../vacantes/vacantes.php"
                               class="btn btn-warning w-100 mb-3">
 
                               <i class="bi bi-briefcase-fill me-2"></i>
@@ -354,7 +354,7 @@
 
 
                          <!-- REPORTES -->
-                         <a href="reportes.php"
+                         <a href="../reportes/reportes.php"
                                class="btn btn-danger w-100">
 
                              <i class="bi bi-bar-chart-fill me-2"></i>
