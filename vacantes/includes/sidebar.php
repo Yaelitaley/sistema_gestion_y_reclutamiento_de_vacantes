@@ -18,7 +18,7 @@
 
             <li>
 
-                <a href="dashboard.php" class="active">
+                <a href="../admin/dashboard.php" class="active">
 
                     <i class="bi bi-house-fill"></i>
 
@@ -109,7 +109,7 @@
 
             <li>
 
-                <a href="../admin/configuracion.php">
+                <a href="configuracion.php">
 
                     <i class="bi bi-gear-fill"></i>
 

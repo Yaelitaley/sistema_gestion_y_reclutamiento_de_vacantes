@@ -12,9 +12,8 @@
 
     </div>
 
-    <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
-
-        <div class="register-box">
+<div class="container-fluid py-5 d-flex justify-content-center">
+            <div class="register-box">
 
             <!-- IMAGEN -->
             <div class="text-center mb-4">
@@ -162,14 +161,12 @@
                 </div>
 
                 <!-- CANCELAR -->
-                <div class="text-center mt-3">
+                <a href="javascript:history.back()"
+                    class="cancel-link">
 
-                    <a href="#"
-                       class="cancel-link">
+                        Regresar
 
-                        Cancelar
-
-                    </a>
+                </a>
 
                 </div>
 
