@@ -86,6 +86,8 @@
 
                                 <input
                                     type="email"
+                                    id="correo"
+                                    name="correo"
                                     class="form-control"
                                     placeholder="Ingresa tu correo">
 
@@ -95,29 +97,20 @@
 
                         <!-- BUTTON -->
                         <button type="submit"
+                                id="btnRecovery"
                                 class="btn btn-primary w-100">
-
                             Enviar enlace de recuperación
-
                         </button>
-                        <div
-                            id="mensaje"
-                            class="alert alert-success mt-3 d-none">
 
-                            Correo enviado. Favor de verificar su bandeja.
-
-                        </div>
+                        <div id="mensaje" class="alert mt-3 d-none"></div>
 
                     </form>
 
                     <!-- VOLVER -->
                     <div class="text-center mt-4">
 
-                        <a href="login.php"
-                           class="forgot-password">
-
+                        <a href="login.php" class="forgot-password">
                             ← Volver al inicio de sesión
-
                         </a>
 
                     </div>
@@ -150,5 +143,47 @@
     </div>
 
 </main>
+
+<script>
+document.getElementById('recoveryForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const btn     = document.getElementById('btnRecovery');
+    const mensaje = document.getElementById('mensaje');
+
+    mensaje.className   = 'alert mt-3 d-none';
+    mensaje.textContent = '';
+
+    btn.disabled    = true;
+    btn.textContent = 'Enviando...';
+
+    const formData = new FormData();
+    formData.append('correo', document.getElementById('correo').value.trim());
+
+    fetch('actions/recovery_admin.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        mensaje.classList.remove('d-none');
+        if (data.success) {
+            mensaje.classList.add('alert-success');
+        } else {
+            mensaje.classList.add('alert-danger');
+        }
+        mensaje.textContent = data.message;
+        btn.disabled    = false;
+        btn.textContent = 'Enviar enlace de recuperación';
+    })
+    .catch(() => {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+        btn.disabled    = false;
+        btn.textContent = 'Enviar enlace de recuperación';
+    });
+});
+</script>
 
 <?php include "includes/footer.php"; ?>

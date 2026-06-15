@@ -82,6 +82,7 @@
                                 <input
                                     type="email"
                                     id="correo"
+                                    name="correo"
                                     class="form-control"
                                     placeholder="Correo electrónico">
 
@@ -101,6 +102,7 @@
                                 <input
                                     type="password"
                                     id="password"
+                                    name="password"
                                     class="form-control"
                                     placeholder="Contraseña">
 
@@ -126,6 +128,7 @@
 
                         <!-- BOTON -->
                         <button type="submit"
+                                id="btnLogin"
                                 class="btn btn-candidato w-100">
 
                             Iniciar sesión
@@ -133,11 +136,7 @@
                         </button>
 
                         <!-- MENSAJE -->
-                        <div
-                            id="mensajeLogin"
-                            class="alert mt-3 d-none">
-
-                        </div>
+                        <div id="mensajeLogin" class="alert mt-3 d-none"></div>
 
                     </form>
 
@@ -181,5 +180,48 @@
     </div>
 
 </main>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const btn     = document.getElementById('btnLogin');
+    const mensaje = document.getElementById('mensajeLogin');
+
+    mensaje.className   = 'alert mt-3 d-none';
+    mensaje.textContent = '';
+
+    btn.disabled    = true;
+    btn.textContent = 'Verificando...';
+
+    const formData = new FormData();
+    formData.append('correo',   document.getElementById('correo').value.trim());
+    formData.append('password', document.getElementById('password').value);
+
+    fetch('actions/login_candidato.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = 'dashboard.php';
+        } else {
+            mensaje.classList.remove('d-none');
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = data.message;
+            btn.disabled    = false;
+            btn.textContent = 'Iniciar sesión';
+        }
+    })
+    .catch(() => {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+        btn.disabled    = false;
+        btn.textContent = 'Iniciar sesión';
+    });
+});
+</script>
 
 <?php include "includes/footer.php"; ?>

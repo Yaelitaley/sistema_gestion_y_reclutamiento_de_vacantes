@@ -46,7 +46,6 @@
             <!-- PANEL DERECHO -->
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
 
-               
                 <!-- LOGIN -->
                 <div class="login-box">
 
@@ -55,6 +54,7 @@
                         <div class="login-icon bg-reclutador">
 
                             <i class="bi bi-person-workspace"></i>
+
                         </div>
 
                         <p class="mb-1">
@@ -68,7 +68,7 @@
                     </div>
 
                     <!-- FORM -->
-                    <form>
+                    <form id="loginForm">
 
                         <!-- CORREO -->
                         <div class="mb-3">
@@ -81,6 +81,8 @@
 
                                 <input
                                     type="email"
+                                    id="correo"
+                                    name="correo"
                                     class="form-control"
                                     placeholder="Correo electrónico">
 
@@ -99,6 +101,8 @@
 
                                 <input
                                     type="password"
+                                    id="password"
+                                    name="password"
                                     class="form-control"
                                     placeholder="Contraseña">
 
@@ -113,26 +117,19 @@
                         <!-- RECOVERY -->
                         <div class="text-end mb-4">
 
-                            <a href="recovery.php"
-                               class="forgot-password">
-
+                            <a href="recovery.php" class="forgot-password">
                                 ¿Olvidaste tu contraseña?
-
                             </a>
 
                         </div>
-                        
 
                         <button type="submit"
-                            class="btn btn-reclutador w-100">
-
-                                Iniciar sesión
-
+                                id="btnLogin"
+                                class="btn btn-reclutador w-100">
+                            Iniciar sesión
                         </button>
 
-
-
-                        
+                        <div id="mensaje" class="alert mt-3 d-none"></div>
 
                     </form>
 
@@ -164,5 +161,48 @@
     </div>
 
 </main>
+
+<script>
+document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const btn     = document.getElementById('btnLogin');
+    const mensaje = document.getElementById('mensaje');
+
+    mensaje.className   = 'alert mt-3 d-none';
+    mensaje.textContent = '';
+
+    btn.disabled    = true;
+    btn.textContent = 'Verificando...';
+
+    const formData = new FormData();
+    formData.append('correo',   document.getElementById('correo').value.trim());
+    formData.append('password', document.getElementById('password').value);
+
+    fetch('actions/login_reclutador.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = 'dashboard.php';
+        } else {
+            mensaje.classList.remove('d-none');
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = data.message;
+            btn.disabled    = false;
+            btn.textContent = 'Iniciar sesión';
+        }
+    })
+    .catch(() => {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+        btn.disabled    = false;
+        btn.textContent = 'Iniciar sesión';
+    });
+});
+</script>
 
 <?php include "includes/footer.php"; ?>

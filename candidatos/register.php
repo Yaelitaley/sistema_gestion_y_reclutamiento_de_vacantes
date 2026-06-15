@@ -82,6 +82,7 @@
                                 <input
                                     type="text"
                                     id="nombre"
+                                    name="nombre"
                                     class="form-control"
                                     placeholder="Nombre completo">
 
@@ -101,6 +102,7 @@
                                 <input
                                     type="email"
                                     id="correo"
+                                    name="correo"
                                     class="form-control"
                                     placeholder="Correo electrónico">
 
@@ -120,6 +122,7 @@
                                 <input
                                     type="password"
                                     id="password"
+                                    name="password"
                                     class="form-control"
                                     placeholder="Contraseña">
 
@@ -139,6 +142,7 @@
                                 <input
                                     type="password"
                                     id="confirmPassword"
+                                    name="confirmPassword"
                                     class="form-control"
                                     placeholder="Confirmar contraseña">
 
@@ -148,29 +152,21 @@
 
                         <!-- BOTON -->
                         <button type="submit"
+                                id="btnRegistrar"
                                 class="btn btn-candidato w-100">
-
                             Crear cuenta
-
                         </button>
 
                         <!-- MENSAJE -->
-                        <div
-                            id="mensaje"
-                            class="alert mt-3 d-none">
-
-                        </div>
+                        <div id="mensaje" class="alert mt-3 d-none"></div>
 
                     </form>
 
                     <!-- LOGIN -->
                     <div class="text-center mt-4">
 
-                        <a href="login.php"
-                           class="forgot-password">
-
+                        <a href="login.php" class="forgot-password">
                             ¿Ya tienes cuenta? Inicia sesión
-
                         </a>
 
                     </div>
@@ -203,5 +199,52 @@
     </div>
 
 </main>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const btn     = document.getElementById('btnRegistrar');
+    const mensaje = document.getElementById('mensaje');
+
+    mensaje.className   = 'alert mt-3 d-none';
+    mensaje.textContent = '';
+
+    btn.disabled    = true;
+    btn.textContent = 'Registrando...';
+
+    const formData = new FormData();
+    formData.append('nombre',          document.getElementById('nombre').value.trim());
+    formData.append('correo',          document.getElementById('correo').value.trim());
+    formData.append('password',        document.getElementById('password').value);
+    formData.append('confirmPassword', document.getElementById('confirmPassword').value);
+
+    fetch('actions/register_candidato.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        mensaje.classList.remove('d-none');
+        if (data.success) {
+            mensaje.classList.add('alert-success');
+            mensaje.textContent = data.message;
+            document.getElementById('registerForm').reset();
+        } else {
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = data.message;
+        }
+        btn.disabled    = false;
+        btn.textContent = 'Crear cuenta';
+    })
+    .catch(() => {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+        btn.disabled    = false;
+        btn.textContent = 'Crear cuenta';
+    });
+});
+</script>
 
 <?php include "includes/footer.php"; ?>
