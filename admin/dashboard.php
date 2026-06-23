@@ -19,7 +19,7 @@
                     ¡Bienvenido, Administrador!
                 </h3>
 
-                <p class="text-muted">
+                <p class="fw-bold">
                     Gestiona reclutadores, candidatos y vacantes del sistema.
                 </p>
 

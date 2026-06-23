@@ -20,7 +20,7 @@
                     Configuración
                 </h2>
 
-                <p class="text-muted">
+                <p class="fw-bold">
                     Administra las configuraciones generales del sistema
                 </p>
 

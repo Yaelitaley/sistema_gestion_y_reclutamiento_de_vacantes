@@ -1,4 +1,4 @@
-<footer class="bg-light py-3 border-top">
+<footer class="bg-light py-0 border-top">
 
 </footer>
 

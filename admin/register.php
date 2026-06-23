@@ -19,7 +19,7 @@
             <div class="text-center mb-4">
 
                 <img
-                    src="../assets/img/admin-register.png"
+                    src="../assets/img/imagenadministrador.png"
                     class="img-fluid register-image"
                     alt="Administrador">
 

@@ -186,13 +186,13 @@
                 <!-- REGRESAR -->
                 <div class="text-center mt-3">
 
-                    <a
-                        href="login.php"
-                        class="cancel-link">
+                    <!-- CANCELAR -->
+                <a href="javascript:history.back()"
+                    class="cancel-link">
 
                         Regresar
 
-                    </a>
+                </a>
 
                 </div>
 

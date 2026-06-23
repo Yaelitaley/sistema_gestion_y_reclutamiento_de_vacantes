@@ -1,7 +1,7 @@
 
 body{
     font-family: 'Poppins', sans-serif;
-    background-color: #0055ff;
+    background-color: #c5fffc;
     margin: 0;
     padding: 0;
 }
@@ -24,7 +24,11 @@ body{
 
     border-radius: 20px;
 }
+.img-fluid{
+     max-width: 320px;
 
+    border-radius: 20px;
+}
 
 
 /* TITULOS */
