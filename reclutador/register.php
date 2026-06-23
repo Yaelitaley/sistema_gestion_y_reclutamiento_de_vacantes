@@ -19,7 +19,7 @@
             <div class="text-center mb-4">
 
                 <img
-                    src="../assets/img/reclutador-regiter.png"
+                    src="../assets/img/imagenreclutador.png"
                     class="img-fluid register-image"
                     alt="Reclutador">
 

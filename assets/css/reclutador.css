@@ -3,15 +3,10 @@ body{
     background-color: white;
 }
 
-/* PANEL IZQUIERDO */
-.left-panel{
-    background-color: #eef5ff;
-    padding: 40px;
-}
 
 /* IMAGEN */
-.login-image{
-    max-width: 250px;
+.img-fluid{
+    max-width: 300px;
     border-radius: 100px;
     
 }
