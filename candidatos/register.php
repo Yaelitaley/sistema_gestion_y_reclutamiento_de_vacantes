@@ -21,16 +21,6 @@
 
         <div class="register-box">
 
-            <!-- IMAGEN -->
-            <div class="text-center mb-4">
-
-                <img
-                    src="../assets/img/candidato02.png"
-                    class="img-fluid register-image"
-                    alt="Candidato">
-
-            </div>
-
 
 
 
