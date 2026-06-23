@@ -1,6 +1,6 @@
 body{
     font-family: 'Poppins', sans-serif;
-    background-color: white;
+    background-color: rgb(212, 222, 255);
 }
 
 
@@ -21,6 +21,11 @@ body{
 .text-reclutador{
     color: #8b5cf6;
 }
+.text-center{
+    size: 50px;
+    font-size:larger;
+}
+
 
 .btn-reclutador{
     background-color: #8b5cf6;
