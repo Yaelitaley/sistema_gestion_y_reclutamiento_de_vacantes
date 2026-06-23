@@ -153,30 +153,28 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 document.addEventListener("DOMContentLoaded", function(){
-
-    // en este caso, se seleccionan todos los botones con la clase "btnEliminar" para agregarles un evento de clic que muestre una alerta de confirmación antes de eliminar un reclutador. Si el usuario confirma la eliminación, se muestra una alerta indicando que el reclutador ha sido eliminado correctamente.
     const botonesEliminar = document.querySelectorAll(".btnEliminar");
 
-
-
     botonesEliminar.forEach(function(boton){
-
         boton.addEventListener("click", function(){
+            const id = boton.dataset.id;
+            const confirmar = confirm("¿Deseas eliminar este administrador?");
 
-            // mensaje de confirmacion
-            const confirmar = confirm("¿Deseas eliminar este reclutador?");
-
-
-
-            // si elige si manda un alerta de eliminado correctamente
-            if(confirmar){
-
-                alert("Reclutador eliminado correctamente.");
-
+            if (confirmar) {
+                fetch("actions/delete_administrador.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "id=" + id
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) {
+                        boton.closest("tr").remove();
+                    }
+                })
+                .catch(() => alert("Error de conexión."));
             }
-
         });
-
     });
-
 });

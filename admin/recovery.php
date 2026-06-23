@@ -12,7 +12,7 @@
                 <div class="text-center">
 
                     <h1 class="fw-bold">
-                        Recuperar
+                        Cambiar
                     </h1>
 
                     <h1 class="fw-bold ">
@@ -36,8 +36,8 @@
                     <i class="bi bi-shield-lock-fill"></i>
 
                     <span>
-                        El sistema enviará un enlace seguro
-                        al correo registrado.
+                        Ingresa el correo de la cuenta y 
+                        establece una nueva contraseña.
                     </span>
 
                 </div>
@@ -59,51 +59,94 @@
                         </div>
 
                         <p class="mb-1">
-                            Recuperación de acceso
+                            Cambio de Contraseña
                         </p>
 
                         <h2 class="fw-bold text-primary">
-                            Administrador
+                            Restablecer contraseña
                         </h2>
 
                     </div>
 
                     <!-- FORM -->
-                    <form id="recoveryForm">
+                    <form id="changePasswordForm">
 
-                        <!-- CORREO -->
-                        <div class="mb-4">
+                      <div class="mb-3">
 
-                            <label class="form-label fw-bold">
-                                Correo electrónico
-                            </label>
+    <label class="form-label fw-bold">
+        Correo electrónico
+    </label>
 
-                            <div class="input-group">
+    <div class="input-group">
 
-                                <span class="input-group-text">
-                                    <i class="bi bi-envelope-fill"></i>
-                                </span>
+        <span class="input-group-text">
+            <i class="bi bi-envelope-fill"></i>
+        </span>
 
-                                <input
-                                    type="email"
-                                    id="correo"
-                                    name="correo"
-                                    class="form-control"
-                                    placeholder="Ingresa tu correo">
+        <input
+            type="email"
+            id="correo"
+            class="form-control"
+            placeholder="Ingresa el correo">
 
-                            </div>
+    </div>
 
-                        </div>
+</div>
 
-                        <!-- BUTTON -->
-                        <button type="submit"
-                                id="btnRecovery"
-                                class="btn btn-primary w-100">
-                            Enviar enlace de recuperación
-                        </button>
+<div class="mb-3">
 
-                        <div id="mensaje" class="alert mt-3 d-none"></div>
+    <label class="form-label fw-bold">
+        Nueva contraseña
+    </label>
 
+    <div class="input-group">
+
+        <span class="input-group-text">
+            <i class="bi bi-lock-fill"></i>
+        </span>
+
+        <input
+            type="password"
+            id="password"
+            class="form-control"
+            placeholder="Nueva contraseña">
+
+    </div>
+
+</div>
+
+<div class="mb-4">
+
+    <label class="form-label fw-bold">
+        Confirmar contraseña
+    </label>
+
+    <div class="input-group">
+
+        <span class="input-group-text">
+            <i class="bi bi-shield-lock-fill"></i>
+        </span>
+
+        <input
+            type="password"
+            id="confirm_password"
+            class="form-control"
+            placeholder="Confirmar contraseña">
+
+    </div>
+
+</div>
+
+<button
+    type="submit"
+    id="btnRecovery"
+    class="btn btn-primary w-100">
+
+    Actualizar contraseña
+
+</button>
+
+<div id="mensaje" class="alert mt-3 d-none"></div>
                     </form>
 
                     <!-- VOLVER -->
@@ -158,7 +201,21 @@ document.getElementById('recoveryForm').addEventListener('submit', function (e) 
     btn.textContent = 'Enviando...';
 
     const formData = new FormData();
-    formData.append('correo', document.getElementById('correo').value.trim());
+
+formData.append(
+    'correo',
+    document.getElementById('correo').value.trim()
+);
+
+formData.append(
+    'password',
+    document.getElementById('password').value
+);
+
+formData.append(
+    'confirm_password',
+    document.getElementById('confirm_password').value
+);
 
     fetch('actions/recovery_admin.php', {
         method: 'POST',

@@ -1,5 +1,21 @@
+<?php
+require_once '../config/config.php';
+require_once '../config/connection.php';
 
-<?php include "includes/header.php"; ?>
+$totalReclutadores  = $conn->query("SELECT COUNT(*) AS total FROM reclutadores")->fetch_assoc()['total'];
+$totalCandidatos     = $conn->query("SELECT COUNT(*) AS total FROM candidatos")->fetch_assoc()['total'];
+$totalVacantes       = $conn->query("SELECT COUNT(*) AS total FROM vacantes")->fetch_assoc()['total'];
+$totalPostulaciones  = $conn->query("SELECT COUNT(*) AS total FROM postulaciones")->fetch_assoc()['total'];
+
+$recientes = $conn->query("SELECT r.nombre_completo, u.correo, e.nombre AS empresa, r.estado
+                            FROM reclutadores r
+                            INNER JOIN usuarios u ON r.usuario_id = u.id
+                            LEFT JOIN empresas e ON r.empresa_id = e.id
+                            ORDER BY r.id DESC
+                            LIMIT 3");
+
+include "includes/header.php";
+?>
 
 <div class="d-flex">
 
@@ -70,7 +86,7 @@
                     <div>
 
                         <h3 class="fw-bold">
-                            12
+                            <?php echo $totalReclutadores; ?>
                         </h3>
 
                         <p class="text-muted mb-0">
@@ -101,7 +117,7 @@
                     <div>
 
                         <h3 class="fw-bold">
-                            356
+                            <?php echo $totalCandidatos; ?>
                         </h3>
 
                         <p class="text-muted mb-0">
@@ -132,7 +148,7 @@
                     <div>
 
                         <h3 class="fw-bold">
-                            28
+                            <?php echo $totalVacantes; ?>
                         </h3>
 
                         <p class="text-muted mb-0">
@@ -163,7 +179,7 @@
                     <div>
 
                         <h3 class="fw-bold">
-                            1,248
+                            <?php echo number_format($totalPostulaciones); ?>
                         </h3>
 
                         <p class="text-muted mb-0">
@@ -222,55 +238,32 @@
 
                         <tbody>
 
-                            <tr>
+                            <?php
+                            if ($recientes && $recientes->num_rows > 0) {
+                                while ($row = $recientes->fetch_assoc()) {
+                                    $estado = strtolower($row['estado']);
 
-                                <td>Juan Pérez</td>
-                                <td>juan@gmail.com</td>
-                                <td>Tech Solutions</td>
+                                    if ($estado === 'activo') {
+                                        $badge = 'bg-success';
+                                    } elseif ($estado === 'pendiente') {
+                                        $badge = 'bg-warning text-dark';
+                                    } elseif ($estado === 'bloqueado') {
+                                        $badge = 'bg-danger';
+                                    } else {
+                                        $badge = 'bg-secondary';
+                                    }
 
-                                <td>
-                                    <span class="badge bg-success">
-                                        Activo
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-
-
-
-                            <tr>
-
-                                <td>Ana López</td>
-                                <td>ana@gmail.com</td>
-                                <td>Global Corp</td>
-
-                                <td>
-                                    <span class="badge bg-warning text-dark">
-                                        Pendiente
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-
-
-
-                            <tr>
-
-                                <td>Carlos Ruiz</td>
-                                <td>carlos@gmail.com</td>
-                                <td>Dev Company</td>
-
-                                <td>
-                                    <span class="badge bg-danger">
-                                        Bloqueado
-                                    </span>
-                                </td>
-
-                            </tr>
+                                    echo '<tr>';
+                                    echo '<td>' . htmlspecialchars($row['nombre_completo']) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
+                                    echo '<td>' . htmlspecialchars($row['empresa'] ?? 'Sin empresa') . '</td>';
+                                    echo '<td><span class="badge ' . $badge . '">' . htmlspecialchars(ucfirst($estado)) . '</span></td>';
+                                    echo '</tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="4" class="text-center text-muted">Sin reclutadores registrados.</td></tr>';
+                            }
+                            ?>
 
                         </tbody>
 
