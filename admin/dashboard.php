@@ -33,7 +33,7 @@
                 <div class="d-flex align-items-center">
 
                     <img
-                        src="../assets/img/admin-avatar.png"
+                        src="../assets/img/imagenadministrador.png"
                         class="rounded-circle me-2"
                         width="40"
                         height="40"
