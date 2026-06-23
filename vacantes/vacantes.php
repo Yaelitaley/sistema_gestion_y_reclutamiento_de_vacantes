@@ -1,442 +1,236 @@
-<?php include "includes/header.php"; ?>
+<?php
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/connection.php';
+require_once __DIR__ . '/../config/app_helpers.php';
+
+$mensaje = $_GET['msg'] ?? '';
+$tipoMensaje = $_GET['type'] ?? 'success';
+$tablasOk = admin_required_tables_ok($conn, ['vacantes']);
+$tienePostulaciones = table_exists($conn, 'postulaciones');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk) {
+    $accion = $_POST['accion'] ?? '';
+
+    if ($accion === 'eliminar') {
+        $id = (int) ($_POST['id'] ?? 0);
+
+        if ($id > 0) {
+            $conn->begin_transaction();
+            try {
+                if ($tienePostulaciones) {
+                    $stmt = $conn->prepare('DELETE FROM postulaciones WHERE vacante_id = ?');
+                    $stmt->bind_param('i', $id);
+                    $stmt->execute();
+                    $stmt->close();
+                }
+
+                $stmt = $conn->prepare('DELETE FROM vacantes WHERE id = ?');
+                $stmt->bind_param('i', $id);
+                $stmt->execute();
+                $eliminadas = $stmt->affected_rows;
+                $stmt->close();
+
+                $conn->commit();
+
+                if ($eliminadas > 0) {
+                    redirect_to('vacantes.php?type=success&msg=' . urlencode('Vacante eliminada correctamente.'));
+                }
+
+                redirect_to('vacantes.php?type=danger&msg=' . urlencode('Vacante no encontrada.'));
+            } catch (Throwable $e) {
+                $conn->rollback();
+                redirect_to('vacantes.php?type=danger&msg=' . urlencode('No se pudo eliminar: ' . $e->getMessage()));
+            }
+        }
+    }
+}
+
+$buscar = trim($_GET['buscar'] ?? '');
+$estadoFiltro = trim($_GET['estado'] ?? '');
+$categoriaFiltro = trim($_GET['categoria'] ?? '');
+$vacantes = [];
+$categorias = [];
+$totales = ['activas' => 0, 'inactivas' => 0, 'postulaciones' => 0, 'categorias' => 0];
+
+if ($tablasOk) {
+    $totales['activas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE estado = 'Activo'")->fetch_assoc()['total'] ?? 0);
+    $totales['inactivas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE estado = 'Inactivo'")->fetch_assoc()['total'] ?? 0);
+    $totales['categorias'] = (int) ($conn->query("SELECT COUNT(DISTINCT categoria) AS total FROM vacantes WHERE categoria <> ''")->fetch_assoc()['total'] ?? 0);
+
+    if ($tienePostulaciones) {
+        $totales['postulaciones'] = (int) ($conn->query('SELECT COUNT(*) AS total FROM postulaciones')->fetch_assoc()['total'] ?? 0);
+    }
+
+    $catResult = $conn->query("SELECT DISTINCT categoria FROM vacantes WHERE categoria <> '' ORDER BY categoria ASC");
+    if ($catResult) {
+        while ($row = $catResult->fetch_assoc()) {
+            $categorias[] = $row['categoria'];
+        }
+    }
+
+    $where = [];
+    $types = '';
+    $params = [];
+
+    if ($buscar !== '') {
+        $where[] = '(v.titulo LIKE ? OR v.empresa LIKE ? OR v.ubicacion LIKE ? OR v.descripcion LIKE ?)';
+        $like = '%' . $buscar . '%';
+        array_push($params, $like, $like, $like, $like);
+        $types .= 'ssss';
+    }
+
+    if ($estadoFiltro !== '' && in_array($estadoFiltro, ['Activo', 'Inactivo'], true)) {
+        $where[] = 'v.estado = ?';
+        $params[] = $estadoFiltro;
+        $types .= 's';
+    }
+
+    if ($categoriaFiltro !== '') {
+        $where[] = 'v.categoria = ?';
+        $params[] = $categoriaFiltro;
+        $types .= 's';
+    }
+
+    $postulacionesSql = $tienePostulaciones ? '(SELECT COUNT(*) FROM postulaciones p WHERE p.vacante_id = v.id)' : '0';
+    $sql = "SELECT v.id, v.titulo, v.empresa, v.ubicacion, v.salario, v.categoria, v.estado, v.descripcion, {$postulacionesSql} AS postulaciones
+            FROM vacantes v";
+
+    if ($where) {
+        $sql .= ' WHERE ' . implode(' AND ', $where);
+    }
+
+    $sql .= ' ORDER BY v.id DESC';
+    $stmt = $conn->prepare($sql);
+
+    if ($params) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $vacantes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+}
+
+include 'includes/header.php';
+?>
 
 <div class="d-flex">
+    <?php include 'includes/sidebar.php'; ?>
 
-    <!-- SIDEBAR -->
-    <?php include "includes/sidebar.php"; ?>
-
-
-
-    <!-- CONTENIDO -->
     <div class="content w-100 p-4">
-
-        <!-- TITULO -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-
             <div>
-
-                <h2 class="fw-bold">
-                    Gestión de Vacantes
-                </h2>
-
-                <p class="text-muted">
-                    Administra y elimina vacantes del sistema
-                </p>
-
+                <h2 class="fw-bold">Gestión de Vacantes</h2>
+                <p class="text-muted">Administra, filtra, edita y elimina vacantes del sistema.</p>
             </div>
 
-            <!-- BOTON -->
-            <a href="../vacantes/register.php"
-               class="btn btn-primary">
-
-                <i class="bi bi-plus-circle me-2"></i>
-                Nueva Vacante
-
+            <a href="../vacantes/register.php" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Nueva Vacante
             </a>
-
         </div>
 
+        <?php if (!$tablasOk): ?>
+            <div class="alert alert-warning">Falta la tabla <strong>vacantes</strong>. Importa <strong>database_chris.sql</strong>.</div>
+        <?php endif; ?>
 
+        <?php if ($mensaje !== ''): ?>
+            <div class="alert alert-<?= e($tipoMensaje) ?>"><?= e($mensaje) ?></div>
+        <?php endif; ?>
 
-
-
-        <!-- CARDS -->
         <div class="row g-4 mb-4">
-
-            <!-- ACTIVAS -->
             <div class="col-md-3">
-
-                <div class="dashboard-card">
-
-                    <div class="card-icon bg-primary-subtle">
-
-                        <i class="bi bi-briefcase-fill text-primary"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="fw-bold">
-                            18
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Vacantes Activas
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <div class="dashboard-card"><div class="card-icon bg-primary-subtle"><i class="bi bi-briefcase-fill text-primary"></i></div><div><h3 class="fw-bold"><?= $totales['activas'] ?></h3><p class="text-muted mb-0">Vacantes Activas</p></div></div>
             </div>
-
-
-
-
-
-            <!-- INACTIVAS -->
             <div class="col-md-3">
-
-                <div class="dashboard-card">
-
-                    <div class="card-icon bg-secondary-subtle">
-
-                        <i class="bi bi-file-earmark-fill text-secondary"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="fw-bold">
-                            7
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Vacantes Inactivas
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <div class="dashboard-card"><div class="card-icon bg-secondary-subtle"><i class="bi bi-file-earmark-fill text-secondary"></i></div><div><h3 class="fw-bold"><?= $totales['inactivas'] ?></h3><p class="text-muted mb-0">Vacantes Inactivas</p></div></div>
             </div>
-
-
-
-
-
-            <!-- POSTULACIONES -->
             <div class="col-md-3">
-
-                <div class="dashboard-card">
-
-                    <div class="card-icon bg-success-subtle">
-
-                        <i class="bi bi-people-fill text-success"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="fw-bold">
-                            324
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Total Postulaciones
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <div class="dashboard-card"><div class="card-icon bg-success-subtle"><i class="bi bi-people-fill text-success"></i></div><div><h3 class="fw-bold"><?= $totales['postulaciones'] ?></h3><p class="text-muted mb-0">Total Postulaciones</p></div></div>
             </div>
-
-
-
-
-
-            <!-- CATEGORIAS -->
             <div class="col-md-3">
-
-                <div class="dashboard-card">
-
-                    <div class="card-icon bg-warning-subtle">
-
-                        <i class="bi bi-bar-chart-fill text-warning"></i>
-
-                    </div>
-
-                    <div>
-
-                        <h3 class="fw-bold">
-                            5
-                        </h3>
-
-                        <p class="text-muted mb-0">
-                            Áreas o Categorías
-                        </p>
-
-                    </div>
-
-                </div>
-
+                <div class="dashboard-card"><div class="card-icon bg-warning-subtle"><i class="bi bi-bar-chart-fill text-warning"></i></div><div><h3 class="fw-bold"><?= $totales['categorias'] ?></h3><p class="text-muted mb-0">Áreas o Categorías</p></div></div>
             </div>
-
         </div>
 
-
-
-
-
-        <!-- TABLA -->
         <div class="table-box">
-
-            <!-- TOP -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-
-                <h5 class="fw-bold">
-                    Lista de Vacantes
-                </h5>
-
+                <h5 class="fw-bold">Lista de Vacantes</h5>
             </div>
 
-
-
-
-
-            <!-- BUSQUEDA -->
-            <div class="row g-3 mb-4">
-
-                <!-- SEARCH -->
+            <form method="GET" class="row g-3 mb-4">
                 <div class="col-md-3">
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Buscar vacante...">
-
+                    <input type="text" name="buscar" class="form-control" placeholder="Buscar vacante..." value="<?= e($buscar) ?>">
                 </div>
 
-
-
-
-
-                <!-- ESTADO -->
                 <div class="col-md-3">
-
-                    <select class="form-select">
-
-                        <option>
-                            Todos los estados
-                        </option>
-
-                        <option>
-                            Activo
-                        </option>
-
-                        <option>
-                            Inactivo
-                        </option>
-
+                    <select name="estado" class="form-select">
+                        <option value="">Todos los estados</option>
+                        <?php foreach (['Activo', 'Inactivo'] as $estado): ?>
+                            <option value="<?= e($estado) ?>" <?= $estadoFiltro === $estado ? 'selected' : '' ?>><?= e($estado) ?></option>
+                        <?php endforeach; ?>
                     </select>
-
                 </div>
 
-
-
-
-
-                <!-- CATEGORIA -->
                 <div class="col-md-3">
-
-                    <select class="form-select">
-
-                        <option>
-                            Todas las categorías
-                        </option>
-
-                        <option>
-                            Tecnología
-                        </option>
-
-                        <option>
-                            Diseño
-                        </option>
-
-                        <option>
-                            Marketing
-                        </option>
-
+                    <select name="categoria" class="form-select">
+                        <option value="">Todas las categorías</option>
+                        <?php foreach ($categorias as $categoria): ?>
+                            <option value="<?= e($categoria) ?>" <?= $categoriaFiltro === $categoria ? 'selected' : '' ?>><?= e($categoria) ?></option>
+                        <?php endforeach; ?>
                     </select>
-
                 </div>
 
-
-
-
-
-                <!-- BOTON -->
                 <div class="col-md-3">
-
-                    <button class="btn btn-primary w-100">
-
-                        <i class="bi bi-search me-2"></i>
-                        Aplicar filtros
-
-                    </button>
-
+                    <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search me-2"></i>Aplicar filtros</button>
                 </div>
+            </form>
 
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Vacante</th>
+                            <th>Empresa</th>
+                            <th>Ubicación</th>
+                            <th>Categoría</th>
+                            <th>Estado</th>
+                            <th>Postulaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!$vacantes): ?>
+                            <tr><td colspan="7" class="text-center text-muted py-4">No hay vacantes registradas.</td></tr>
+                        <?php endif; ?>
+
+                        <?php foreach ($vacantes as $vacante): ?>
+                            <tr>
+                                <td>
+                                    <strong><?= e($vacante['titulo']) ?></strong><br>
+                                    <small class="text-muted"><?= e(texto_corto($vacante['descripcion'], 65)) ?></small>
+                                </td>
+                                <td><?= e($vacante['empresa']) ?></td>
+                                <td><?= e($vacante['ubicacion']) ?></td>
+                                <td><span class="badge bg-primary"><?= e($vacante['categoria']) ?></span></td>
+                                <td><?= badge_estado($vacante['estado']) ?></td>
+                                <td><?= (int) $vacante['postulaciones'] ?></td>
+                                <td>
+                                    <a href="edit_vacante.php?id=<?= (int) $vacante['id'] ?>" class="btn btn-warning btn-sm" title="Editar">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form method="POST" class="d-inline" onsubmit="return confirm('¿Deseas eliminar esta vacante?');">
+                                        <input type="hidden" name="accion" value="eliminar">
+                                        <input type="hidden" name="id" value="<?= (int) $vacante['id'] ?>">
+                                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar"><i class="bi bi-trash-fill"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
-
-
-
-
-
-            <!-- TABLA -->
-            <table class="table align-middle">
-
-                <thead>
-
-                    <tr>
-
-                        <th>Vacante</th>
-                        <th>Categoría</th>
-                        <th>Estado</th>
-                        <th>Postulaciones</th>
-                        <th>Acciones</th>
-
-                    </tr>
-
-                </thead>
-
-
-
-
-
-                <tbody>
-
-                    <!-- FILA -->
-                    <tr>
-
-                        <td>Desarrollador Backend</td>
-
-                        <td>
-                            <span class="badge bg-primary">
-                                Tecnología
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        </td>
-
-                        <td>35</td>
-
-                        <td>
-
-                            <!-- EDITAR -->
-                            <a href="edit_vacante.php"
-                               class="btn btn-warning btn-sm">
-
-                                <i class="bi bi-pencil-fill"></i>
-
-                            </a>
-
-                             <!-- ELIMINAR -->
-                            <button
-                                class="btn btn-danger btn-sm btnEliminar">
-
-                                    <i class="bi bi-trash-fill"></i>
-
-                            </button>
-
-
-                        </td>
-
-                    </tr>
-
-
-
-
-
-                    <!-- FILA -->
-                    <tr>
-
-                        <td>Diseñador UI/UX</td>
-
-                        <td>
-                            <span class="badge bg-danger">
-                                Diseño
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="badge bg-success">
-                                Activo
-                            </span>
-                        </td>
-
-                        <td>20</td>
-
-                        <td>
-
-                            <a href="edit_vacante.php"
-                               class="btn btn-warning btn-sm">
-
-                                <i class="bi bi-pencil-fill"></i>
-
-                            </a>
-
-                             <!-- ELIMINAR -->
-                            <button
-                                class="btn btn-danger btn-sm btnEliminar">
-
-                                    <i class="bi bi-trash-fill"></i>
-
-                            </button>
-
-
-                        </td>
-
-                    </tr>
-
-
-
-
-
-                    <!-- FILA -->
-                    <tr>
-
-                        <td>Marketing Digital</td>
-
-                        <td>
-                            <span class="badge bg-warning text-dark">
-                                Marketing
-                            </span>
-                        </td>
-
-                        <td>
-                            <span class="badge bg-danger">
-                                Inactivo
-                            </span>
-                        </td>
-
-                        <td>10</td>
-
-                        <td>
-
-                            <a href="edit_vacante.php"
-                               class="btn btn-warning btn-sm">
-
-                                <i class="bi bi-pencil-fill"></i>
-
-                            </a>
-
-                             <!-- ELIMINAR -->
-                            <button
-                                class="btn btn-danger btn-sm btnEliminar">
-
-                                    <i class="bi bi-trash-fill"></i>
-
-                            </button>
-
-
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
         </div>
-
     </div>
-
 </div>
 
-<?php include "includes/footer.php"; ?>
+<?php include 'includes/footer.php'; ?>

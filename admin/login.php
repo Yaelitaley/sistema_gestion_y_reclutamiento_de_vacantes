@@ -179,7 +179,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     formData.append('correo',   document.getElementById('correo').value.trim());
     formData.append('password', document.getElementById('password').value);
 
-    fetch('../admin/dashboard.php', {
+    fetch('../admin/actions/login_admin.php', {
         method: 'POST',
         body: formData
     })
