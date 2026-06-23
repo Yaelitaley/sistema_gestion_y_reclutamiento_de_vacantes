@@ -41,15 +41,18 @@ if ($tieneVacantes) {
         }
     }
 
-    $result = $conn->query('SELECT estado, COUNT(*) AS total FROM vacantes GROUP BY estado');
+    // Se corrige: Agrupación por el campo real 'activa' (1 o 0)
+    $result = $conn->query('SELECT activa, COUNT(*) AS total FROM vacantes GROUP BY activa');
     if ($result) {
         while ($row = $result->fetch_assoc()) {
-            $vacantesPorEstado[$row['estado']] = (int) $row['total'];
+            $estadoTxt = ((int)$row['activa'] === 1) ? 'Activo' : 'Inactivo';
+            $vacantesPorEstado[$estadoTxt] = (int) $row['total'];
         }
     }
 
     $postSql = $tienePostulaciones ? '(SELECT COUNT(*) FROM postulaciones p WHERE p.vacante_id = v.id)' : '0';
-    $result = $conn->query("SELECT v.titulo, v.categoria, v.estado, {$postSql} AS postulaciones FROM vacantes v ORDER BY v.id DESC LIMIT 5");
+    // Se corrige: v.trabajo en lugar de v.titulo, y se evalúa el estado textual a partir de v.activa
+    $result = $conn->query("SELECT v.trabajo AS titulo, v.categoria, IF(v.activa = 1, 'Activo', 'Inactivo') AS estado, {$postSql} AS postulaciones FROM vacantes v ORDER BY v.id DESC LIMIT 5");
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $recientes[] = $row;
@@ -59,18 +62,24 @@ if ($tieneVacantes) {
 
 if ($tienePostulaciones) {
     $stats['postulaciones'] = (int) ($conn->query('SELECT COUNT(*) AS total FROM postulaciones')->fetch_assoc()['total'] ?? 0);
-    $stats['contrataciones'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM postulaciones WHERE estado = 'Contratado'")->fetch_assoc()['total'] ?? 0);
-    $stats['rechazados'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM postulaciones WHERE estado = 'Rechazado'")->fetch_assoc()['total'] ?? 0);
+    
+    // Se corrige: Las postulaciones se vinculan a estados_postulacion para filtrar por nombre de estado
+    $stats['contrataciones'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM postulaciones p INNER JOIN estados_postulacion ep ON p.estado_id = ep.id WHERE ep.nombre = 'Contratado'")->fetch_assoc()['total'] ?? 0);
+    $stats['rechazados'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM postulaciones p INNER JOIN estados_postulacion ep ON p.estado_id = ep.id WHERE ep.nombre = 'Rechazado'")->fetch_assoc()['total'] ?? 0);
 
-    $result = $conn->query('SELECT estado, COUNT(*) AS total FROM postulaciones GROUP BY estado');
+    // Se corrige: Agrupación por el nombre real del estado usando un JOIN
+    $result = $conn->query('SELECT ep.nombre AS estado, COUNT(p.id) AS total FROM estados_postulacion ep LEFT JOIN postulaciones p ON ep.id = p.estado_id GROUP BY ep.id, ep.nombre');
     if ($result) {
         while ($row = $result->fetch_assoc()) {
-            $estadosPostulaciones[$row['estado']] = (int) $row['total'];
+            if (array_key_exists($row['estado'], $estadosPostulaciones)) {
+                $estadosPostulaciones[$row['estado']] = (int) $row['total'];
+            }
         }
     }
 }
 
 if ($tieneEntrevistas) {
+    // Nota: Si tu tabla entrevistas usa un campo numérico o diferente para el estado, puedes ajustarlo aquí
     $stats['entrevistas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM entrevistas WHERE estado = 'Realizada'")->fetch_assoc()['total'] ?? 0);
 }
 
@@ -101,7 +110,7 @@ include 'includes/header.php';
 
         <?php if (!$tieneVacantes || !$tienePostulaciones): ?>
             <div class="alert alert-warning">
-                Algunas estadísticas pueden aparecer en cero porque faltan tablas. Para tener el reporte completo importa <strong>database_chris.sql</strong>.
+                Algunas estadísticas pueden aparecer en cero porque faltan tablas. Para tener el reporte completo importa tus scripts SQL.
             </div>
         <?php endif; ?>
 
@@ -141,7 +150,13 @@ include 'includes/header.php';
                         <?php $porcentaje = (int) round(($total / $maxPostulaciones) * 100); ?>
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span><?= badge_estado($estado) ?></span>
+                                <span>
+                                    <?php if (function_exists('badge_estado')): ?>
+                                        <?= badge_estado($estado) ?>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary"><?= e($estado) ?></span>
+                                    <?php endif; ?>
+                                </span>
                                 <strong><?= (int) $total ?></strong>
                             </div>
                             <div class="progress" role="progressbar" aria-valuenow="<?= $porcentaje ?>" aria-valuemin="0" aria-valuemax="100">
@@ -156,11 +171,23 @@ include 'includes/header.php';
                 <div class="table-box">
                     <h5 class="fw-bold mb-4">Vacantes por estado</h5>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span><?= badge_estado('Activo') ?></span>
+                        <span>
+                            <?php if (function_exists('badge_estado')): ?>
+                                <?= badge_estado('Activo') ?>
+                            <?php else: ?>
+                                <span class="badge bg-success">Activo</span>
+                            <?php endif; ?>
+                        </span>
                         <strong><?= (int) ($vacantesPorEstado['Activo'] ?? 0) ?></strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span><?= badge_estado('Inactivo') ?></span>
+                        <span>
+                            <?php if (function_exists('badge_estado')): ?>
+                                <?= badge_estado('Inactivo') ?>
+                            <?php else: ?>
+                                <span class="badge bg-danger">Inactivo</span>
+                            <?php endif; ?>
+                        </span>
                         <strong><?= (int) ($vacantesPorEstado['Inactivo'] ?? 0) ?></strong>
                     </div>
                 </div>
@@ -211,7 +238,13 @@ include 'includes/header.php';
                                     <tr>
                                         <td><?= e($vacante['titulo']) ?></td>
                                         <td><?= e($vacante['categoria']) ?></td>
-                                        <td><?= badge_estado($vacante['estado']) ?></td>
+                                        <td>
+                                            <?php if (function_exists('badge_estado')): ?>
+                                                <?= badge_estado($vacante['estado']) ?>
+                                            <?php else: ?>
+                                                <span class="badge <?= $vacante['estado'] === 'Activo' ? 'bg-success' : 'bg-danger' ?>"><?= e($vacante['estado']) ?></span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td><?= (int) $vacante['postulaciones'] ?></td>
                                     </tr>
                                 <?php endforeach; ?>

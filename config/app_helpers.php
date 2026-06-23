@@ -41,7 +41,8 @@ if (!function_exists('badge_estado')) {
 
 if (!function_exists('table_exists')) {
     function table_exists($conn, $table) {
-        $stmt = $conn->prepare("SHOW TABLES LIKE ?");
+        $result = $conn->query("SHOW TABLES LIKE '$table'");
+        return $result && $result->num_rows > 0;
         if (!$stmt) {
             return false;
         }

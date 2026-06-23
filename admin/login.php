@@ -179,11 +179,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     formData.append('correo',   document.getElementById('correo').value.trim());
     formData.append('password', document.getElementById('password').value);
 
-
     fetch('actions/login_admin.php', {
-
-    fetch('../admin/actions/login_admin.php', {
-
         method: 'POST',
         body: formData
     })
@@ -202,7 +198,7 @@ document.getElementById('loginForm').addEventListener('submit', function (e) {
     .catch(() => {
         mensaje.classList.remove('d-none');
         mensaje.classList.add('alert-danger');
-        mensaje.textContent = 'Error de conexión';
+        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
         btn.disabled    = false;
         btn.textContent = 'Iniciar sesión';
     });

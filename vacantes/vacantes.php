@@ -53,8 +53,8 @@ $categorias = [];
 $totales = ['activas' => 0, 'inactivas' => 0, 'postulaciones' => 0, 'categorias' => 0];
 
 if ($tablasOk) {
-    $totales['activas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE estado = 'Activo'")->fetch_assoc()['total'] ?? 0);
-    $totales['inactivas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE estado = 'Inactivo'")->fetch_assoc()['total'] ?? 0);
+    $totales['activas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE activa = 1")->fetch_assoc()['total'] ?? 0);
+    $totales['inactivas'] = (int) ($conn->query("SELECT COUNT(*) AS total FROM vacantes WHERE activa = 0")->fetch_assoc()['total'] ?? 0);
     $totales['categorias'] = (int) ($conn->query("SELECT COUNT(DISTINCT categoria) AS total FROM vacantes WHERE categoria <> ''")->fetch_assoc()['total'] ?? 0);
 
     if ($tienePostulaciones) {
@@ -73,16 +73,16 @@ if ($tablasOk) {
     $params = [];
 
     if ($buscar !== '') {
-        $where[] = '(v.titulo LIKE ? OR v.empresa LIKE ? OR v.ubicacion LIKE ? OR v.descripcion LIKE ?)';
+        $where[] = '(v.trabajo LIKE ? OR emp.nombre LIKE ? OR v.ubicacion LIKE ? OR v.descripcion LIKE ?)';
         $like = '%' . $buscar . '%';
         array_push($params, $like, $like, $like, $like);
         $types .= 'ssss';
     }
 
     if ($estadoFiltro !== '' && in_array($estadoFiltro, ['Activo', 'Inactivo'], true)) {
-        $where[] = 'v.estado = ?';
-        $params[] = $estadoFiltro;
-        $types .= 's';
+        $where[] = 'v.activa = ?';
+        $params[] = ($estadoFiltro === 'Activo') ? 1 : 0;
+        $types .= 'i';
     }
 
     if ($categoriaFiltro !== '') {
@@ -92,8 +92,12 @@ if ($tablasOk) {
     }
 
     $postulacionesSql = $tienePostulaciones ? '(SELECT COUNT(*) FROM postulaciones p WHERE p.vacante_id = v.id)' : '0';
-    $sql = "SELECT v.id, v.titulo, v.empresa, v.ubicacion, v.salario, v.categoria, v.estado, v.descripcion, {$postulacionesSql} AS postulaciones
-            FROM vacantes v";
+    
+    // Vinculamos con reclutadores y empresas para obtener el nombre real de la organización
+    $sql = "SELECT v.id, v.trabajo AS titulo, COALESCE(emp.nombre, 'Sin Empresa') AS empresa, v.ubicacion, v.salario, v.categoria, v.activa, v.descripcion, {$postulacionesSql} AS postulaciones
+            FROM vacantes v
+            LEFT JOIN reclutadores r ON v.reclutador_id = r.id
+            LEFT JOIN empresas emp ON r.empresa_id = emp.id";
 
     if ($where) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
@@ -130,7 +134,7 @@ include 'includes/header.php';
         </div>
 
         <?php if (!$tablasOk): ?>
-            <div class="alert alert-warning">Falta la tabla <strong>vacantes</strong>. Importa <strong>database_chris.sql</strong>.</div>
+            <div class="alert alert-warning">Falta la tabla <strong>vacantes</strong>. Importa tu script SQL.</div>
         <?php endif; ?>
 
         <?php if ($mensaje !== ''): ?>
@@ -212,7 +216,15 @@ include 'includes/header.php';
                                 <td><?= e($vacante['empresa']) ?></td>
                                 <td><?= e($vacante['ubicacion']) ?></td>
                                 <td><span class="badge bg-primary"><?= e($vacante['categoria']) ?></span></td>
-                                <td><?= badge_estado($vacante['estado']) ?></td>
+                                <td>
+                                    <?php if (function_exists('badge_estado')): ?>
+                                        <?= badge_estado($vacante['activa'] ? 'Activo' : 'Inactivo') ?>
+                                    <?php else: ?>
+                                        <span class="badge <?= $vacante['activa'] ? 'bg-success' : 'bg-danger' ?>">
+                                            <?= $vacante['activa'] ? 'Activo' : 'Inactivo' ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= (int) $vacante['postulaciones'] ?></td>
                                 <td>
                                     <a href="edit_vacante.php?id=<?= (int) $vacante['id'] ?>" class="btn btn-warning btn-sm" title="Editar">

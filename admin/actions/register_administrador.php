@@ -33,7 +33,7 @@ if (strlen($password) < 6) {
     exit;
 }
 
-// Verificar correo duplicado
+//verifica si el correo ya esta 
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param('s', $correo);
 $stmt->execute();
