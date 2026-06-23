@@ -1,17 +1,12 @@
 body{
     font-family: 'Poppins', sans-serif;
-    background-color: white;
+    background-color: rgb(212, 222, 255);
 }
 
-/* PANEL IZQUIERDO */
-.left-panel{
-    background-color: #eef5ff;
-    padding: 40px;
-}
 
 /* IMAGEN */
-.login-image{
-    max-width: 250px;
+.img-fluid{
+    max-width: 300px;
     border-radius: 100px;
     
 }
@@ -26,6 +21,11 @@ body{
 .text-reclutador{
     color: #8b5cf6;
 }
+.text-center{
+    size: 50px;
+    font-size:larger;
+}
+
 
 .btn-reclutador{
     background-color: #8b5cf6;
@@ -83,7 +83,18 @@ body{
     align-items: center;
     gap: 10px;
 }
+.top-bar{
+    background-color: white;
 
+    padding: 15px 25px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
 
 /* RESPONSIVE */
 @media(max-width:768px){

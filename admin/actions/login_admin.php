@@ -1,8 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
-require_once '../../config/config.php';
-require_once '../../config/connection.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../config/connection.php';
+require_once __DIR__ . '/../../config/app_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -12,63 +13,44 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$correo   = trim($_POST['correo'] ?? '');
+$correo = trim($_POST['correo'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
-if (empty($correo) || empty($password)) {
-
+if ($correo === '' || $password === '') {
     echo json_encode([
         'success' => false,
         'message' => 'Todos los campos son obligatorios.'
     ]);
-
     exit;
 }
 
-$stmt = $conn->prepare("
-    SELECT id, password
-    FROM usuarios
-    WHERE email = ?
-    AND rol_id IN (1,2)
-");
+$stmt = $conn->prepare(
+    'SELECT id, password, rol_id
+     FROM usuarios
+     WHERE email = ?
+     AND rol_id IN (1,2)
+     LIMIT 1'
+);
 
-$stmt->bind_param("s", $correo);
+$stmt->bind_param('s', $correo);
 $stmt->execute();
-$stmt->store_result();
 
-if ($stmt->num_rows === 0) {
+$result = $stmt->get_result();
+$usuario = $result ? $result->fetch_assoc() : null;
 
+$stmt->close();
+
+if (!$usuario || !password_verify($password, $usuario['password'])) {
     echo json_encode([
         'success' => false,
         'message' => 'Credenciales incorrectas.'
     ]);
-
     exit;
 }
 
-$stmt->bind_result($id, $hash);
-$stmt->fetch();
-
-if ($password != $hash) {
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Credenciales incorrectas.'
-    ]);
-
-    exit;
-}
-$_SESSION['usuario_id'] = $id;
-$_SESSION['rol_id']     = 2;
-$_SESSION['correo']     = $correo;
-
-echo json_encode([
-    'success' => true,
-    'message' => 'Acceso correcto.',
-    'correo' => $correo,
-    'id' => $id
-]);
-exit;
+$_SESSION['usuario_id'] = (int)$usuario['id'];
+$_SESSION['rol_id'] = (int)$usuario['rol_id'];
+$_SESSION['correo'] = $correo;
 
 echo json_encode([
     'success' => true,

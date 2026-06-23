@@ -35,7 +35,7 @@ include "includes/header.php";
                     ¡Bienvenido, Administrador!
                 </h3>
 
-                <p class="text-muted">
+                <p class="fw-bold">
                     Gestiona reclutadores, candidatos y vacantes del sistema.
                 </p>
 
@@ -49,7 +49,7 @@ include "includes/header.php";
                 <div class="d-flex align-items-center">
 
                     <img
-                        src="../assets/img/admin-avatar.png"
+                        src="../assets/img/imagenadministrador.png"
                         class="rounded-circle me-2"
                         width="40"
                         height="40"

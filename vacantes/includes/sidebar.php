@@ -130,7 +130,7 @@
     <!-- LOGOUT -->
     <div class="logout">
 
-        <a href="#" id="btnLogout">
+        <a href="../admin/logout.php" id="btnLogout">
 
     <i class="bi bi-box-arrow-left"></i>
 
