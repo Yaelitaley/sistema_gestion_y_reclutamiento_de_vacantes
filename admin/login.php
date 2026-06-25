@@ -162,47 +162,4 @@
 
 </main>
 
-<script>
-document.getElementById('loginForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const btn     = document.getElementById('btnLogin');
-    const mensaje = document.getElementById('mensaje');
-
-    mensaje.className   = 'alert mt-3 d-none';
-    mensaje.textContent = '';
-
-    btn.disabled    = true;
-    btn.textContent = 'Verificando...';
-
-    const formData = new FormData();
-    formData.append('correo',   document.getElementById('correo').value.trim());
-    formData.append('password', document.getElementById('password').value);
-
-    fetch('actions/login_admin.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = 'dashboard.php';
-        } else {
-            mensaje.classList.remove('d-none');
-            mensaje.classList.add('alert-danger');
-            mensaje.textContent = data.message;
-            btn.disabled    = false;
-            btn.textContent = 'Iniciar sesión';
-        }
-    })
-    .catch(() => {
-        mensaje.classList.remove('d-none');
-        mensaje.classList.add('alert-danger');
-        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
-        btn.disabled    = false;
-        btn.textContent = 'Iniciar sesión';
-    });
-});
-</script>
-
 <?php include "includes/footer.php"; ?>

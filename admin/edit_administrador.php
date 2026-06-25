@@ -294,56 +294,5 @@ include 'includes/header.php';
     </div>
 </div>
 
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("editForm");
-    const mensaje = document.getElementById("mensaje");
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const id = document.getElementById("adminId").value;
-        const nombre = document.getElementById("nombre").value.trim();
-        const correo = document.getElementById("correo").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-        mensaje.classList.remove("d-none", "alert-danger", "alert-success");
-
-        if (nombre === "" || correo === "") {
-            mensaje.classList.add("alert-danger");
-            mensaje.innerHTML = "Nombre y correo son obligatorios.";
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            mensaje.classList.add("alert-danger");
-            mensaje.innerHTML = "Las contraseñas no coinciden.";
-            return;
-        }
-
-        const datos = new URLSearchParams({ id, nombre, correo, password });
-
-        fetch("actions/update_administrador.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: datos
-        })
-        .then(res => res.json())
-        .then(data => {
-            mensaje.classList.add(data.success ? "alert-success" : "alert-danger");
-            mensaje.innerHTML = data.message;
-        })
-        .catch(() => {
-            mensaje.classList.add("alert-danger");
-            mensaje.innerHTML = "Error de conexión.";
-        });
-    });
-});
-</script>
-
-<?php include "includes/footer.php"; ?>
-
 <?php include 'includes/footer.php'; ?>
 
