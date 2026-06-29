@@ -121,13 +121,13 @@
     <!-- CERRAR SESIÓN -->
     <div class="logout">
 
-        <a href="login.php">
+       <a href="../candidatos/login.php" class="logout btnCerrarSesion ">
 
-            <i class="bi bi-box-arrow-left"></i>
+    <i class="bi bi-box-arrow-right me-2"></i>
 
-            Cerrar sesión
+    Cerrar sesión
 
-        </a>
+</a>
 
     </div>
 

@@ -145,15 +145,13 @@
 
                 <li>
 
-                    <a
-                        class="dropdown-item text-danger"
-                        href="login.php">
+                   <a href="../candidatos/login.php" class="dropdown-item btnCerrarSesion">
 
-                        <i class="bi bi-box-arrow-right me-2"></i>
+    <i class="bi bi-box-arrow-right me-2"></i>
 
-                        Cerrar sesión
+    Cerrar sesión
 
-                    </a>
+</a>
 
                 </li>
 

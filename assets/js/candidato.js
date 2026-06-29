@@ -453,3 +453,181 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
 });
+
+/*==================================================
+=                CURRÍCULUM
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    // ==========================
+    // DESCARGAR CV
+    // ==========================
+
+    const btnDescargarCV = document.getElementById("btnDescargarCV");
+
+    if(btnDescargarCV){
+
+        btnDescargarCV.addEventListener("click", function(){
+
+            alert("Descargando currículum...");
+
+        });
+
+    }
+
+
+
+
+
+    // ==========================
+    // RESTABLECER FORMULARIO
+    // ==========================
+
+    const btnRestablecerCV = document.getElementById("btnRestablecerCV");
+
+    if(btnRestablecerCV){
+
+        btnRestablecerCV.addEventListener("click", function(){
+
+            alert("Los datos del formulario han sido restablecidos.");
+
+        });
+
+    }
+
+
+
+
+
+    // ==========================
+    // GUARDAR CAMBIOS
+    // ==========================
+
+    const formularioCV = document.getElementById("formCV");
+
+    if(formularioCV){
+
+        formularioCV.addEventListener("submit", function(e){
+
+            e.preventDefault();
+
+            alert("Los cambios del currículum se guardaron correctamente.");
+
+        });
+
+    }
+
+});
+
+/*==========================================
+=            SUBIR CURRÍCULUM
+==========================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const botonSubir = document.getElementById("btnSubirCV");
+    const archivo = document.getElementById("archivoCV");
+
+    if(botonSubir && archivo){
+
+        botonSubir.addEventListener("click", function(){
+
+            archivo.click();
+
+        });
+
+        archivo.addEventListener("change", function(){
+
+            if(this.files.length > 0){
+
+                alert("Currículum cargado correctamente.");
+
+            }
+
+        });
+
+    }
+
+});
+
+/*==================================================
+=            EDITAR PERFIL
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    // FORMULARIO
+    const formPerfil = document.getElementById("formPerfil");
+
+    // BOTÓN RESTABLECER
+    const btnRestablecerPerfil = document.getElementById("btnRestablecerPerfil");
+
+
+
+    // GUARDAR CAMBIOS
+    if(formPerfil){
+
+        formPerfil.addEventListener("submit", function(e){
+
+            e.preventDefault();
+
+            alert("Los cambios del perfil se guardaron correctamente.");
+
+        });
+
+    }
+
+
+
+    // RESTABLECER
+    if(btnRestablecerPerfil){
+
+        btnRestablecerPerfil.addEventListener("click", function(){
+
+            const confirmar = confirm("¿Deseas restablecer el formulario?");
+
+            if(!confirmar){
+
+                event.preventDefault();
+
+            }else{
+
+                alert("El formulario fue restablecido correctamente.");
+
+            }
+
+        });
+
+    }
+
+});
+
+/*==================================================
+=            CERRAR SESIÓN
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const botonesCerrarSesion = document.querySelectorAll(".btnCerrarSesion");
+
+    botonesCerrarSesion.forEach(function(boton){
+
+        boton.addEventListener("click", function(e){
+
+            e.preventDefault();
+
+            const confirmar = confirm("¿Estás seguro de que deseas cerrar sesión?");
+
+            if(confirmar){
+
+                window.location.href = this.href;
+
+            }
+
+        });
+
+    });
+
+});
+

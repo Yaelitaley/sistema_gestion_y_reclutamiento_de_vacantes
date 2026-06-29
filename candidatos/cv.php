@@ -716,6 +716,8 @@
                 </a>
 
                 <button
+                    type="button"
+                    id="btnDescargarCV"
                     class="btn btn-outline-primary">
 
                     <i class="bi bi-download me-2"></i>

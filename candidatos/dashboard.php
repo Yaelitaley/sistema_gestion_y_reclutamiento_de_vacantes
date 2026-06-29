@@ -593,21 +593,33 @@
 
                         <div class="d-grid gap-2 mt-3">
 
-                            <button class="btn btn-primary">
+                            <input
+    type="file"
+    id="archivoCV"
+    accept=".pdf"
+    hidden>
 
-                                <i class="bi bi-upload me-2"></i>
+<button
+    class="btn btn-success"
+    id="btnSubirCV">
 
-                                Subir CV
+    <i class="bi bi-upload me-2"></i>
 
-                            </button>
+    Subir CV
 
-                            <button class="btn btn-outline-primary">
+</button>
 
-                                <i class="bi bi-eye-fill me-2"></i>
+                            
 
-                                Visualizar CV
+                                <a href="cv.php" class="btn btn-outline-primary">
 
-                            </button>
+    <i class="bi bi-file-earmark-person-fill me-2"></i>
+
+    Visualizar CV
+
+</a>
+
+                            
 
                         </div>
 

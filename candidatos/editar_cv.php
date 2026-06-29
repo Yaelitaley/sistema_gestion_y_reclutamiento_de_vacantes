@@ -692,6 +692,7 @@ Curso de JavaScript.</textarea>
 
                     <button
                         type="reset"
+                        id="btnRestablecerCV"
                         class="btn btn-outline-danger me-2">
 
                         <i class="bi bi-arrow-counterclockwise me-2"></i>
@@ -706,6 +707,7 @@ Curso de JavaScript.</textarea>
 
                     <button
                         type="submit"
+                        id="btnGuardarCV"
                         class="btn btn-success">
 
                         <i class="bi bi-floppy-fill me-2"></i>
