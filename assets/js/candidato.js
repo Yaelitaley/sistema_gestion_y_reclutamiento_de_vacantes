@@ -1,3 +1,6 @@
+console.log("JavaScript cargado correctamente");
+
+
 document.addEventListener("DOMContentLoaded", function(){
 //regstro
     const registerForm = document.getElementById("registerForm");
@@ -270,6 +273,178 @@ document.addEventListener("DOMContentLoaded", function(){
             if(confirmar){
 
                 alert("Reclutador eliminado correctamente.");
+
+            }
+
+        });
+
+    });
+
+});
+
+/*==================================================
+=            EXPLORAR EMPLEOS
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    // ==========================
+    // BUSCADOR DE EMPLEOS
+    // ==========================
+
+    const buscador = document.getElementById("buscarEmpleo");
+
+    if(buscador){
+
+        buscador.addEventListener("keyup", function(){
+
+            const texto = this.value.toLowerCase();
+
+            const vacantes = document.querySelectorAll(".job-card");
+
+            vacantes.forEach(function(vacante){
+
+                const contenido = vacante.textContent.toLowerCase();
+
+                if(contenido.includes(texto)){
+
+                    vacante.style.display = "block";
+
+                }
+
+                else{
+
+                    vacante.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    }
+
+
+
+
+
+
+    // ==========================
+    // BOTÓN POSTULARME
+    // ==========================
+
+    const botonesPostular = document.querySelectorAll(".btnPostular");
+
+    botonesPostular.forEach(function(boton){
+
+        boton.addEventListener("click", function(){
+
+            alert("¡Tu postulación fue enviada correctamente!");
+
+        });
+
+    });
+
+
+
+
+
+
+    // ==========================
+    // GUARDAR EMPLEO
+    // ==========================
+
+    const botonesGuardar = document.querySelectorAll(".btnGuardar");
+
+    botonesGuardar.forEach(function(boton){
+
+        boton.addEventListener("click", function(){
+
+            boton.classList.remove("btn-outline-success");
+
+            boton.classList.add("btn-success");
+
+            boton.innerHTML = '<i class="bi bi-heart-fill me-2"></i>Guardado';
+
+        });
+
+    });
+
+
+
+
+
+
+    // ==========================
+    // COMPARTIR EMPLEO
+    // ==========================
+
+    const botonesCompartir = document.querySelectorAll(".btnCompartir");
+
+    botonesCompartir.forEach(function(boton){
+
+        boton.addEventListener("click", function(){
+
+            navigator.clipboard.writeText(window.location.href);
+
+            alert("Enlace copiado al portapapeles.");
+
+        });
+
+    });
+
+
+
+
+
+
+    // ==========================
+    // LIMPIAR FILTROS
+    // ==========================
+
+    const limpiar = document.getElementById("btnLimpiar");
+
+    if(limpiar){
+
+        limpiar.addEventListener("click", function(){
+
+            document.querySelectorAll("select").forEach(function(select){
+
+                select.selectedIndex = 0;
+
+            });
+
+            if(buscador){
+
+                buscador.value = "";
+
+            }
+
+        });
+
+    }
+
+});
+
+/*==================================================
+=            CANCELAR POSTULACIÓN
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const botonesCancelar = document.querySelectorAll(".btnCancelarPostulacion");
+
+    botonesCancelar.forEach(function(boton){
+
+        boton.addEventListener("click", function(){
+
+            const confirmar = confirm("¿Estás seguro de cancelar esta postulación?");
+
+            if(confirmar){
+
+                alert("La postulación ha sido cancelada correctamente.");
+
+                this.closest("tr").remove();
 
             }
 

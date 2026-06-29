@@ -1,8 +1,8 @@
 <div class="sidebar">
 
-    <!-- LOGO -->
     <div>
 
+        <!-- LOGO -->
         <div class="logo">
 
             <i class="bi bi-briefcase-fill"></i>
@@ -11,7 +11,11 @@
 
         </div>
 
-        <!-- MENU -->
+
+
+
+
+        <!-- MENÚ -->
         <ul class="menu">
 
             <li>
@@ -26,45 +30,61 @@
 
             </li>
 
+
+
+
+
             <li>
 
-                <a href="../vacantes/vacantes.php">
+                <a href="../candidatos/explorar-empleos.php">
 
-                    <i class="bi bi-briefcase-fill"></i>
+                    <i class="bi bi-search"></i>
 
-                    Vacantes
+                    Explorar Empleos
 
                 </a>
 
             </li>
 
+
+
+
+
             <li>
 
-                <a href="../reclutador/candidatos.php">
+                <a href="postulaciones.php">
 
-                    <i class="bi bi-people-fill"></i>
+                    <i class="bi bi-send-check-fill"></i>
 
-                    Candidatos
+                    Mis Postulaciones
 
                 </a>
 
             </li>
 
+
+
+
+
             <li>
 
-                <a href="entrevistas.php">
+                <a href="cv.php">
 
-                    <i class="bi bi-calendar-event-fill"></i>
+                    <i class="bi bi-file-earmark-person-fill"></i>
 
-                    Entrevistas
+                    Mi CV
 
                 </a>
 
             </li>
 
+
+
+
+
             <li>
 
-                <a href="perfil_reclutador.php">
+                <a href="perfil.php">
 
                     <i class="bi bi-person-circle"></i>
 
@@ -74,9 +94,13 @@
 
             </li>
 
+
+
+
+
             <li>
 
-                <a href="../admin/configuracion.php">
+                <a href="configuracion.php">
 
                     <i class="bi bi-gear-fill"></i>
 
@@ -90,16 +114,20 @@
 
     </div>
 
-    <!-- LOGOUT -->
+
+
+
+
+    <!-- CERRAR SESIÓN -->
     <div class="logout">
 
-        <a href="../reclutador/logout.php" id="btnLogout">
+        <a href="login.php">
 
-    <i class="bi bi-box-arrow-left"></i>
+            <i class="bi bi-box-arrow-left"></i>
 
-    Cerrar sesión
+            Cerrar sesión
 
-</a>
+        </a>
 
     </div>
 

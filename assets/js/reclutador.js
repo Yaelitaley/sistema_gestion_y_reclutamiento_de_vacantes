@@ -26,3 +26,16 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const btnLogout = document.getElementById("btnLogout");
+
+    if (btnLogout) {
+        btnLogout.addEventListener("click", function (e) {
+            const confirmar = confirm("¿Deseas cerrar sesión?");
+            if (!confirmar) {
+                e.preventDefault();
+            }
+        });
+    }});

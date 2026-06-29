@@ -96,6 +96,855 @@ body{
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
+/*==================================================
+=            CONTENIDO PRINCIPAL
+==================================================*/
+
+.content{
+
+    flex: 1;
+
+    padding: 30px;
+
+}
+
+
+
+
+
+/*==================================================
+=            SIDEBAR
+==================================================*/
+
+.sidebar{
+
+    width: 260px;
+
+    min-height: 100vh;
+
+    background: linear-gradient(180deg,#0f172a,#1e293b);
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+}
+
+
+
+
+
+.logo{
+
+    color: white;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    margin-bottom: 40px;
+
+}
+
+
+
+
+
+.logo i{
+
+    margin-right: 10px;
+
+    color: #22c55e;
+
+}
+
+
+
+
+
+.menu{
+
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+
+
+
+
+.menu li{
+
+    margin-bottom: 10px;
+
+}
+
+
+
+
+
+.menu a{
+
+    text-decoration: none;
+
+    color: #d1d5db;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    transition: .3s;
+
+}
+
+
+
+
+
+.menu a:hover{
+
+    background: #22c55e;
+
+    color: white;
+
+}
+
+
+
+
+
+.menu .active{
+
+    background: #22c55e;
+
+    color: white;
+
+}
+
+
+
+
+
+.logout a{
+
+    color: #ef4444;
+
+    text-decoration: none;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+
+
+
+/*==================================================
+=            TOPBAR
+==================================================*/
+
+.top-bar{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 18px 25px;
+
+    box-shadow: 0 4px 18px rgba(0,0,0,.08);
+
+    margin-bottom: 30px;
+
+}
+
+
+
+
+
+.search-box{
+
+    width: 45%;
+
+}
+
+
+
+
+
+.search-box .form-control{
+
+    border-radius: 10px;
+
+}
+
+
+
+
+
+.dropdown-toggle{
+
+    border: none;
+
+    background: transparent;
+
+}
+
+
+
+
+
+.dropdown-menu{
+
+    border: none;
+
+    border-radius: 15px;
+
+}
+
+
+
+
+
+/*==================================================
+=            TARJETAS
+==================================================*/
+
+.dashboard-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 22px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+    transition: .3s;
+
+}
+
+
+
+
+
+.dashboard-card:hover{
+
+    transform: translateY(-5px);
+
+}
+
+
+
+
+
+.card-icon{
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+}
+
+
+
+
+
+.card-icon i{
+
+    font-size: 30px;
+
+}
+
+
+
+
+
+/*==================================================
+=            TABLE BOX
+==================================================*/
+
+.table-box{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+}
+
+
+/*==================================================
+=            BANNER PRINCIPAL
+==================================================*/
+
+.banner{
+
+    background: linear-gradient(135deg,#22c55e,#16a34a);
+
+    color: white;
+
+    border-radius: 20px;
+
+    padding: 40px;
+
+    overflow: hidden;
+
+    margin-bottom: 35px;
+
+}
+
+.banner h1,
+.banner h2{
+
+    font-weight: 700;
+
+}
+
+.banner p{
+
+    opacity: .95;
+
+    margin: 20px 0;
+
+}
+
+.banner img{
+
+    max-width: 320px;
+
+}
+
+
+
+
+
+/*==================================================
+=            BOTONES
+==================================================*/
+
+.btn-success{
+
+    border-radius: 10px;
+
+    padding: 10px 20px;
+
+    font-weight: 600;
+
+}
+
+.btn-outline-success{
+
+    border-radius: 10px;
+
+    font-weight: 600;
+
+}
+
+
+
+
+
+/*==================================================
+=            CATEGORÍAS
+==================================================*/
+
+.category-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+    transition: .3s;
+
+    cursor: pointer;
+
+}
+
+.category-card:hover{
+
+    transform: translateY(-6px);
+
+    background: #22c55e;
+
+    color: white;
+
+}
+
+.category-card i{
+
+    font-size: 45px;
+
+    margin-bottom: 15px;
+
+}
+
+.category-card h6{
+
+    font-weight: 600;
+
+}
+
+
+
+
+
+/*==================================================
+=            TARJETAS DE EMPLEOS
+==================================================*/
+
+.job-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+    transition: .3s;
+
+    height: 100%;
+
+}
+
+.job-card:hover{
+
+    transform: translateY(-6px);
+
+}
+
+.job-card h5{
+
+    font-weight: 700;
+
+}
+
+.job-card p{
+
+    color: #6b7280;
+
+    margin-bottom: 10px;
+
+}
+
+.job-card .badge{
+
+    margin-bottom: 15px;
+
+}
+
+
+
+
+
+/*==================================================
+=            ICONOS
+==================================================*/
+
+.job-card i{
+
+    margin-right: 8px;
+
+}
+
+
+
+
+
+/*==================================================
+=            BUSCADOR
+==================================================*/
+
+.search-job{
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-bottom: 30px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.search-job .form-control{
+
+    border-radius: 10px;
+
+}
+
+.search-job .btn{
+
+    border-radius: 10px;
+
+}
+
+
+
+
+
+/*==================================================
+=            ACCIONES RÁPIDAS
+==================================================*/
+
+.quick-actions .btn{
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+}
+
+
+/*==================================================
+=            PERFIL DEL CANDIDATO
+==================================================*/
+
+.profile-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.profile-card img{
+
+    width: 130px;
+
+    height: 130px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 5px solid #22c55e;
+
+    margin-bottom: 20px;
+
+}
+
+.profile-card h4{
+
+    font-weight: 700;
+
+    margin-bottom: 5px;
+
+}
+
+.profile-card p{
+
+    color: #6b7280;
+
+}
+
+
+
+
+
+/*==================================================
+=            CURRICULUM
+==================================================*/
+
+.cv-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    margin-top: 25px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.cv-card h5{
+
+    font-weight: 700;
+
+    margin-bottom: 20px;
+
+}
+
+
+
+
+
+/*==================================================
+=            ESTADÍSTICAS
+==================================================*/
+
+.stats-card{
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    margin-top: 25px;
+
+    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.stats-card h5{
+
+    font-weight: 700;
+
+    margin-bottom: 20px;
+
+}
+
+.stats-item{
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+
+}
+
+.stats-item:last-child{
+
+    border-bottom: none;
+
+}
+
+
+
+
+
+/*==================================================
+=            TABLAS
+==================================================*/
+
+.table{
+
+    margin-bottom: 0;
+
+}
+
+.table thead{
+
+    background: #f8fafc;
+
+}
+
+.table th{
+
+    font-weight: 600;
+
+}
+
+.table td{
+
+    vertical-align: middle;
+
+}
+
+
+
+
+
+/*==================================================
+=            BADGES
+==================================================*/
+
+.badge{
+
+    padding: 8px 14px;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+}
+
+
+
+
+
+/*==================================================
+=            IMÁGENES
+==================================================*/
+
+.rounded-circle{
+
+    object-fit: cover;
+
+}
+
+
+
+
+
+/*==================================================
+=            FOOTER
+==================================================*/
+
+footer{
+
+    background: white;
+
+    margin-top: 40px;
+
+    border-top: 1px solid #e5e7eb;
+
+}
+
+
+
+
+
+/*==================================================
+=            RESPONSIVE
+==================================================*/
+
+@media(max-width:992px){
+
+    .sidebar{
+
+        display: none;
+
+    }
+
+    .content{
+
+        padding: 20px;
+
+    }
+
+    .banner{
+
+        text-align: center;
+
+    }
+
+    .banner img{
+
+        margin-top: 25px;
+
+    }
+
+}
+
+
+
+
+
+@media(max-width:768px){
+
+    .top-bar{
+
+        flex-direction: column;
+
+        gap: 20px;
+
+    }
+
+    .search-box{
+
+        width: 100%;
+
+    }
+
+    .dashboard-card{
+
+        margin-bottom: 20px;
+
+    }
+
+    .category-card{
+
+        margin-bottom: 20px;
+
+    }
+
+}
+
+
+
+
+
+@media(max-width:576px){
+
+    .content{
+
+        padding: 15px;
+
+    }
+
+    .profile-card{
+
+        padding: 20px;
+
+    }
+
+    .job-card{
+
+        padding: 20px;
+
+    }
+
+}
+
+
+
+
+
 
 /* RESPONSIVE */
 @media(max-width:768px){
