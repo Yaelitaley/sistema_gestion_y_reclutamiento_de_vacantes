@@ -17,79 +17,35 @@ $recientes = $conn->query("SELECT r.nombre_completo, u.correo, e.nombre AS empre
 include "includes/header.php";
 ?>
 
-<div class="d-flex">
 
     <?php include "includes/sidebar.php"; ?>
 
+    <div class="content">
 
-
-    <!-- CONTENIDO -->
-    <div class="content w-100 p-4">
-
-        <!-- TOPBAR -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-
-            <div>
-
-                <h3 class="fw-bold">
-                    ¡Bienvenido, Administrador!
-                </h3>
-
-                <p class="fw-bold">
-                    Gestiona reclutadores, candidatos y vacantes del sistema.
-                </p>
-
-            </div>
-
-            <!-- PERFIL -->
-            <div class="admin-profile d-flex align-items-center">
-
-                <i class="bi bi-bell-fill me-4 fs-5"></i>
-
-                <div class="d-flex align-items-center">
-
-                    <img
-                        src="../assets/img/imagenadministrador.png"
-                        class="rounded-circle me-2"
-                        width="40"
-                        height="40"
-                        alt="Admin">
-
-                    <span class="fw-semibold">
-                        Admin
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
+        <?php include "includes/topbar.php"; ?>
 
 
         <!-- CARDS -->
-        <div class="row g-4 mb-4">
+        <div class=" row g-4 mb-4">
 
             <!-- CARD -->
             <div class="col-md-3">
 
                 <div class="dashboard-card">
 
-                    <div class="card-icon bg-primary-subtle">
+                    <div class="card-icon icon-blue">
 
-                        <i class="bi bi-person-badge-fill text-primary"></i>
+                        <i class="bi bi-person-workspace text-primary"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">
+                        <h3 class="texto fw-bold">
                             <?php echo $totalReclutadores; ?>
                         </h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
                             Reclutadores
                         </p>
 
@@ -108,19 +64,19 @@ include "includes/header.php";
 
                 <div class="dashboard-card">
 
-                    <div class="card-icon bg-success-subtle">
+                   <div class="card-icon icon-green">
 
-                        <i class="bi bi-people-fill text-success"></i>
+                        <i class="bi bi-person-vcard-fill text-success"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">
+                        <h3 class="texto fw-bold">
                             <?php echo $totalCandidatos; ?>
                         </h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
                             Candidatos
                         </p>
 
@@ -139,19 +95,19 @@ include "includes/header.php";
 
                 <div class="dashboard-card">
 
-                    <div class="card-icon bg-warning-subtle">
+                    <div class="card-icon icon-orange">
 
-                        <i class="bi bi-briefcase-fill text-warning"></i>
+                        <i class="bi bi-building-fill-check text-warning"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">
+                        <h3 class="texto fw-bold">
                             <?php echo $totalVacantes; ?>
                         </h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
                             Vacantes
                         </p>
 
@@ -170,19 +126,19 @@ include "includes/header.php";
 
                 <div class="dashboard-card">
 
-                    <div class="card-icon bg-danger-subtle">
+                    <div class="card-icon icon-purple">
 
-                        <i class="bi bi-bar-chart-fill text-danger"></i>
+                        <i class="bi bi-clipboard2-check-fill text-danger"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">
+                        <h3 class="texto fw-bold">
                             <?php echo number_format($totalPostulaciones); ?>
                         </h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
                             Postulaciones
                         </p>
 
@@ -208,12 +164,12 @@ include "includes/header.php";
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
 
-                        <h5 class="fw-bold">
+                        <h5 class="texto fw-bold">
                             Reclutadores recientes
                         </h5>
 
-                        <a href="reclutadores.php"
-                           class="btn btn-primary btn-sm">
+                        <a href="../reclutador/register.php"
+   class="btn btn-dashboard btn-purple w-100 mb-3">
 
                             Ver todos
 
@@ -292,9 +248,9 @@ include "includes/header.php";
 
                          <!-- RECLUTADOR -->
                             <a href="../reclutador/register.php"
-                               class="btn btn-primary w-100 mb-3">
+                               class="btn btn-dashboard btn-blue">
 
-                              <i class="bi bi-person-badge-fill me-2"></i>
+                              <i class="bi bi-person-workspace me-2"></i>
 
                               Agregar Reclutador
 
@@ -306,9 +262,9 @@ include "includes/header.php";
 
                           <!-- CANDIDATO -->
                          <a href="../candidatos/register.php"
-           class="btn btn-success w-100 mb-3">
+                           class="btn btn-dashboard btn-green">
 
-                              <i class="bi bi-people-fill me-2"></i>
+                              <i class="bi bi-person-vcard-fill me-2"></i>
 
                               Agregar Candidato
 
@@ -320,7 +276,7 @@ include "includes/header.php";
 
                          <!-- ADMIN -->
                             <a href="../admin/register.php"
-                              class="btn btn-dark w-100 mb-3">
+                              class="btn btn-dashboard btn-purple">
 
                              <i class="bi bi-shield-lock-fill me-2"></i>
 
@@ -334,7 +290,7 @@ include "includes/header.php";
 
                          <!-- VACANTES -->
                          <a href="../vacantes/vacantes.php"
-                              class="btn btn-warning w-100 mb-3">
+                              class="btn btn-dashboard btn-orange">
 
                               <i class="bi bi-briefcase-fill me-2"></i>
 
@@ -348,9 +304,9 @@ include "includes/header.php";
 
                          <!-- REPORTES -->
                          <a href="../reportes/reportes.php"
-                               class="btn btn-danger w-100">
+                             class="btn btn-dashboard btn-red">
 
-                             <i class="bi bi-bar-chart-fill me-2"></i>
+                             <i class="bi bi-file-earmark-bar-graph-fill me-2"></i>
 
                              Generar Reporte
 
@@ -363,6 +319,5 @@ include "includes/header.php";
 
     </div>
 
-</div>
 
 <?php include "includes/footer.php"; ?>
