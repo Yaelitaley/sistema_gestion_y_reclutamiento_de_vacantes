@@ -29,16 +29,6 @@
 
             </div>
 
-            <a
-                href="perfil.php"
-                class="btn btn-secondary">
-
-                <i class="bi bi-arrow-left me-2"></i>
-
-                Regresar
-
-            </a>
-
         </div>
 
 

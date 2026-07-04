@@ -18,7 +18,7 @@
 
                 <a href="dashboard.php" class="active">
 
-                    <i class="bi bi-house-door-fill"></i>
+                    <i class="bi bi-house-fill"></i>
 
                     Inicio
 
@@ -30,7 +30,7 @@
 
                 <a href="../vacantes/vacantes.php">
 
-                    <i class="bi bi-briefcase-fill"></i>
+                    <i class="bi bi-building-fill-check"></i>
 
                     Vacantes
 

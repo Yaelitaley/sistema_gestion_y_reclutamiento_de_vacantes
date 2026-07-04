@@ -1,8 +1,20 @@
 body{
-    font-family: 'Poppins', sans-serif;
-    background-color: rgb(212, 222, 255);
-}
 
+    font-family:'Poppins',sans-serif;
+
+    margin:0;
+
+    padding:0;
+
+    background:
+linear-gradient(
+135deg,
+#0f172a,
+#1d4ed8,
+#1e3a8a
+);
+
+}
 
 /* IMAGEN */
 .img-fluid{
@@ -28,10 +40,43 @@ body{
 
 
 .btn-reclutador{
-    background-color: #8b5cf6;
-    color: white;
-    border: none;
+
+    background:linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
 }
+.btn-reclutador:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 20px rgba(37,99,235,.35);
+
+}
+
+
+.table-box{
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    color:white;
+
+}
+
+.table-box .row{
+
+    padding:10px 0;
+
+}
+
 
 
 
@@ -55,6 +100,29 @@ body{
     font-size: 35px;
 }
 
+.card-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:16px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-shrink:0;
+
+}
+
+.card-icon i{
+
+    font-size:30px;
+
+}
 /* LINKS */
 .forgot-password{
     text-decoration: none;
@@ -84,29 +152,57 @@ body{
     gap: 10px;
 }
 .top-bar{
-    background-color: white;
 
-    padding: 15px 25px;
+    display:flex;
 
-    display: flex;
-    align-items: center;
+    justify-content:space-between;
 
-    gap: 10px;
+    align-items:center;
 
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding:18px 25px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
 }
 
 .sidebar{
-    width: 260px;
-    min-height: 100vh;
 
-    background-color: #111827;
+    position:fixed;
 
-    padding: 20px;
+    top:0;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    left:-260px;
+
+    width:260px;
+
+    height:100vh;
+
+    background:#111827;
+
+    padding:22px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    transition:left .35s ease;
+
+    z-index:9999;
+
+}
+
+.sidebar.active{
+
+    left:0;
+
 }
 /* LOGO */
 .logo{
@@ -152,14 +248,18 @@ body{
 
 /* HOVER */
 .menu a:hover{
-    background-color: #2563eb;
-    color: white;
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+    color:white;
+
 }
 
 /* ACTIVE */
 .menu .active{
-    background-color: #2563eb;
-    color: white;
+
+    background:linear-gradient(135deg,#2563eb,#3b82f6);
+
 }
 
 /* LOGOUT */
@@ -173,6 +273,71 @@ body{
 
     gap: 10px;
 }
+.dashboard-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    padding:22px;
+
+}
+.dashboard-card:hover{
+
+    transform:translateY(-5px);
+
+    background:rgba(255,255,255,.18);
+
+}
+
+
+.row{
+    text-align: center;
+}
+
+.recruiter-profile{
+
+    display:flex;
+    align-items:center;
+    gap:18px;
+
+    padding:12px 22px;
+
+    border-radius:16px;
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.action-box{
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
+    border-radius:18px;
+
+    color:white;
+
+    padding:28px;
+
+}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -180,5 +345,53 @@ body{
     .left-panel{
         display: none;
     }
+
+}
+
+.content{
+
+    flex: 1;
+
+    width: 100%;
+
+    padding: 30px;
+
+    margin-left: 0;
+
+    transition: margin-left .35s ease;
+
+}
+
+.content.sidebar-open{
+
+    margin-left: 260px;
+
+}
+
+
+/* TEXTO GENERAL */
+.texto,
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content p,
+.content span,
+.content label{
+    color:#fff;
+}
+
+.content table{
+    color:#fff;
+}
+
+.table th{
+    color:#fff;
+}
+
+.table td{
+
+    color:#eef2ff;
 
 }

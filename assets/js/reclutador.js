@@ -1,23 +1,88 @@
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function () {
 
-    // en este caso, se seleccionan todos los botones con la clase "btnEliminar" para agregarles un evento de clic que muestre una alerta de confirmación antes de eliminar un reclutador. Si el usuario confirma la eliminación, se muestra una alerta indicando que el reclutador ha sido eliminado correctamente.
+    /*=========================================
+    =            BOTÓN MENÚ SIDEBAR
+    =========================================*/
+
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.querySelector(".sidebar");
+    const content = document.querySelector(".content");
+
+    if (menuToggle && sidebar && content) {
+
+        menuToggle.addEventListener("click", function (e) {
+
+            e.stopPropagation();
+
+            sidebar.classList.toggle("active");
+            content.classList.toggle("sidebar-open");
+
+        });
+
+    }
+
+    /*=========================================
+    =            CERRAR SIDEBAR
+    =========================================*/
+
+    document.addEventListener("click", function (e) {
+
+        if (
+            sidebar &&
+            content &&
+            sidebar.classList.contains("active") &&
+            !sidebar.contains(e.target) &&
+            !menuToggle.contains(e.target)
+        ) {
+
+            sidebar.classList.remove("active");
+            content.classList.remove("sidebar-open");
+
+        }
+
+    });
+
+    /*=========================================
+    =            CONFIRMAR LOGOUT
+    =========================================*/
+
+    const btnLogout = document.getElementById("btnLogout");
+
+    if (btnLogout) {
+
+        btnLogout.addEventListener("click", function (e) {
+
+            const confirmar = confirm("¿Deseas cerrar sesión?");
+
+            if (!confirmar) {
+
+                e.preventDefault();
+
+            }
+
+        });
+
+    }
+
+    /*=========================================
+    =            ELIMINAR RECLUTADOR
+    =========================================*/
+
     const botonesEliminar = document.querySelectorAll(".btnEliminar");
 
+    botonesEliminar.forEach(function (boton) {
 
+        boton.addEventListener("click", function (e) {
 
-    botonesEliminar.forEach(function(boton){
+            e.preventDefault();
 
-        boton.addEventListener("click", function(){
-
-            // mensaje de confirmacion
             const confirmar = confirm("¿Deseas eliminar este reclutador?");
 
-
-
-            // si elige si manda un alerta de eliminado correctamente
-            if(confirmar){
+            if (confirmar) {
 
                 alert("Reclutador eliminado correctamente.");
+
+                // Aquí posteriormente irá el fetch o AJAX para eliminar.
 
             }
 
@@ -25,17 +90,26 @@ document.addEventListener("DOMContentLoaded", function(){
 
     });
 
-});
+    /*=========================================
+    =            EFECTO HOVER CARDS
+    =========================================*/
 
-document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".dashboard-card");
 
-    const btnLogout = document.getElementById("btnLogout");
+    cards.forEach(function(card){
 
-    if (btnLogout) {
-        btnLogout.addEventListener("click", function (e) {
-            const confirmar = confirm("¿Deseas cerrar sesión?");
-            if (!confirmar) {
-                e.preventDefault();
-            }
+        card.addEventListener("mouseenter", function(){
+
+            card.style.transform = "translateY(-6px)";
+
         });
-    }});
+
+        card.addEventListener("mouseleave", function(){
+
+            card.style.transform = "translateY(0px)";
+
+        });
+
+    });
+
+});

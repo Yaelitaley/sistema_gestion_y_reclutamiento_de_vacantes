@@ -8,22 +8,6 @@
 
         <?php include "includes/topbar.php"; ?>
 
-        <!-- TITULO -->
-        <div class="mb-4">
-
-            <h2 class="fw-bold">
-
-                ¡Bienvenido, Reclutador!
-
-            </h2>
-
-            <p class="text-muted">
-
-                Encuentra y administra candidatos para tus vacantes.
-
-            </p>
-
-        </div>
 
         <!-- CARDS -->
         <div class="row g-4 mb-4">
@@ -34,15 +18,15 @@
 
                     <div class="card-icon bg-primary-subtle">
 
-                        <i class="bi bi-briefcase-fill text-primary"></i>
+                        <i class="bi bi-building-check text-primary"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">8</h3>
+                        <h3 class="texto fw-bold">8</h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
 
                             Vacantes Activas
 
@@ -60,15 +44,15 @@
 
                     <div class="card-icon bg-success-subtle">
 
-                        <i class="bi bi-people-fill text-success"></i>
+                        <i class="bi bi-person-vcard-fill text-success"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">134</h3>
+                        <h3 class="texto fw-bold">134</h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto  mb-0">
 
                             Postulantes
 
@@ -86,15 +70,15 @@
 
                     <div class="card-icon bg-warning-subtle">
 
-                        <i class="bi bi-calendar-event-fill text-warning"></i>
+                        <i class="bi bi-calendar2-check-fill text-warning"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">15</h3>
+                        <h3 class="texto fw-bold">15</h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto  mb-0">
 
                             Entrevistas
 
@@ -112,15 +96,15 @@
 
                     <div class="card-icon bg-info-subtle">
 
-                        <i class="bi bi-check2-square text-info"></i>
+                        <i class="bi bi-envelope-check-fill text-info"></i>
 
                     </div>
 
                     <div>
 
-                        <h3 class="fw-bold">5</h3>
+                        <h3 class="texto fw-bold">5</h3>
 
-                        <p class="text-muted mb-0">
+                        <p class="texto mb-0">
 
                             Ofertas Enviadas
 
@@ -144,7 +128,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
 
-                        <h5 class="fw-bold">
+                        <h5 class="texto fw-bold">
 
                             Mis Procesos Activos
 
@@ -252,7 +236,7 @@
 
                 <div class="action-box">
 
-                    <h5 class="fw-bold mb-4">
+                    <h5 class="texto fw-bold mb-4">
 
                         Próximas Entrevistas
 
@@ -260,13 +244,13 @@
 
                     <div class="mb-4">
 
-                        <h6 class="fw-bold">
+                        <h6 class="texto fw-bold">
 
                             Ana López
 
                         </h6>
 
-                        <small class="text-muted">
+                        <small class="texto text-muted">
 
                             Desarrollador Backend
 
@@ -284,13 +268,13 @@
 
                     <div class="mb-4">
 
-                        <h6 class="fw-bold">
+                        <h6 class="texto fw-bold">
 
                             Diego Martínez
 
                         </h6>
 
-                        <small class="text-muted">
+                        <small class="texto text-muted">
 
                             Diseñador UI
 
@@ -326,7 +310,7 @@
 
                 <div class="table-box">
 
-                    <h5 class="fw-bold mb-4">
+                    <h5 class="texto fw-bold mb-4">
 
                         Etapas de Reclutamiento
 
