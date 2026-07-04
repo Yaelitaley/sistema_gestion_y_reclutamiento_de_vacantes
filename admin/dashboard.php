@@ -258,7 +258,7 @@ include "includes/header.php";
 
 
 
-
+<br><br>
 
                           <!-- CANDIDATO -->
                          <a href="../candidatos/register.php"
@@ -271,7 +271,7 @@ include "includes/header.php";
                             </a>
 
 
-
+<br><br>
 
 
                          <!-- ADMIN -->
@@ -285,7 +285,7 @@ include "includes/header.php";
                          </a>
 
 
-
+<br><br>
 
 
                          <!-- VACANTES -->
@@ -298,8 +298,8 @@ include "includes/header.php";
 
                          </a>
 
-
-
+<br>
+<br>
 
 
                          <!-- REPORTES -->
@@ -308,7 +308,7 @@ include "includes/header.php";
 
                              <i class="bi bi-file-earmark-bar-graph-fill me-2"></i>
 
-                             Generar Reporte
+                             Ver Reporte
 
                          </a>
 

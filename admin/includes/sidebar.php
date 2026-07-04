@@ -34,7 +34,7 @@
 
             <li>
 
-                <a href="../reclutador/index_reclutador.php">
+                <a href="index_reclutador.php">
 
                     <i class="bi bi-person-badge-fill"></i>
 
@@ -50,7 +50,7 @@
 
             <li>
 
-                <a href="../candidatos/index_candidatos.php">
+                <a href="index_candidatos.php">
 
                     <i class="bi bi-people-fill"></i>
 
@@ -62,7 +62,7 @@
 
             <li>
 
-                <a href="../admin/index_administrador.php">
+                <a href="index_administrador.php">
 
                     <i class="bi bi-people-fill"></i>
 
@@ -77,7 +77,7 @@
 
             <li>
 
-                <a href="../vacantes/vacantes.php">
+                <a href="vacantes.php">
 
                     <i class="bi bi-briefcase-fill"></i>
 
@@ -93,7 +93,7 @@
 
             <li>
 
-                <a href="../reportes/reportes.php">
+                <a href="reportes.php">
 
                     <i class="bi bi-bar-chart-fill"></i>
 
@@ -109,7 +109,7 @@
 
             <li>
 
-                <a href="../admin/configuracion.php">
+                <a href="configuracion.php">
 
                     <i class="bi bi-gear-fill"></i>
 
