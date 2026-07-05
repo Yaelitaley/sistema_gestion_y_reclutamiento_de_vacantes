@@ -1,7 +1,7 @@
 <?php
 
 $host     = 'localhost';
-$dbname   = 'sistema_reclutamiento';
+$dbname   = 'reclutamiento_vacantes';
 $user     = 'root';
 $password = '';
 
