@@ -1,24 +1,16 @@
 <div class="top-bar d-flex justify-content-between align-items-center mb-4 ">
 
-    <!-- BUSCADOR -->
-    <div class="search-box w-50">
-
-        <div class="input-group">
-
-            <span class="input-group-text bg-white border-end-0">
-
-                <i class="bi bi-search text-secondary"></i>
-
-            </span>
-
-            <input
-                type="text"
-                class="form-control border-start-0"
-                placeholder="Buscar empleos, empresas o categorías...">
-
+     <!-- ENCABEZADO -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <h2 class="fw-bold">
+                    ¡Bienvenido, Candidato!
+                </h2>
+                <p class="text-muted">
+                    Encuentra el empleo ideal para impulsar tu carrera profesional.
+                </p>
+            </div>
         </div>
-
-    </div>
 
 
 
