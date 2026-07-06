@@ -125,18 +125,6 @@ body{
     gap: 10px;
 }
 
-.top-bar{
-    background-color: white;
-
-    padding: 15px 25px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 10px;
-
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
 
 /*==================================================
 =            CONTENIDO PRINCIPAL
@@ -476,7 +464,16 @@ body{
 
 }
 
+.card{
+    background:rgba(255,255,255,.12);
 
+    
+
+    justify-content: center;
+
+    align-items: center;
+
+}
 
 .card-icon{
 
@@ -535,17 +532,19 @@ body{
 
 .banner{
 
-    background: linear-gradient(135deg,#22c55e,#16a34a);
+    background:rgba(255,255,255,.12);
 
-    color: white;
+    border:1px solid rgba(255,255,255,.15);
 
-    border-radius: 20px;
+    backdrop-filter:blur(15px);
 
-    padding: 40px;
+    -webkit-backdrop-filter:blur(15px);
 
-    overflow: hidden;
+    border-radius:20px;
 
-    margin-bottom: 35px;
+    padding:40px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.20);
 
 }
 
@@ -660,17 +659,13 @@ body{
 
 .job-card{
 
-    background: white;
+    background:rgba(255,255,255,.12);
 
-    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.15);
 
-    padding: 25px;
+    backdrop-filter:blur(15px);
 
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
-
-    transition:.35s;
-
-    height: 100%;
+    color:white;
 
 }
 
@@ -726,15 +721,11 @@ body{
 
 .search-job{
 
-    background: white;
+    background:rgba(255,255,255,.12);
 
-    border-radius: 15px;
+    border:1px solid rgba(255,255,255,.15);
 
-    padding: 20px;
-
-    margin-bottom: 30px;
-
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    backdrop-filter:blur(15px);
 
 }
 
@@ -791,15 +782,11 @@ body{
 
 .profile-card{
 
-    background: white;
+    background:rgba(255,255,255,.12);
 
-    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.15);
 
-    padding: 30px;
-
-    text-align: center;
-
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    backdrop-filter:blur(15px);
 
 }
 
@@ -843,15 +830,11 @@ body{
 
 .cv-card{
 
-    background: white;
+    background:rgba(255,255,255,.12);
 
-    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.15);
 
-    padding: 25px;
-
-    margin-top: 25px;
-
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    backdrop-filter:blur(15px);
 
 }
 
@@ -873,15 +856,11 @@ body{
 
 .stats-card{
 
-    background: white;
+    background:rgba(255,255,255,.12);
 
-    border-radius: 18px;
+    border:1px solid rgba(255,255,255,.15);
 
-    padding: 25px;
-
-    margin-top: 25px;
-
-    box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    backdrop-filter:blur(15px);
 
 }
 
@@ -929,7 +908,7 @@ body{
 
 .table thead{
 
-    background: #f8fafc;
+    background:rgba(255,255,255,.08);
 
 }
 
@@ -987,11 +966,9 @@ body{
 
 footer{
 
-    background: white;
+    background:transparent;
 
-    margin-top: 40px;
-
-    border-top: 1px solid #e5e7eb;
+    border-top:1px solid rgba(255,255,255,.15);
 
 }
 

@@ -6,17 +6,6 @@
     <div class="content w-100 p-4">
         <!-- TOPBAR -->
         <?php include "includes/topbar.php"; ?>
-        <!-- ENCABEZADO -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold">
-                    ¡Bienvenido, Candidato!
-                </h2>
-                <p class="text-muted">
-                    Encuentra el empleo ideal para impulsar tu carrera profesional.
-                </p>
-            </div>
-        </div>
 
 
 
