@@ -17,6 +17,39 @@ if (!function_exists('redirect_to')) {
     }
 }
 
+if (!function_exists('require_admin_login')) {
+    /**
+     * Protege las páginas del panel de administrador.
+     * Si no hay sesión activa con rol de Super Usuario (1) o Administrador (2),
+     * redirige al login del admin.
+     */
+    function require_admin_login() {
+        if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || !in_array((int) $_SESSION['rol_id'], [1, 2], true)) {
+            redirect_to('login.php');
+        }
+    }
+}
+
+if (!function_exists('is_admin_logged_in')) {
+    function is_admin_logged_in() {
+        return isset($_SESSION['usuario_id']) && isset($_SESSION['rol_id']) && in_array((int) $_SESSION['rol_id'], [1, 2], true);
+    }
+}
+
+if (!function_exists('require_admin_login_json')) {
+    /**
+     * Protege endpoints que responden JSON (llamados por fetch/AJAX).
+     * Si no hay sesión de admin válida, responde con error y corta la ejecución.
+     */
+    function require_admin_login_json() {
+        if (!is_admin_logged_in()) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Sesión no válida. Inicia sesión de nuevo.']);
+            exit;
+        }
+    }
+}
+
 if (!function_exists('badge_estado')) {
     function badge_estado($estado) {
         $estado = trim((string) $estado);

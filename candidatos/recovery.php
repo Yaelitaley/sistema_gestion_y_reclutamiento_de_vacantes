@@ -20,7 +20,7 @@
                     </h1>
 
                     <p class="mt-3 fw-bold">
-                        Recupera el acceso al panel de reclutador
+                        Recupera el acceso a tu cuenta de candidato
                     </p>
 
                     <img
@@ -36,8 +36,8 @@
                     <i class="bi bi-shield-lock-fill"></i>
 
                     <span>
-                        El sistema enviará un enlace seguro
-                        al correo registrado.
+                        Usa tu clave de seguridad para
+                        restablecer tu contraseña.
                     </span>
 
                 </div>
@@ -54,7 +54,7 @@
 
                         <div class="login-icon bg-candidato">
 
-                            <i class="bi bi-envelope-lock-fill"></i>
+                            <i class="bi bi-shield-lock-fill"></i>
 
                         </div>
 
@@ -72,7 +72,7 @@
                     <form id="recoveryForm">
 
                         <!-- CORREO -->
-                        <div class="mb-4">
+                        <div class="mb-3">
 
                             <label class="form-label fw-bold">
                                 Correo electrónico
@@ -87,9 +87,77 @@
                                 <input
                                     type="email"
                                     id="correoRecovery"
-                                    name="correo"
                                     class="form-control"
                                     placeholder="Ingresa tu correo">
+
+                            </div>
+
+                        </div>
+
+                        <!-- CLAVE DE SEGURIDAD -->
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Clave de seguridad
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-shield-lock-fill"></i>
+                                </span>
+
+                                <input
+                                    type="text"
+                                    id="claveSeguridadRecovery"
+                                    class="form-control"
+                                    placeholder="La que registraste">
+
+                            </div>
+
+                        </div>
+
+                        <!-- NUEVA CONTRASEÑA -->
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Nueva contraseña
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock-fill"></i>
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="nuevaPassword"
+                                    class="form-control"
+                                    placeholder="********">
+
+                            </div>
+
+                        </div>
+
+                        <!-- CONFIRMAR NUEVA CONTRASEÑA -->
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Confirmar nueva contraseña
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock-fill"></i>
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="confirmNuevaPassword"
+                                    class="form-control"
+                                    placeholder="********">
 
                             </div>
 
@@ -99,7 +167,7 @@
                         <button type="submit"
                                 id="btnRecovery"
                                 class="btn btn-candidato w-100">
-                            Enviar enlace de recuperación
+                            Restablecer contraseña
                         </button>
 
                         <!-- MENSAJE -->
@@ -113,25 +181,6 @@
                         <a href="login.php" class="forgot-password">
                             ← Volver al inicio de sesión
                         </a>
-
-                    </div>
-
-                    <!-- ALERT -->
-                    <div class="alert-box mt-4">
-
-                        <i class="bi bi-info-circle-fill"></i>
-
-                        <div>
-
-                            <strong>
-                                Recuperación segura
-                            </strong>
-
-                            <p class="mb-0">
-                                Revisa tu correo electrónico para continuar con el proceso.
-                            </p>
-
-                        </div>
 
                     </div>
 
@@ -152,14 +201,43 @@ document.getElementById('recoveryForm').addEventListener('submit', function (e) 
     const btn     = document.getElementById('btnRecovery');
     const mensaje = document.getElementById('mensajeRecovery');
 
+    const correo          = document.getElementById('correoRecovery').value.trim();
+    const claveSeguridad  = document.getElementById('claveSeguridadRecovery').value.trim();
+    const nuevaPassword   = document.getElementById('nuevaPassword').value;
+    const confirmPassword = document.getElementById('confirmNuevaPassword').value;
+
     mensaje.className   = 'alert mt-3 d-none';
     mensaje.textContent = '';
 
+    if (!correo || !claveSeguridad || !nuevaPassword || !confirmPassword) {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Rellena todos los campos.';
+        return;
+    }
+
+    if (nuevaPassword.length < 6) {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'La nueva contraseña debe tener mínimo 6 caracteres.';
+        return;
+    }
+
+    if (nuevaPassword !== confirmPassword) {
+        mensaje.classList.remove('d-none');
+        mensaje.classList.add('alert-danger');
+        mensaje.textContent = 'Las contraseñas no coinciden.';
+        return;
+    }
+
     btn.disabled    = true;
-    btn.textContent = 'Enviando...';
+    btn.textContent = 'Procesando...';
 
     const formData = new FormData();
-    formData.append('correo', document.getElementById('correoRecovery').value.trim());
+    formData.append('correo', correo);
+    formData.append('claveSeguridad', claveSeguridad);
+    formData.append('nuevaPassword', nuevaPassword);
+    formData.append('confirmPassword', confirmPassword);
 
     fetch('actions/recovery_candidato.php', {
         method: 'POST',
@@ -170,19 +248,23 @@ document.getElementById('recoveryForm').addEventListener('submit', function (e) 
         mensaje.classList.remove('d-none');
         if (data.success) {
             mensaje.classList.add('alert-success');
+            mensaje.textContent = data.message;
+            setTimeout(function () {
+                window.location.href = 'login.php';
+            }, 1500);
         } else {
             mensaje.classList.add('alert-danger');
+            mensaje.textContent = data.message;
+            btn.disabled    = false;
+            btn.textContent = 'Restablecer contraseña';
         }
-        mensaje.textContent = data.message;
-        btn.disabled    = false;
-        btn.textContent = 'Enviar enlace de recuperación';
     })
     .catch(() => {
         mensaje.classList.remove('d-none');
         mensaje.classList.add('alert-danger');
         mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
         btn.disabled    = false;
-        btn.textContent = 'Enviar enlace de recuperación';
+        btn.textContent = 'Restablecer contraseña';
     });
 });
 </script>

@@ -1,28 +1,5 @@
 <?php
 
-require_once '../config/config.php';
-require_once '../config/connection.php';
-
-$id = $_GET['id'] ?? null;
-
-if (!$id) {
-    header("Location: index_administrador.php");
-    exit;
-}
-
-$stmt = $conn->prepare("SELECT id, nombre_completo, correo FROM usuarios WHERE id = ? AND rol_id IN (1,2)");
-$stmt->bind_param('i', $id);
-$stmt->execute();
-$admin = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-if (!$admin) {
-    header("Location: index_administrador.php");
-    exit;
-}
-
-include "includes/header.php";
-
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
@@ -58,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $admin) {
     $estado = trim($_POST['estado'] ?? 'Activo');
     $password = trim($_POST['password'] ?? '');
     $confirmPassword = trim($_POST['confirmPassword'] ?? '');
+    $claveSeguridad = trim($_POST['clave_seguridad'] ?? '');
+    $confirmClaveSeguridad = trim($_POST['confirm_clave_seguridad'] ?? '');
 
     if ($nombre === '' || $correo === '' || $empresa === '') {
         $mensaje = 'Nombre, correo y empresa son obligatorios.';
@@ -73,6 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $admin) {
         $tipoMensaje = 'danger';
     } elseif ($password !== $confirmPassword) {
         $mensaje = 'Las contraseñas no coinciden.';
+        $tipoMensaje = 'danger';
+    } elseif ($claveSeguridad !== '' && strlen($claveSeguridad) < 4) {
+        $mensaje = 'La clave de seguridad debe tener al menos 4 caracteres.';
+        $tipoMensaje = 'danger';
+    } elseif ($claveSeguridad !== $confirmClaveSeguridad) {
+        $mensaje = 'La clave de seguridad no coincide con su confirmación.';
         $tipoMensaje = 'danger';
     } elseif (!in_array($estado, ['Activo', 'Pendiente', 'Bloqueado', 'Inactivo'], true)) {
         $mensaje = 'El estado seleccionado no es válido.';
@@ -96,10 +81,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $admin) {
                 $stmt->execute();
                 $stmt->close();
 
-                if ($password !== '') {
+                if ($password !== '' && $claveSeguridad !== '') {
+                    $hash = password_hash($password, PASSWORD_BCRYPT);
+                    $hashClave = password_hash($claveSeguridad, PASSWORD_BCRYPT);
+                    $stmt = $conn->prepare('UPDATE usuarios SET email = ?, correo = ?, password = ?, clave_seguridad = ? WHERE id = ?');
+                    $stmt->bind_param('ssssi', $correo, $correo, $hash, $hashClave, $admin['usuario_id']);
+                } elseif ($password !== '') {
                     $hash = password_hash($password, PASSWORD_BCRYPT);
                     $stmt = $conn->prepare('UPDATE usuarios SET email = ?, correo = ?, password = ? WHERE id = ?');
                     $stmt->bind_param('sssi', $correo, $correo, $hash, $admin['usuario_id']);
+                } elseif ($claveSeguridad !== '') {
+                    $hashClave = password_hash($claveSeguridad, PASSWORD_BCRYPT);
+                    $stmt = $conn->prepare('UPDATE usuarios SET email = ?, correo = ?, clave_seguridad = ? WHERE id = ?');
+                    $stmt->bind_param('sssi', $correo, $correo, $hashClave, $admin['usuario_id']);
                 } else {
                     $stmt = $conn->prepare('UPDATE usuarios SET email = ?, correo = ? WHERE id = ?');
                     $stmt->bind_param('ssi', $correo, $correo, $admin['usuario_id']);
@@ -131,88 +125,6 @@ include 'includes/header.php';
     <?php include 'includes/sidebar.php'; ?>
 
     <div class="content w-100 p-4">
-
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold">Editar Administrador</h3>
-                <p class="text-muted">Modifica la información del Administrador.</p>
-            </div>
-        </div>
-
-        <div class="table-box">
-
-            <form id="editForm">
-
-                <input type="hidden" id="adminId" value="<?php echo htmlspecialchars($admin['id']); ?>">
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Nombre completo</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                        <input
-                            type="text"
-                            id="nombre"
-                            class="form-control"
-                            value="<?php echo htmlspecialchars($admin['nombre_completo'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Correo electrónico</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                        <input
-                            type="email"
-                            id="correo"
-                            class="form-control"
-                            value="<?php echo htmlspecialchars($admin['correo']); ?>">
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Nueva contraseña</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input
-                            type="password"
-                            id="password"
-                            class="form-control"
-                            placeholder="Déjalo vacío si no la quieres cambiar">
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Confirmar contraseña</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            class="form-control"
-                            placeholder="Confirmar contraseña">
-                    </div>
-                </div>
-
-                <div id="mensaje" class="alert mt-3 d-none"></div>
-
-                <div class="d-flex gap-3">
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-floppy-fill me-2"></i>
-                        Guardar cambios
-                    </button>
-
-                    <a href="javascript:history.back()" class="cancel-link">
-                        Regresar
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
-
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -283,6 +195,25 @@ include 'includes/header.php';
                         </div>
                     </div>
 
+                    <hr class="my-4">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Clave de seguridad personal</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" name="clave_seguridad" id="clave_seguridad" class="form-control" placeholder="Dejar vacío para no cambiarla" minlength="4">
+                        </div>
+                        <small class="text-muted">Se usa junto con tu correo para recuperar tu contraseña si la olvidas. Solo tú debes conocerla.</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Confirmar clave de seguridad</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" name="confirm_clave_seguridad" id="confirm_clave_seguridad" class="form-control" placeholder="Confirmar clave de seguridad" minlength="4">
+                        </div>
+                    </div>
+
                     <div class="d-flex gap-3">
                         <button type="submit" class="btn btn-primary"><i class="bi bi-floppy-fill me-2"></i>Guardar cambios</button>
                         <a href="index_administrador.php" class="cancel-link">Regresar</a>
@@ -295,4 +226,3 @@ include 'includes/header.php';
 </div>
 
 <?php include 'includes/footer.php'; ?>
-

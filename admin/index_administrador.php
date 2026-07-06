@@ -3,6 +3,8 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
 
+require_admin_login();
+
 $mensaje = $_GET['msg'] ?? '';
 $tipoMensaje = $_GET['type'] ?? 'success';
 $tablasOk = admin_required_tables_ok($conn, ['usuarios', 'administradores']);

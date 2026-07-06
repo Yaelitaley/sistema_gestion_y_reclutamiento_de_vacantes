@@ -1,6 +1,9 @@
 <?php
 require_once '../config/config.php';
 require_once '../config/connection.php';
+require_once '../config/app_helpers.php';
+
+require_admin_login();
 
 $totalReclutadores  = $conn->query("SELECT COUNT(*) AS total FROM reclutadores")->fetch_assoc()['total'];
 $totalCandidatos     = $conn->query("SELECT COUNT(*) AS total FROM candidatos")->fetch_assoc()['total'];

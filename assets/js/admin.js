@@ -210,94 +210,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-        /*==========================================
-    =            RECUPERAR CONTRASEÑA
+    /*==========================================
+    =      RECUPERAR / CAMBIAR CONTRASEÑA ADMIN
     ==========================================*/
 
-    const recoveryForm = document.getElementById("recoveryForm");
+    const changePasswordForm = document.getElementById("changePasswordForm");
 
-    if(recoveryForm){
+    if (changePasswordForm) {
 
-        recoveryForm.addEventListener("submit", function(e){
-
+        changePasswordForm.addEventListener("submit", function (e) {
             e.preventDefault();
 
-            const btn = document.getElementById("btnRecovery");
+            const btn     = document.getElementById("btnRecovery");
             const mensaje = document.getElementById("mensaje");
 
-            mensaje.className = "alert mt-3 d-none";
+            mensaje.className   = "alert mt-3 d-none";
             mensaje.textContent = "";
 
-            btn.disabled = true;
-            btn.textContent = "Enviando...";
+            const correo          = document.getElementById("correo").value.trim();
+            const password        = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm_password").value;
 
-            const formData = new FormData();
-
-            formData.append(
-                "correo",
-                document.getElementById("correo").value.trim()
-            );
-
-            formData.append(
-                "password",
-                document.getElementById("password").value
-            );
-
-            formData.append(
-                "confirm_password",
-                document.getElementById("confirm_password").value
-            );
-
-            fetch("actions/recovery_admin.php",{
-
-                method:"POST",
-
-                body:formData
-
-            })
-
-            .then(res=>res.json())
-
-            .then(data=>{
-
-                mensaje.classList.remove("d-none");
-
-                if(data.success){
-
-                    mensaje.classList.add("alert-success");
-
-                }else{
-
-                    mensaje.classList.add("alert-danger");
-
-                }
-
-                mensaje.textContent = data.message;
-
-                btn.disabled = false;
-                btn.textContent = "Enviar enlace de recuperación";
-
-            })
-
-            .catch(()=>{
-
+            if (!correo || !password || !confirmPassword) {
                 mensaje.classList.remove("d-none");
                 mensaje.classList.add("alert-danger");
+                mensaje.textContent = "Todos los campos son obligatorios.";
+                return;
+            }
 
-                mensaje.textContent = "Error de conexión.";
+            if (password !== confirmPassword) {
+                mensaje.classList.remove("d-none");
+                mensaje.classList.add("alert-danger");
+                mensaje.textContent = "Las contraseñas no coinciden.";
+                return;
+            }
 
-                btn.disabled = false;
-                btn.textContent = "Enviar enlace de recuperación";
+            btn.disabled    = true;
+            btn.textContent = "Actualizando...";
 
+            const formData = new FormData();
+            formData.append("correo", correo);
+            formData.append("password", password);
+            formData.append("confirm_password", confirmPassword);
+
+            fetch("actions/change_password_admin.php", {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                mensaje.classList.remove("d-none");
+                if (data.success) {
+                    mensaje.classList.add("alert-success");
+                    mensaje.textContent = data.message + " Redirigiendo al inicio de sesión...";
+                    setTimeout(() => {
+                        window.location.href = "login.php";
+                    }, 2000);
+                } else {
+                    mensaje.classList.add("alert-danger");
+                    mensaje.textContent = data.message;
+                    btn.disabled    = false;
+                    btn.textContent = "Actualizar contraseña";
+                }
+            })
+            .catch(() => {
+                mensaje.classList.remove("d-none");
+                mensaje.classList.add("alert-danger");
+                mensaje.textContent = "Error de conexión. Intenta de nuevo.";
+                btn.disabled    = false;
+                btn.textContent = "Actualizar contraseña";
             });
-
         });
 
     }
-
-
-
-
 
     /*==========================================
     =            EDITAR ADMINISTRADOR

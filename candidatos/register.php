@@ -159,6 +159,37 @@
 
 
 
+                <!-- CLAVE DE SEGURIDAD -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-bold">
+                        Clave de Seguridad
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            id="claveSeguridad"
+                            class="form-control"
+                            placeholder="Clave de seguridad">
+
+                    </div>
+
+                    <small class="text-muted">
+                        La necesitarás si olvidas tu contraseña.
+                    </small>
+
+                </div>
+
+
+
+
+
                 <!-- MENSAJE -->
                 <div
                     id="mensaje"

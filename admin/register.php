@@ -21,8 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk) {
     $valores['estado'] = trim($_POST['estado'] ?? 'Activo');
     $password = trim($_POST['password'] ?? '');
     $confirmPassword = trim($_POST['confirmPassword'] ?? '');
+    $claveSeguridad = trim($_POST['clave_seguridad'] ?? '');
+    $confirmClaveSeguridad = trim($_POST['confirm_clave_seguridad'] ?? '');
 
-    if ($valores['nombre'] === '' || $valores['correo'] === '' || $valores['empresa'] === '' || $password === '' || $confirmPassword === '') {
+    if ($valores['nombre'] === '' || $valores['correo'] === '' || $valores['empresa'] === '' || $password === '' || $confirmPassword === '' || $claveSeguridad === '' || $confirmClaveSeguridad === '') {
         $mensaje = 'Todos los campos son obligatorios.';
         $tipoMensaje = 'danger';
     } elseif (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/u', $valores['nombre'])) {
@@ -36,6 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk) {
         $tipoMensaje = 'danger';
     } elseif ($password !== $confirmPassword) {
         $mensaje = 'Las contraseñas no coinciden.';
+        $tipoMensaje = 'danger';
+    } elseif (strlen($claveSeguridad) < 4) {
+        $mensaje = 'La clave de seguridad debe tener al menos 4 caracteres.';
+        $tipoMensaje = 'danger';
+    } elseif ($claveSeguridad !== $confirmClaveSeguridad) {
+        $mensaje = 'La clave de seguridad no coincide con su confirmación.';
         $tipoMensaje = 'danger';
     } elseif (!in_array($valores['estado'], ['Activo', 'Pendiente', 'Bloqueado', 'Inactivo'], true)) {
         $mensaje = 'El estado seleccionado no es válido.';
@@ -57,9 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk) {
             try {
                 $rolId = 2;
                 $hash = password_hash($password, PASSWORD_BCRYPT);
+                $hashClaveSeguridad = password_hash($claveSeguridad, PASSWORD_BCRYPT);
 
-                $stmt = $conn->prepare('INSERT INTO usuarios (rol_id, email, password, correo) VALUES (?, ?, ?, ?)');
-                $stmt->bind_param('isss', $rolId, $valores['correo'], $hash, $valores['correo']);
+                $stmt = $conn->prepare('INSERT INTO usuarios (rol_id, email, password, correo, clave_seguridad) VALUES (?, ?, ?, ?, ?)');
+                $stmt->bind_param('issss', $rolId, $valores['correo'], $hash, $valores['correo'], $hashClaveSeguridad);
                 $stmt->execute();
                 $usuarioId = $conn->insert_id;
                 $stmt->close();
@@ -163,8 +172,30 @@ include 'includes/header.php';
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Clave de Seguridad Personal</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" name="clave_seguridad" id="clave_seguridad" class="form-control" placeholder="Clave de seguridad" required minlength="4">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Confirmar Clave de Seguridad</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" name="confirm_clave_seguridad" id="confirm_clave_seguridad" class="form-control" placeholder="Confirmar clave de seguridad" required minlength="4">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="text-center mb-4">
-                    <small class="text-muted">Proporciona una contraseña temporal para el administrador. Podrá cambiarla después.</small>
+                    <small class="text-muted">
+                        La contraseña es temporal, el administrador podrá cambiarla después.
+                        La <strong>clave de seguridad</strong> es personal e intransferible: solo el propio administrador
+                        debe conocerla, ya que se usará para recuperar su contraseña si la olvida.
+                    </small>
                 </div>
 
                 <div class="text-center">

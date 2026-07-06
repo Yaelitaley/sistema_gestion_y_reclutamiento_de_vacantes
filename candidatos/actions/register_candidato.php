@@ -10,12 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$nombre   = trim($_POST['nombre']   ?? '');
-$correo   = trim($_POST['correo']   ?? '');
-$password = trim($_POST['password'] ?? '');
-$confirm  = trim($_POST['confirmPassword'] ?? '');
+$nombre          = trim($_POST['nombre']   ?? '');
+$correo          = trim($_POST['correo']   ?? '');
+$password        = trim($_POST['password'] ?? '');
+$confirm         = trim($_POST['confirmPassword'] ?? '');
+$claveSeguridad  = trim($_POST['claveSeguridad'] ?? '');
 
-if (empty($nombre) || empty($correo) || empty($password) || empty($confirm)) {
+if (empty($nombre) || empty($correo) || empty($password) || empty($confirm) || empty($claveSeguridad)) {
     echo json_encode(['success' => false, 'message' => 'Todos los campos son obligatorios.']);
     exit;
 }
@@ -35,6 +36,11 @@ if (strlen($password) < 6) {
     exit;
 }
 
+if (strlen($claveSeguridad) < 4) {
+    echo json_encode(['success' => false, 'message' => 'La clave de seguridad debe tener al menos 4 caracteres.']);
+    exit;
+}
+
 // Verificar correo duplicado
 $stmt = $conn->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param('s', $correo);
@@ -49,15 +55,16 @@ if ($stmt->num_rows > 0) {
 $stmt->close();
 
 // Insertar usuario con rol_id = 4 (Candidato)
-$rol_id = 4;
-$hash   = password_hash($password, PASSWORD_BCRYPT);
+$rol_id      = 4;
+$hash        = password_hash($password, PASSWORD_BCRYPT);
+$claveHash   = password_hash($claveSeguridad, PASSWORD_BCRYPT);
 
 $conn->begin_transaction();
 
 try {
     // Insertar en usuarios
-    $stmt = $conn->prepare("INSERT INTO usuarios (rol_id, email, password, correo) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param('isss', $rol_id, $correo, $hash, $correo);
+    $stmt = $conn->prepare("INSERT INTO usuarios (rol_id, email, password, clave_seguridad, correo) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param('issss', $rol_id, $correo, $hash, $claveHash, $correo);
     $stmt->execute();
     $usuario_id = $conn->insert_id;
     $stmt->close();

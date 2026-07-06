@@ -36,8 +36,8 @@
                     <i class="bi bi-shield-lock-fill"></i>
 
                     <span>
-                        Ingresa el correo de la cuenta y 
-                        establece una nueva contraseña.
+                        Ingresa el correo de la cuenta, tu clave de
+                        seguridad personal y una nueva contraseña.
                     </span>
 
                 </div>
@@ -71,82 +71,105 @@
                     <!-- FORM -->
                     <form id="changePasswordForm">
 
-                      <div class="mb-3">
+                        <div class="mb-3">
 
-    <label class="form-label fw-bold">
-        Correo electrónico
-    </label>
+                            <label class="form-label fw-bold">
+                                Correo electrónico
+                            </label>
 
-    <div class="input-group">
+                            <div class="input-group">
 
-        <span class="input-group-text">
-            <i class="bi bi-envelope-fill"></i>
-        </span>
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </span>
 
-        <input
-            type="email"
-            id="correo"
-            class="form-control"
-            placeholder="Ingresa el correo">
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    class="form-control"
+                                    placeholder="Ingresa el correo">
 
-    </div>
+                            </div>
 
-</div>
+                        </div>
 
-<div class="mb-3">
+                        <div class="mb-3">
 
-    <label class="form-label fw-bold">
-        Nueva contraseña
-    </label>
+                            <label class="form-label fw-bold">
+                                Clave de seguridad
+                            </label>
 
-    <div class="input-group">
+                            <div class="input-group">
 
-        <span class="input-group-text">
-            <i class="bi bi-lock-fill"></i>
-        </span>
+                                <span class="input-group-text">
+                                    <i class="bi bi-key-fill"></i>
+                                </span>
 
-        <input
-            type="password"
-            id="password"
-            class="form-control"
-            placeholder="Nueva contraseña">
+                                <input
+                                    type="password"
+                                    id="clave_seguridad"
+                                    class="form-control"
+                                    placeholder="Tu clave de seguridad personal">
 
-    </div>
+                            </div>
 
-</div>
+                        </div>
 
-<div class="mb-4">
+                        <div class="mb-3">
 
-    <label class="form-label fw-bold">
-        Confirmar contraseña
-    </label>
+                            <label class="form-label fw-bold">
+                                Nueva contraseña
+                            </label>
 
-    <div class="input-group">
+                            <div class="input-group">
 
-        <span class="input-group-text">
-            <i class="bi bi-shield-lock-fill"></i>
-        </span>
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock-fill"></i>
+                                </span>
 
-        <input
-            type="password"
-            id="confirm_password"
-            class="form-control"
-            placeholder="Confirmar contraseña">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    class="form-control"
+                                    placeholder="Nueva contraseña">
 
-    </div>
+                            </div>
 
-</div>
+                        </div>
 
-<button
-    type="submit"
-    id="btnRecovery"
-    class="btn btn-primary w-100">
+                        <div class="mb-4">
 
-    Actualizar contraseña
+                            <label class="form-label fw-bold">
+                                Confirmar contraseña
+                            </label>
 
-</button>
+                            <div class="input-group">
 
-<div id="mensaje" class="alert mt-3 d-none"></div>
+                                <span class="input-group-text">
+                                    <i class="bi bi-shield-lock-fill"></i>
+                                </span>
+
+                                <input
+                                    type="password"
+                                    id="confirm_password"
+                                    class="form-control"
+                                    placeholder="Confirmar contraseña">
+
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="btnRecovery"
+                            class="btn btn-primary w-100">
+
+                            Actualizar contraseña
+
+                        </button>
+
+                        <div id="mensaje" class="alert mt-3 d-none"></div>
+
                     </form>
 
                     <!-- VOLVER -->
@@ -170,7 +193,7 @@
                             </strong>
 
                             <p class="mb-0">
-                                Revisa tu correo electrónico para continuar con el proceso.
+                                Tu clave de seguridad es personal: solo tú la conoces.
                             </p>
 
                         </div>
@@ -187,5 +210,85 @@
 
 </main>
 
+<script>
+(function () {
+
+    var form = document.getElementById('changePasswordForm');
+
+    if (!form) {
+        console.error('No se encontró #changePasswordForm en la página.');
+        return;
+    }
+
+    form.addEventListener('submit', function (e) {
+
+        e.preventDefault();
+
+        var btn     = document.getElementById('btnRecovery');
+        var mensaje = document.getElementById('mensaje');
+
+        mensaje.className   = 'alert mt-3 d-none';
+        mensaje.textContent = '';
+
+        var correo          = document.getElementById('correo').value.trim();
+        var claveSeguridad  = document.getElementById('clave_seguridad').value;
+        var password        = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
+
+        if (!correo || !claveSeguridad || !password || !confirmPassword) {
+            mensaje.classList.remove('d-none');
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = 'Todos los campos son obligatorios.';
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            mensaje.classList.remove('d-none');
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = 'Las contraseñas no coinciden.';
+            return;
+        }
+
+        btn.disabled    = true;
+        btn.textContent = 'Actualizando...';
+
+        var formData = new FormData();
+        formData.append('correo', correo);
+        formData.append('clave_seguridad', claveSeguridad);
+        formData.append('password', password);
+        formData.append('confirm_password', confirmPassword);
+
+        fetch('actions/change_password_admin.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            mensaje.classList.remove('d-none');
+            if (data.success) {
+                mensaje.classList.add('alert-success');
+                mensaje.textContent = data.message + ' Redirigiendo al inicio de sesión...';
+                setTimeout(function () {
+                    window.location.href = 'login.php';
+                }, 2000);
+            } else {
+                mensaje.classList.add('alert-danger');
+                mensaje.textContent = data.message;
+                btn.disabled    = false;
+                btn.textContent = 'Actualizar contraseña';
+            }
+        })
+        .catch(function () {
+            mensaje.classList.remove('d-none');
+            mensaje.classList.add('alert-danger');
+            mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+            btn.disabled    = false;
+            btn.textContent = 'Actualizar contraseña';
+        });
+
+    });
+
+})();
+</script>
 
 <?php include "includes/footer.php"; ?>

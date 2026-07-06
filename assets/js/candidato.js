@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
             const confirmPassword = document.getElementById("confirmPassword").value;
 
+            const claveSeguridad = document.getElementById("claveSeguridad").value;
+
 
 
             // se muestra un mensaje de alerta si el formulario no es valido
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
             // se revisa si los campos estan vacios
-            if(nombre === "" || correo === "" || password === "" || confirmPassword === ""){
+            if(nombre === "" || correo === "" || password === "" || confirmPassword === "" || claveSeguridad === ""){
 
                 mensaje.classList.add("alert-danger");
 
@@ -93,78 +95,61 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 
-            // arroja un mensaje de exito si todo es correcto
+            // validamos que la clave de seguridad tenga al menos 4 caracteres
+            else if(claveSeguridad.length < 4){
+
+                mensaje.classList.add("alert-danger");
+
+                mensaje.innerHTML = "La clave de seguridad debe tener mínimo 4 caracteres.";
+
+            }
+
+
+
+            // si todo es correcto, se envian los datos al servidor
             else{
 
-                mensaje.classList.add("alert-success");
+                const datos = new FormData();
+                datos.append("nombre", nombre);
+                datos.append("correo", correo);
+                datos.append("password", password);
+                datos.append("confirmPassword", confirmPassword);
+                datos.append("claveSeguridad", claveSeguridad);
 
-                mensaje.innerHTML = "Solicitud enviada correctamente.";
+                const btnSubmit = registerForm.querySelector("button[type='submit']");
+                if (btnSubmit) {
+                    btnSubmit.disabled = true;
+                }
 
-            }
+                fetch("actions/register_candidato.php", {
+                    method: "POST",
+                    body: datos
+                })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
 
-        });
+                    mensaje.classList.remove("alert-danger", "alert-success");
+                    mensaje.classList.add(data.success ? "alert-success" : "alert-danger");
+                    mensaje.innerHTML = data.message;
 
-    }
+                    if (data.success) {
+                        registerForm.reset();
+                        setTimeout(function () {
+                            window.location.href = "login.php";
+                        }, 1500);
+                    } else if (btnSubmit) {
+                        btnSubmit.disabled = false;
+                    }
 
-
-// aqui se valida el formulario de recuperacion de contraseña
-
-    const recoveryForm = document.getElementById("recoveryForm");
-
-    const mensajeRecovery = document.getElementById("mensajeRecovery");
-
-
-    if(recoveryForm){
-
-        recoveryForm.addEventListener("submit", function(e){
-
-            e.preventDefault();
-
-            // aqui se obtiene el valor del input de correo
-            const correoRecovery = document.getElementById("correoRecovery").value;
-
-
-
-            //se muestra el mensaje si el formulario no es valido
-            mensajeRecovery.classList.remove("d-none");
-
-
-
-            // se limpian las clases de alerta para evitar que se acumulen
-            mensajeRecovery.classList.remove("alert-danger");
-
-            mensajeRecovery.classList.remove("alert-success");
-
-
-
-            // aqui se valida que el campo de correo no este vacio
-            if(correoRecovery === ""){
-
-                mensajeRecovery.classList.add("alert-danger");
-
-                mensajeRecovery.innerHTML = "Ingresa tu correo.";
-
-            }
-
-
-
-            // si no incluye el simbolo de arroba, no es un correo valido
-            else if(!correoRecovery.includes("@")){
-
-                mensajeRecovery.classList.add("alert-danger");
-
-                mensajeRecovery.innerHTML = "Correo no válido.";
-
-            }
-
-
-
-            // lanza un mensaje de exito si el correo es valido
-            else{
-
-                mensajeRecovery.classList.add("alert-success");
-
-                mensajeRecovery.innerHTML = "Correo enviado. Favor de verificar su bandeja.";
+                })
+                .catch(function () {
+                    mensaje.classList.remove("alert-success");
+                    mensaje.classList.add("alert-danger");
+                    mensaje.innerHTML = "Ocurrió un error al conectar con el servidor.";
+                    if (btnSubmit) {
+                        btnSubmit.disabled = false;
+                    }
+                });
 
             }
 
@@ -630,4 +615,3 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
 });
-

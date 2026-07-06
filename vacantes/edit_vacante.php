@@ -5,9 +5,25 @@ require_once __DIR__ . '/../config/app_helpers.php';
 
 $mensaje = '';
 $tipoMensaje = '';
-$tablasOk = admin_required_tables_ok($conn, ['vacantes']);
+$tablasOk = admin_required_tables_ok($conn, ['vacantes', 'reclutadores']);
 $id = (int) ($_GET['id'] ?? $_POST['id'] ?? 0);
 $categoriasBase = ['Tecnología', 'Diseño', 'Marketing', 'Administración', 'Ventas', 'Recursos Humanos', 'Soporte', 'Otro'];
+$nivelesBase = ['Sin experiencia', 'Junior', 'Intermedio', 'Senior'];
+
+$reclutadores = [];
+if ($tablasOk) {
+    $resReclutadores = $conn->query(
+        "SELECT r.id, r.nombre_completo, COALESCE(e.nombre, 'Sin empresa') AS empresa
+         FROM reclutadores r
+         LEFT JOIN empresas e ON r.empresa_id = e.id
+         ORDER BY r.nombre_completo ASC"
+    );
+    if ($resReclutadores) {
+        while ($fila = $resReclutadores->fetch_assoc()) {
+            $reclutadores[] = $fila;
+        }
+    }
+}
 
 if (!$tablasOk) {
     $vacante = null;
@@ -27,21 +43,27 @@ if (!$tablasOk) {
     if (!in_array($vacante['categoria'], $categoriasBase, true)) {
         $categoriasBase[] = $vacante['categoria'];
     }
+
+    if (!in_array($vacante['nivel_experiencia'], $nivelesBase, true)) {
+        $nivelesBase[] = $vacante['nivel_experiencia'];
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $vacante) {
-    $titulo = trim($_POST['titulo'] ?? '');
-    $empresa = trim($_POST['empresa'] ?? '');
+    $trabajo = trim($_POST['trabajo'] ?? '');
+    $reclutadorId = (int) ($_POST['reclutador_id'] ?? 0);
     $ubicacion = trim($_POST['ubicacion'] ?? '');
     $salarioInput = trim($_POST['salario'] ?? '');
     $categoria = trim($_POST['categoria'] ?? '');
-    $estado = trim($_POST['estado'] ?? 'Activo');
+    $nivelExperiencia = trim($_POST['nivel_experiencia'] ?? '');
+    $activaInput = trim($_POST['activa'] ?? '1');
+    $requisitos = trim($_POST['requisitos'] ?? '');
     $descripcion = trim($_POST['descripcion'] ?? '');
 
-    if ($titulo === '' || $empresa === '' || $ubicacion === '' || $categoria === '' || $estado === '' || $descripcion === '') {
+    if ($trabajo === '' || $reclutadorId <= 0 || $ubicacion === '' || $categoria === '' || $nivelExperiencia === '' || $requisitos === '' || $descripcion === '') {
         $mensaje = 'Todos los campos son obligatorios, excepto salario.';
         $tipoMensaje = 'danger';
-    } elseif (!in_array($estado, ['Activo', 'Inactivo'], true)) {
+    } elseif (!in_array($activaInput, ['0', '1'], true)) {
         $mensaje = 'El estado seleccionado no es válido.';
         $tipoMensaje = 'danger';
     } elseif ($salarioInput !== '' && !is_numeric($salarioInput)) {
@@ -49,10 +71,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $vacante) {
         $tipoMensaje = 'danger';
     } else {
         $salario = $salarioInput === '' ? null : (float) $salarioInput;
+        $activa = (int) $activaInput;
 
         try {
-            $stmt = $conn->prepare('UPDATE vacantes SET titulo = ?, empresa = ?, ubicacion = ?, salario = ?, categoria = ?, estado = ?, descripcion = ? WHERE id = ?');
-            $stmt->bind_param('sssdsssi', $titulo, $empresa, $ubicacion, $salario, $categoria, $estado, $descripcion, $id);
+            $stmt = $conn->prepare(
+                'UPDATE vacantes SET reclutador_id = ?, trabajo = ?, descripcion = ?, categoria = ?, requisitos = ?, salario = ?, ubicacion = ?, nivel_experiencia = ?, activa = ? WHERE id = ?'
+            );
+            $stmt->bind_param(
+                'isssdsssii',
+                $reclutadorId,
+                $trabajo,
+                $descripcion,
+                $categoria,
+                $requisitos,
+                $salario,
+                $ubicacion,
+                $nivelExperiencia,
+                $activa,
+                $id
+            );
             $stmt->execute();
             $stmt->close();
 
@@ -65,12 +102,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $vacante) {
 
     $vacante = [
         'id' => $id,
-        'titulo' => $titulo,
-        'empresa' => $empresa,
+        'trabajo' => $trabajo,
+        'reclutador_id' => $reclutadorId,
         'ubicacion' => $ubicacion,
         'salario' => $salarioInput,
         'categoria' => $categoria,
-        'estado' => $estado,
+        'nivel_experiencia' => $nivelExperiencia,
+        'activa' => $activaInput,
+        'requisitos' => $requisitos,
         'descripcion' => $descripcion
     ];
 }
@@ -90,7 +129,7 @@ include 'includes/header.php';
         </div>
 
         <?php if (!$tablasOk): ?>
-            <div class="alert alert-warning">Falta la tabla <strong>vacantes</strong>. Importa <strong>database_chris.sql</strong>.</div>
+            <div class="alert alert-warning">Faltan las tablas <strong>vacantes</strong> o <strong>reclutadores</strong>. Importa tu script SQL.</div>
         <?php endif; ?>
 
         <?php if ($mensaje !== ''): ?>
@@ -106,15 +145,22 @@ include 'includes/header.php';
                         <label class="form-label fw-bold">Título de la vacante</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-briefcase-fill"></i></span>
-                            <input type="text" name="titulo" class="form-control" value="<?= e($vacante['titulo']) ?>" required>
+                            <input type="text" name="trabajo" class="form-control" value="<?= e($vacante['trabajo']) ?>" required>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Empresa</label>
+                        <label class="form-label fw-bold">Reclutador / Empresa</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-building"></i></span>
-                            <input type="text" name="empresa" class="form-control" value="<?= e($vacante['empresa']) ?>" required>
+                            <select name="reclutador_id" class="form-select" required>
+                                <option value="">Selecciona un reclutador</option>
+                                <?php foreach ($reclutadores as $reclutador): ?>
+                                    <option value="<?= (int) $reclutador['id'] ?>" <?= (string) $vacante['reclutador_id'] === (string) $reclutador['id'] ? 'selected' : '' ?>>
+                                        <?= e($reclutador['nombre_completo']) ?> — <?= e($reclutador['empresa']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                     </div>
 
@@ -144,12 +190,25 @@ include 'includes/header.php';
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Estado</label>
-                        <select name="estado" class="form-select" required>
-                            <?php foreach (['Activo', 'Inactivo'] as $estado): ?>
-                                <option value="<?= e($estado) ?>" <?= $vacante['estado'] === $estado ? 'selected' : '' ?>><?= e($estado) ?></option>
+                        <label class="form-label fw-bold">Nivel de experiencia</label>
+                        <select name="nivel_experiencia" class="form-select" required>
+                            <?php foreach ($nivelesBase as $nivel): ?>
+                                <option value="<?= e($nivel) ?>" <?= $vacante['nivel_experiencia'] === $nivel ? 'selected' : '' ?>><?= e($nivel) ?></option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Estado</label>
+                        <select name="activa" class="form-select" required>
+                            <option value="1" <?= (string) $vacante['activa'] === '1' ? 'selected' : '' ?>>Activa</option>
+                            <option value="0" <?= (string) $vacante['activa'] === '0' ? 'selected' : '' ?>>Inactiva</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Requisitos</label>
+                        <textarea name="requisitos" class="form-control" rows="3" required><?= e($vacante['requisitos']) ?></textarea>
                     </div>
 
                     <div class="mb-4">
