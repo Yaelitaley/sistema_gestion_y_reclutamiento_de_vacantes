@@ -615,3 +615,28 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 
 });
+
+
+
+/*==================================================
+=            SIDEBAR
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuToggle = document.getElementById("menuToggle");
+    const sidebar = document.querySelector(".sidebar");
+    const content = document.querySelector(".content");
+
+    if(menuToggle && sidebar && content){
+
+        menuToggle.addEventListener("click", function(){
+
+            sidebar.classList.toggle("active");
+            content.classList.toggle("sidebar-open");
+
+        });
+
+    }
+
+});

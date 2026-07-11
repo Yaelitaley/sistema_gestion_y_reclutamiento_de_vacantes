@@ -11,7 +11,7 @@
 
 
         <!-- BANNER PRINCIPAL -->
-        <div class="card border-0 shadow-sm mb-5">
+        <div class="dashboard-card hero-banner mb-5">
 
             <div class="row g-0 align-items-center">
 
@@ -31,7 +31,7 @@
 
                         </h2>
 
-                        <p class="text-muted mb-4">
+                        <p class="texto opacity-75 mb-4">
 
                             Descubre cientos de oportunidades laborales
                             creadas especialmente para tu perfil profesional.
@@ -40,11 +40,11 @@
 
                         <a
                             href="../candidatos/explorar-empleos.php"
-                            class="btn btn-success btn-lg">
+                            class="btn btn-candidato btn-lg">
+                            <i class="bi bi-arrow-right-circle-fill"></i>
 
                             Explorar Empleos
 
-                            <i class="bi bi-arrow-right ms-2"></i>
 
                         </a>
 
@@ -81,7 +81,7 @@
 
             <a
                 href="../candidatos/explorar-empleos.php"
-                class="text-decoration-none">
+                class="btn btn-candidato">
 
                 Ver todas
 
@@ -229,7 +229,7 @@
 
             <a
                 href="explorar-empleos.php"
-                class="text-decoration-none">
+                class="btn btn-candidato">
 
                 Ver todos
 
@@ -254,7 +254,7 @@
 
                     </h5>
 
-                    <p class="text-muted">
+                    <p class="texto opacity-75">
 
                         Google México
 
@@ -284,7 +284,7 @@
 
                     <a
                         href="../candidatos/ver-empleo.php"
-                        class="btn btn-outline-success w-100">
+                        class="btn btn-candidato w-100">
 
                         Ver Vacante
 
@@ -309,7 +309,7 @@
 
                     </h5>
 
-                    <p class="text-muted">
+                    <p class="texto opacity-75">
 
                         Microsoft
 
@@ -339,7 +339,7 @@
 
                     <a
                         href="../candidatos/ver-empleo.php"
-                        class="btn btn-outline-success w-100">
+                        class="btn btn-candidato w-100">
 
                         Ver Vacante
 
@@ -364,7 +364,7 @@
 
                     </h5>
 
-                    <p class="text-muted">
+                    <p class="texto opacity-75">
 
                         Amazon
 
@@ -394,7 +394,7 @@
 
                     <a
                         href="../candidatos/ver-empleo.php"
-                        class="btn btn-outline-success w-100">
+                        class="btn btn-candidato w-100">
 
                         Ver Vacante
 
@@ -419,7 +419,7 @@
 
                     </h5>
 
-                    <p class="text-muted">
+                    <p class="texto opacity-75">
 
                         Oracle
 
@@ -449,7 +449,7 @@
 
                     <a
                         href="vacantes.php"
-                        class="btn btn-outline-success w-100">
+                        class="btn btn-candidato w-100">
 
                         Ver Vacante
 
@@ -475,7 +475,7 @@
 
                         </h4>
 
-                        <p class="text-muted">
+                        <p class="texto opacity-75">
 
                             Desarrollador Web
 
@@ -489,7 +489,7 @@
 
                         <a
                             href="perfil.php"
-                            class="btn btn-success w-100">
+                            class="btn btn-candidato w-100">
 
                             <i class="bi bi-person-fill me-2"></i>
 
@@ -518,7 +518,7 @@
 
                         </h5>
 
-                        <p class="text-muted">
+                        <p class="texto opacity-75">
 
                             Mantén actualizado tu CV para aumentar tus oportunidades laborales.
 
@@ -533,7 +533,7 @@
     hidden>
 
 <button
-    class="btn btn-success"
+    class="btn btn-candidato"
     id="btnSubirCV">
 
     <i class="bi bi-upload me-2"></i>
@@ -544,7 +544,7 @@
 
                             
 
-                                <a href="cv.php" class="btn btn-outline-primary">
+                                <a href="cv.php" class="btn btn-candidato">
 
     <i class="bi bi-file-earmark-person-fill me-2"></i>
 
@@ -664,8 +664,8 @@
                     <div class="col-md-3">
 
                         <a
-                            href="vacantes.php"
-                            class="btn btn-success w-100">
+                            href="explorar-empleos.php"
+                            class="btn btn-candidato w-100">
 
                             <i class="bi bi-briefcase-fill me-2"></i>
 
@@ -683,7 +683,7 @@
 
                         <a
                             href="perfil.php"
-                            class="btn btn-primary w-100">
+                            class="btn btn-candidato w-100">
 
                             <i class="bi bi-person-fill me-2"></i>
 
@@ -701,7 +701,7 @@
 
                         <a
                             href="postulaciones.php"
-                            class="btn btn-warning w-100">
+                            class="btn btn-candidato w-100">
 
                             <i class="bi bi-send-check-fill me-2"></i>
 
@@ -719,7 +719,7 @@
 
                         <a
                             href="configuracion.php"
-                            class="btn btn-dark w-100">
+                            class="btn btn-candidato w-100">
 
                             <i class="bi bi-gear-fill me-2"></i>
 

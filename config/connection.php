@@ -6,7 +6,7 @@ $user     = 'root';
 $password = '';
 
 
-$conn = new mysqli($host, $user, $password, $dbname, 3306);
+$conn = new mysqli($host, $user, $password, $dbname, 3307);
 
 $conn = new mysqli($host, $user, $password, $dbname);
 

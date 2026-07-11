@@ -46,23 +46,35 @@ body{
 
 }
 
-.candidate-profile{
+.candidate-profile .dropdown-toggle{
 
     display:flex;
 
     align-items:center;
 
-    gap:15px;
+    border:none;
 
-    padding:12px 18px;
+    background:transparent;
 
-    border-radius:15px;
+    color:white;
 
-    background:rgba(255,255,255,.12);
+    border-radius:14px;
 
-    border:1px solid rgba(255,255,255,.15);
+    padding:10px 16px;
 
-    backdrop-filter:blur(15px);
+    transition:.3s;
+
+}
+
+.candidate-profile .dropdown-toggle:hover{
+
+    background:rgba(255,255,255,.10);
+
+}
+
+.candidate-profile .dropdown-toggle:focus{
+
+    box-shadow:none;
 
 }
 
@@ -181,7 +193,6 @@ body{
 
     transition:left .35s ease;
 
-    z-index:9999;
 
 }
 
@@ -239,7 +250,7 @@ body{
 
     margin-right: 10px;
 
-    color: #22c55e;
+    color:#ec4899;
 
 }
 
@@ -297,9 +308,11 @@ body{
 
 .menu a:hover{
 
-    background: #22c55e;
-
-    color: white;
+    background:linear-gradient(
+        135deg,
+        #ec4899,
+        #db2777
+    );
 
 }
 
@@ -309,9 +322,11 @@ body{
 
 .menu .active{
 
-    background: #22c55e;
-
-    color: white;
+    background:linear-gradient(
+        135deg,
+        #ec4899,
+        #db2777
+    );
 
 }
 
@@ -424,12 +439,38 @@ body{
 
 .dropdown-menu{
 
-    border: none;
+    background:rgba(35,35,55,.95);
 
-    border-radius: 15px;
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:14px;
+
+    min-width:220px;
 
 }
 
+.dropdown-item{
+
+    color:white;
+    transition:.3s;
+
+}
+
+.dropdown-item:hover{
+
+    background:linear-gradient(135deg,#ec4899,#db2777);
+
+    color:white;
+
+}
+
+.dropdown-divider{
+
+    border-color:rgba(255,255,255,.15);
+
+}
 
 
 
@@ -454,6 +495,10 @@ body{
 
     transition:.35s;
 
+    min-height:140px;
+
+    z-index: -1;
+
 }
 
 .dashboard-card:hover{
@@ -467,11 +512,20 @@ body{
 .card{
     background:rgba(255,255,255,.12);
 
-    
 
     justify-content: center;
 
     align-items: center;
+
+}
+
+.glass-card{
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
 
 }
 
@@ -545,6 +599,10 @@ body{
     padding:40px;
 
     box-shadow:0 10px 25px rgba(0,0,0,.20);
+
+    position:relative;
+
+    overflow:visible;
 
 }
 
@@ -685,12 +743,9 @@ body{
 
 .job-card p{
 
-    color: #6b7280;
-
-    margin-bottom: 10px;
+    color:#f3f4f6;
 
 }
-
 .job-card .badge{
 
     margin-bottom: 15px;
@@ -775,6 +830,12 @@ body{
 
 }
 
+.action-box:hover{
+
+    background:rgba(255,255,255,.18);
+
+}
+
 
 /*==================================================
 =            PERFIL DEL CANDIDATO
@@ -790,6 +851,34 @@ body{
 
 }
 
+/*==================================================
+=            PERFIL CANDIDATO
+==================================================*/
+
+.candidate-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:12px 18px;
+
+    border-radius:15px;
+
+    background:rgba(255,255,255,.12);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(15px);
+
+    -webkit-backdrop-filter:blur(15px);
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
 .profile-card img{
 
     width: 130px;
@@ -800,7 +889,7 @@ body{
 
     border-radius: 50%;
 
-    border: 5px solid #22c55e;
+   border:4px solid #ec4899;
 
     margin-bottom: 20px;
 
@@ -816,7 +905,7 @@ body{
 
 .profile-card p{
 
-    color: #6b7280;
+    color:#e5e7eb;
 
 }
 
@@ -882,7 +971,7 @@ body{
 
     padding: 12px 0;
 
-    border-bottom: 1px solid #e5e7eb;
+     border-bottom:1px solid rgba(255,255,255,.12);
 
 }
 
@@ -972,6 +1061,78 @@ footer{
 
 }
 
+.dashboard-card{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.dashboard-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.15),
+        transparent
+    );
+
+    transition:.8s;
+
+}
+
+.dashboard-card:hover::before{
+
+    left:150%;
+
+}
+
+.texto,
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6,
+.content p,
+.content span,
+.content label{
+
+    color:white;
+
+}
+
+.table{
+
+    color:white;
+
+}
+
+.table th{
+
+    color:white;
+
+}
+
+.table td{
+
+    color:#f3f4f6;
+
+}
+
 
 
 
@@ -1028,23 +1189,7 @@ footer{
 
     }
 
-    .dashboard-card{
-
-        margin-bottom: 20px;
-
-    }
-
-    .category-card{
-
-        margin-bottom: 20px;
-
-    }
-
-}
-
-
-
-
+} 
 
 @media(max-width:576px){
 
@@ -1067,41 +1212,6 @@ footer{
     }
 
 }
-
-.texto,
-.content h1,
-.content h2,
-.content h3,
-.content h4,
-.content h5,
-.content h6,
-.content p,
-.content span,
-.content label{
-
-    color:white;
-
-}
-
-.table{
-
-    color:white;
-
-}
-
-.table th{
-
-    color:white;
-
-}
-
-.table td{
-
-    color:#f3f4f6;
-
-}
-
-
 
 
 /* RESPONSIVE */
