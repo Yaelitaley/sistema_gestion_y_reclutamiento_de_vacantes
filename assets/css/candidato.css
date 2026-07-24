@@ -2,10 +2,10 @@ body{
     font-family:'Poppins',sans-serif;
     margin:0;
     padding:0;
-    background:linear-gradient(135deg,#210c0c,#ff3784);
+    background:linear-gradient(#F8FAFC);
 }
 .container-fluid{
-    background-color: #db2777;
+    background-color: #F8FAFC;
 }
 /* PANEL IZQUIERDO */
 .left-panel{
@@ -15,7 +15,7 @@ body{
 /* IMAGEN */
 .login-image{
     max-width: 250px;
-    border-radius: 100px;
+    border-radius: 10px;
 }
 /* LOGIN BOX */
 .login-box{
@@ -26,7 +26,7 @@ body{
     color: #ff5d52 ;
 }
 .btn-candidato{
-    background:linear-gradient(135deg,#ec4899,#db2777);
+    background:linear-gradient(135deg,#4853ec,#5b30a0);
     color:white;
     border:none;
     transition:.3s;
@@ -148,7 +148,7 @@ body{
 }
 .logo i{
     margin-right: 10px;
-    color:#ec4899;
+    color:#6b48ec;
 }
 .menu{
     list-style: none;
@@ -171,15 +171,15 @@ body{
 .menu a:hover{
     background:linear-gradient(
         135deg,
-        #ec4899,
-        #db2777
+        #484dec,
+        #8d27db
     );
 }
 .menu .active{
     background:linear-gradient(
         135deg,
-        #ec4899,
-        #db2777
+        #4866ec,
+        #6627db
     );
 }
 .logout a{
@@ -256,6 +256,16 @@ body{
     transition:.35s;
     min-height:140px;
     z-index: 1;
+}
+.dashboard-carde{
+    background:rgba(255, 233, 233, 0.12);
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-webkit:blur(15px);
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.20);
+    transition:.35s;
+    min-height:140px;
+    z-index: 6;
 }
 .dashboard-card:hover{
     transform:translateY(-5px);
@@ -557,16 +567,16 @@ footer{
 .content p,
 .content span,
 .content label{
-    color:white;
+    color:rgb(0, 0, 0);
 }
 .table{
-    color:white;
+    color:rgb(0, 0, 0);
 }
 .table th{
-    color:white;
+    color:rgb(0, 0, 0);
 }
 .table td{
-    color:#f3f4f6;
+    color:#000000;
 }
 /*==================================================
 =            RESPONSIVE

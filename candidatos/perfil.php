@@ -1,11 +1,15 @@
 <?php include "includes/header.php"; ?>
+
 <div class="d-flex">
     <!-- SIDEBAR -->
     <?php include "includes/sidebar.php"; ?>
+
     <!-- CONTENIDO -->
     <div class="content w-100 p-4">
+
         <!-- TOPBAR -->
         <?php include "includes/topbar.php"; ?>
+
         <!-- TÍTULO -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -16,13 +20,9 @@
                     Consulta y administra la información de tu cuenta.
                 </p>
             </div>
-            <a
-                href="editar_perfil.php"
-                class="btn btn-success">
-                <i class="bi bi-pencil-square me-2"></i>
-                Editar Perfil
-            </a>
+           
         </div>
+
         <!-- PERFIL -->
         <div class="table-box mb-4">
             <div class="row align-items-center">
@@ -57,13 +57,13 @@
                             </p>
                             <p>
                                 <i class="bi bi-calendar-fill text-warning me-2"></i>
-                                21 años
+                                Masculino <!-- Ajustado para coincidir con el campo Género de editar-perfil -->
                             </p>
                         </div>
                         <div class="col-md-6">
                             <p>
                                 <i class="bi bi-geo-alt-fill text-danger me-2"></i>
-                                Campeche, México
+                                Campeche
                             </p>
                             <p>
                                 <i class="bi bi-person-badge-fill text-info me-2"></i>
@@ -78,6 +78,7 @@
                 </div>
             </div>
         </div>
+
         <!-- INFORMACIÓN PROFESIONAL -->
         <div class="table-box mb-4">
             <h4 class="fw-bold mb-4">
@@ -93,73 +94,20 @@
                         <strong>Disponibilidad:</strong>
                         Tiempo Completo
                     </p>
-                    <p>
-                        <strong>Modalidad:</strong>
-                        Remoto / Híbrido
-                    </p>
                 </div>
                 <div class="col-md-6">
                     <p>
-                        <strong>Experiencia:</strong>
-                        1 año
+                        <strong>Modalidad Preferida:</strong>
+                        Híbrido
                     </p>
                     <p>
                         <strong>Salario Esperado:</strong>
                         $20,000 MXN
                     </p>
-                    <p>
-                        <strong>Estado:</strong>
-                        Activo
-                    </p>
                 </div>
             </div>
         </div>
-                <!-- ESTADO DEL PERFIL -->
-        <div class="table-box mb-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold">
-                    Estado del Perfil
-                </h4>
-                <span class="badge bg-success">
-                    85% Completo
-                </span>
-            </div>
-            <p class="text-muted">
-                Completa toda la información de tu perfil para aumentar tus oportunidades laborales.
-            </p>
-            <div class="progress mb-4" style="height: 12px;">
-                <div
-                    class="progress-bar bg-success"
-                    style="width:85%;">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <p>
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                        Datos Personales
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p>
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                        Currículum
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p>
-                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                        Experiencia
-                    </p>
-                </div>
-                <div class="col-md-3">
-                    <p>
-                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
-                        Portafolio
-                    </p>
-                </div>
-            </div>
-        </div>
+
         <!-- ESTADÍSTICAS -->
         <div class="row g-4 mb-4">
             <div class="col-lg-3 col-md-6">
@@ -168,12 +116,8 @@
                         <i class="bi bi-send-check-fill text-primary"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">
-                            12
-                        </h3>
-                        <p class="text-muted mb-0">
-                            Postulaciones
-                        </p>
+                        <h3 class="fw-bold">12</h3>
+                        <p class="text-muted mb-0">Postulaciones</p>
                     </div>
                 </div>
             </div>
@@ -183,12 +127,8 @@
                         <i class="bi bi-clock-history text-warning"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">
-                            4
-                        </h3>
-                        <p class="text-muted mb-0">
-                            En Revisión
-                        </p>
+                        <h3 class="fw-bold">4</h3>
+                        <p class="text-muted mb-0">En Revisión</p>
                     </div>
                 </div>
             </div>
@@ -198,12 +138,8 @@
                         <i class="bi bi-calendar-event-fill text-info"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">
-                            3
-                        </h3>
-                        <p class="text-muted mb-0">
-                            Entrevistas
-                        </p>
+                        <h3 class="fw-bold">3</h3>
+                        <p class="text-muted mb-0">Entrevistas</p>
                     </div>
                 </div>
             </div>
@@ -213,16 +149,13 @@
                         <i class="bi bi-check-circle-fill text-success"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">
-                            1
-                        </h3>
-                        <p class="text-muted mb-0">
-                            Contratado
-                        </p>
+                        <h3 class="fw-bold">1</h3>
+                        <p class="text-muted mb-0">Contratado</p>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- ACCESOS RÁPIDOS -->
         <div class="table-box mb-4">
             <h4 class="fw-bold mb-4">
@@ -230,78 +163,54 @@
             </h4>
             <div class="row g-3">
                 <div class="col-lg-3 col-md-6">
-                    <a
-                        href="cv.php"
-                        class="btn btn-outline-primary w-100 py-3">
+                    <a href="cv.php" class="btn btn-outline-primary w-100 py-3">
                         <i class="bi bi-file-earmark-person-fill fs-4 d-block mb-2"></i>
                         Mi Currículum
                     </a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <a
-                        href="postulaciones.php"
-                        class="btn btn-outline-success w-100 py-3">
+                    <a href="postulaciones.php" class="btn btn-outline-success w-100 py-3">
                         <i class="bi bi-send-check-fill fs-4 d-block mb-2"></i>
                         Mis Postulaciones
                     </a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <a
-                        href="explorar_empleos.php"
-                        class="btn btn-outline-warning w-100 py-3">
+                    <a href="explorar-empleos.php" class="btn btn-outline-warning w-100 py-3">
                         <i class="bi bi-search fs-4 d-block mb-2"></i>
                         Explorar Empleos
                     </a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <a
-                        href="configuracion.php"
-                        class="btn btn-outline-secondary w-100 py-3">
+                    <a href="configuracion.php" class="btn btn-outline-secondary w-100 py-3">
                         <i class="bi bi-gear-fill fs-4 d-block mb-2"></i>
                         Configuración
                     </a>
                 </div>
             </div>
         </div>
+
         <!-- REDES PROFESIONALES -->
-        <div class="table-box mb-5">
+        <div class="table-box mb-4">
             <h4 class="fw-bold mb-4">
                 Redes Profesionales
             </h4>
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">
-                        LinkedIn
-                    </label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        value="linkedin.com/in/gabrielmontero"
-                        readonly>
+                    <label class="form-label">LinkedIn</label>
+                    <input type="text" class="form-control" value="linkedin.com/in/gabrielmontero" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">
-                        GitHub
-                    </label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        value="github.com/gabrielmontero"
-                        readonly>
+                    <label class="form-label">GitHub</label>
+                    <input type="text" class="form-control" value="github.com/gabrielmontero" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">
-                        Portafolio
-                    </label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        value="www.gabrielmontero.dev"
-                        readonly>
+                    <label class="form-label">Portafolio</label>
+                    <input type="text" class="form-control" value="www.gabrielmontero.dev" readonly>
                 </div>
             </div>
         </div>
-                <!-- RESUMEN DEL PERFIL -->
+
+        <!-- RESUMEN DEL PERFIL -->
         <div class="table-box mb-4">
             <h4 class="fw-bold mb-3">
                 Resumen del Perfil
@@ -314,8 +223,9 @@
                 PHP y MySQL.
             </p>
         </div>
+
         <!-- OBJETIVOS PROFESIONALES -->
-        <div class="table-box mb-5">
+        <div class="table-box mb-4">
             <h4 class="fw-bold mb-3">
                 Objetivos Profesionales
             </h4>
@@ -338,29 +248,66 @@
                 </li>
             </ul>
         </div>
+
+        <!-- PREFERENCIAS DE LA CUENTA (Agregado para coincidir con editar-perfil) -->
+        <div class="table-box mb-4">
+            <h4 class="fw-bold mb-4">
+                Preferencias de la Cuenta
+            </h4>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" checked disabled>
+                <label class="form-check-label">
+                    Recibir ofertas de empleo por correo.
+                </label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" checked disabled>
+                <label class="form-check-label">
+                    Recibir notificaciones del sistema.
+                </label>
+            </div>
+            <div class="form-check" mb-3>
+                <input class="form-check-input" type="checkbox" checked disabled>
+                <label class="form-check-label">
+                    Mostrar mi perfil públicamente para reclutadores.
+                </label>
+            </div>
+        </div>
+
+        <!-- ESTADO DE LA CUENTA (Agregado para coincidir con editar-perfil) -->
+        <div class="table-box mb-5">
+            <h4 class="fw-bold mb-4">
+                Estado de la Cuenta
+            </h4>
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                <div>
+                    Tu perfil está completo en un <strong>85%</strong>.
+                    Mantén tu información actualizada para aumentar tus
+                    oportunidades de ser contactado por los reclutadores.
+                </div>
+            </div>
+        </div>
+
         <!-- BOTONES -->
         <div class="d-flex justify-content-between align-items-center flex-wrap mb-5">
-            <a
-                href="dashboard.php"
-                class="btn btn-outline-secondary">
+            <a href="dashboard.php" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-2"></i>
                 Regresar
             </a>
             <div>
-                <a
-                    href="cv.php"
-                    class="btn btn-outline-primary me-2">
+                <a href="cv.php" class="btn btn-outline-primary me-2">
                     <i class="bi bi-file-earmark-person-fill me-2"></i>
                     Ver CV
                 </a>
-                <a
-                    href="editar_perfil.php"
-                    class="btn btn-success">
+                <a href="editar_perfil.php" class="btn btn-success">
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar Perfil
                 </a>
             </div>
         </div>
+
     </div>
 </div>
+
 <?php include "includes/footer.php"; ?>
