@@ -11,7 +11,7 @@
 
 
         <!-- BANNER PRINCIPAL -->
-        <div class="dashboard-card hero-banner mb-5">
+        <div class="dashboard-carde hero-banner mb-5">
 
             <div class="row g-0 align-items-center">
 
@@ -465,7 +465,7 @@
                 <!-- PERFIL -->
                 <div class="col-lg-4 mb-4">
 
-                    <div class="dashboard-card flex-column text-center">
+                    <div class="dashboard-carde flex-column text-center">
 
                         <i class="bi bi-person-fill me-3 fs-4"></i>
 
@@ -508,7 +508,7 @@
                 <!-- CURRICULUM -->
                 <div class="col-lg-4 mb-4">
 
-                    <div class="dashboard-card flex-column">
+                    <div class="dashboard-carde flex-column">
 
                         <h5 class="fw-bold mb-3">
 
@@ -567,7 +567,7 @@
                 <!-- ESTADISTICAS -->
                 <div class="col-lg-4 mb-4">
 
-                    <div class="dashboard-card flex-column">
+                    <div class="dashboard-carde flex-column">
 
                         <h5 class="fw-bold mb-4">
 
