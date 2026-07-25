@@ -1,3 +1,6 @@
+/* Los colores oficiales de los botones son:  background:linear-gradient(135deg,#4853ec,#5b30a0);*/
+/*El color oficial del fondo es ; background:linear-gradient(#F8FAFC);  */
+
 body{
     font-family:'Poppins',sans-serif;
     margin:0;
@@ -237,7 +240,8 @@ body{
     transition:.3s;
 }
 .dropdown-item:hover{
-    background:linear-gradient(135deg,#ec4899,#db2777);
+    background:linear-gradient(135deg,#484dec,
+        #8d27db);
     color:white;
 }
 .dropdown-divider{
@@ -260,6 +264,7 @@ body{
 .dashboard-carde{
     background:rgba(255, 233, 233, 0.12);
     border:1px solid rgba(255,255,255,.15);
+    text-align: center;
     backdrop-webkit:blur(15px);
     border-radius:18px;
     box-shadow:0 10px 25px rgba(0,0,0,.20);
@@ -281,13 +286,21 @@ body{
     border:1px solid rgba(255,255,255,.15);
     backdrop-filter:blur(15px);
 }
-.card-icon{
+.card-icon {
     width: 60px;
     height: 60px;
+    min-width: 60px; /* Evita que se deforme */
     border-radius: 15px;
+    
     display: flex;
     justify-content: center;
     align-items: center;
+    
+    text-align: center;
+    line-height: 1; /* Mantiene el icono en el centro vertical exacto */
+    font-size: 24px; /* Ajusta el tamaño del ícono si lo necesitas */
+    
+    flex-shrink: 0; /* Evita que se encoja en contenedores flex */
 }
 .card-icon i{
     font-size: 30px;
@@ -298,8 +311,7 @@ body{
 .table-box{
     background:rgba(255,255,255,.12);
     border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
+    backdrop-webkit:blur(15px);
     border-radius:18px;
     padding:25px;
 }
@@ -538,6 +550,7 @@ footer{
 .dashboard-card{
     position:relative;
     overflow:hidden;
+    text-align: center;
 }
 .dashboard-card::before{
     content:"";

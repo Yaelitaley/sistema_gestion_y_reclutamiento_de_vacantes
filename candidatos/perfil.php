@@ -112,7 +112,7 @@
         <div class="row g-4 mb-4">
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-primary-subtle">
+                    <div class="card-icono bg-primary-subtle mt-2">
                         <i class="bi bi-send-check-fill text-primary"></i>
                     </div>
                     <div>
@@ -123,7 +123,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-warning-subtle">
+                    <div class="card-icono bg-warning-subtle mt-2">
                         <i class="bi bi-clock-history text-warning"></i>
                     </div>
                     <div>
@@ -134,7 +134,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-info-subtle">
+                    <div class="card-icono bg-info-subtle mt-2">
                         <i class="bi bi-calendar-event-fill text-info"></i>
                     </div>
                     <div>
@@ -145,7 +145,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-success-subtle">
+                    <div class="card-icono bg-success-subtle mt-2">
                         <i class="bi bi-check-circle-fill text-success"></i>
                     </div>
                     <div>

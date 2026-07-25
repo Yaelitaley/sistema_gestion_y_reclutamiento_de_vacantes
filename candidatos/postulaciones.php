@@ -15,45 +15,63 @@
             <p class="text-muted">Consulta el estado de todas las vacantes a las que te has postulado.</p>
         </div>
 
-        <!-- TARJETAS -->
-        <div class="row g-4 mb-5">
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-carde">
-                    <div class="card-icon bg-primary-subtle"><i class="bi bi-send-check-fill text-primary"></i></div>
-                    <div>
-                        <h3 class="fw-bold">12</h3>
-                        <p class="text-muted mb-0">Postulaciones</p>
-                    </div>
-                </div>
+       <!-- TARJETAS -->
+<div class="row g-4 mb-5 p-4">
+    
+    <!-- TARJETA 1 -->
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-carde p-4 d-flex align-items-center gap-3">
+            <!-- Corregido: card-icon (antes tenía card-icono) -->
+            <div class="card-icon bg-primary-subtle">
+                <i class="bi bi-send-check-fill text-primary"></i>
             </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-carde">
-                    <div class="card-icon bg-warning-subtle"><i class="bi bi-clock-history text-warning"></i></div>
-                    <div>
-                        <h3 class="fw-bold">4</h3>
-                        <p class="text-muted mb-0">En Revisión</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-carde">
-                    <div class="card-icon bg-info-subtle"><i class="bi bi-calendar-event-fill text-info"></i></div>
-                    <div>
-                        <h3 class="fw-bold">3</h3>
-                        <p class="text-muted mb-0">Entrevistas</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-carde">
-                    <div class="card-icon bg-success-subtle"><i class="bi bi-check-circle-fill text-success"></i></div>
-                    <div>
-                        <h3 class="fw-bold">1</h3>
-                        <p class="text-muted mb-0">Contratado</p>
-                    </div>
-                </div>
+            <div>
+                <h3 class="fw-bold mb-0">12</h3>
+                <p class="text-muted mb-0">Postulaciones</p>
             </div>
         </div>
+    </div>
+
+    <!-- TARJETA 2 -->
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-carde p-4 d-flex align-items-center gap-3">
+            <div class="card-icon bg-warning-subtle">
+                <i class="bi bi-clock-history text-warning"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0">4</h3>
+                <p class="text-muted mb-0">En Revisión</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TARJETA 3 -->
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-carde p-4 d-flex align-items-center gap-3">
+            <div class="card-icon bg-info-subtle">
+                <i class="bi bi-calendar-event-fill text-info"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0">3</h3>
+                <p class="text-muted mb-0">Entrevistas</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TARJETA 4 -->
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-carde p-4 d-flex align-items-center gap-3">
+            <div class="card-icon bg-success-subtle">
+                <i class="bi bi-check-circle-fill text-success"></i>
+            </div>
+            <div>
+                <h3 class="fw-bold mb-0">1</h3>
+                <p class="text-muted mb-0">Contratado</p>
+            </div>
+        </div>
+    </div>
+
+</div>
 
         <!-- BUSCADOR Y FILTROS -->
         <form action="postulaciones.php" method="GET">
@@ -157,22 +175,11 @@
             </div>
         </div>
 
-        <!-- PAGINACIÓN -->
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-            </ul>
-        </nav>
-
         <!-- RESUMEN -->
         <div class="row mt-5">
             <div class="col-lg-6">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-success-subtle"><i class="bi bi-graph-up-arrow text-success"></i></div>
+                <div class="dashboard-card p-4">
+                    <div class="card-icono bg-success-subtle"><i class="bi bi-graph-up-arrow text-success"></i></div>
                     <div>
                         <h5 class="fw-bold">Resumen</h5>
                         <p class="mb-0 text-muted">
@@ -182,8 +189,8 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-primary-subtle"><i class="bi bi-lightbulb-fill text-primary"></i></div>
+                <div class="dashboard-card p-4">
+                    <div class="card-icono bg-primary-subtle"><i class="bi bi-lightbulb-fill text-primary"></i></div>
                     <div>
                         <h5 class="fw-bold">Recomendación</h5>
                         <p class="mb-0 text-muted">

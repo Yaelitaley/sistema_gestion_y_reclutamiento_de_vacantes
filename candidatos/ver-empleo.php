@@ -9,14 +9,6 @@
         <!-- TOPBAR -->
         <?php include "includes/topbar.php"; ?>
 
-        <!-- BOTÓN REGRESAR -->
-        <div class="mb-4">
-            <a href="explorar-empleos.php" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-2"></i>
-                Regresar
-            </a>
-        </div>
-
         <!-- INFORMACIÓN PRINCIPAL -->
         <div class="table-box mb-5">
             <div class="row align-items-center">
@@ -170,14 +162,14 @@
         </div>
 
         <!-- VACANTES RELACIONADAS -->
-        <div class="table-box mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="table-box mb-5 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 p-4">
                 <h3 class="fw-bold">Vacantes Relacionadas</h3>
                 <a href="explorar-empleos.php" class="btn btn-outline-success">Ver Todas</a>
             </div>
             <div class="row g-4">
                 <div class="col-lg-4">
-                    <div class="job-card">
+                    <div class="job-card p-4">
                         <h5 class="fw-bold">Backend Developer</h5>
                         <p class="text-muted">Oracle</p>
                         <span class="badge bg-danger mb-3">Presencial</span>
@@ -186,7 +178,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="job-card">
+                    <div class="job-card p-4">
                         <h5 class="fw-bold">UI / UX Designer</h5>
                         <p class="text-muted">Microsoft</p>
                         <span class="badge bg-primary mb-3">Híbrido</span>
@@ -194,8 +186,8 @@
                         <a href="ver-empleo.php" class="btn btn-outline-success w-100">Ver Vacante</a>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="job-card">
+                <div class="col-lg-4 ">
+                    <div class="job-card p-4">
                         <h5 class="fw-bold">Full Stack Developer</h5>
                         <p class="text-muted">Amazon</p>
                         <span class="badge bg-success mb-3">Remoto</span>

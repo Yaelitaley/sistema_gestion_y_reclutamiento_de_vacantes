@@ -22,13 +22,13 @@
             <!-- BUSCADOR -->
             <div class="tabla mb-4">
                 <div class="row g-3">
-                    <div class="col-lg-10">
+                    <div class="col-lg-9">
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-search"></i></span>
                             <input type="text" name="busqueda" id="buscarEmpleo" class="form-control" placeholder="Buscar puesto, empresa o palabra clave...">
                         </div>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                         <button type="submit" class="btn btn-success w-100">Buscar</button>
                     </div>
                 </div>
@@ -39,17 +39,16 @@
         <div class="row g-4 mb-5">
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-success-subtle"><i class="bi bi-briefcase-fill text-success"></i></div>
-                    <div>
+                    <div> <div class="card-icono bg-success-subtle mt-2"><i class="bi bi-briefcase-fill text-success"></i></div>
                         <h3 class="fw-bold">125</h3>
                         <p class="text-muted mb-0">Vacantes Disponibles</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-3 col-md-6 ">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-primary-subtle"><i class="bi bi-building text-primary"></i></div>
-                    <div>
+                    
+                    <div > <div class="card-icono bg-primary-subtle mt-2"><i class="bi bi-building text-primary"></i></div>
                         <h3 class="fw-bold">48</h3>
                         <p class="text-muted mb-0">Empresas</p>
                     </div>
@@ -57,7 +56,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-warning-subtle"><i class="bi bi-laptop text-warning"></i></div>
+                    <div class="card-icono bg-warning-subtle mt-2"><i class="bi bi-laptop text-warning"></i></div>
                     <div>
                         <h3 class="fw-bold">36</h3>
                         <p class="text-muted mb-0">Remotas</p>
@@ -66,7 +65,7 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card">
-                    <div class="card-icon bg-danger-subtle"><i class="bi bi-stars text-danger"></i></div>
+                    <div class="card-icono bg-danger-subtle mt-2"><i class="bi bi-stars text-danger"></i></div>
                     <div>
                         <h3 class="fw-bold">18</h3>
                         <p class="text-muted mb-0">Nuevas Hoy</p>
@@ -76,12 +75,12 @@
         </div>
 
         <!-- LISTADO DE VACANTES -->
-        <h4 class="fw-bold mb-4">Vacantes Disponibles</h4>
+        <h4 class="fw-bold mb-4 p-4">Vacantes Disponibles</h4>
 
-        <div class="row g-4">
+        <div class="row g-4 p-4">
             <!-- VACANTE 1 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Frontend Developer</h4>
                     <p class="text-muted">Google México</p>
                     <span class="badge bg-success">Tiempo Completo</span>
@@ -98,7 +97,7 @@
 
             <!-- VACANTE 2 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Diseñador UI / UX</h4>
                     <p class="text-muted">Microsoft</p>
                     <span class="badge bg-primary">Híbrido</span>
@@ -115,7 +114,7 @@
 
             <!-- VACANTE 3 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Backend Developer</h4>
                     <p class="text-muted">Oracle</p>
                     <span class="badge bg-danger">Presencial</span>
@@ -132,7 +131,7 @@
 
             <!-- VACANTE 4 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Analista de Datos</h4>
                     <p class="text-muted">Amazon</p>
                     <span class="badge bg-warning text-dark">Remoto</span>
@@ -149,7 +148,7 @@
 
             <!-- VACANTE 5 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Especialista en Marketing Digital</h4>
                     <p class="text-muted">Mercado Libre</p>
                     <span class="badge bg-info">Híbrido</span>
@@ -166,7 +165,7 @@
 
             <!-- VACANTE 6 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Analista Financiero</h4>
                     <p class="text-muted">BBVA</p>
                     <span class="badge bg-primary">Tiempo Completo</span>
@@ -183,7 +182,7 @@
 
             <!-- VACANTE 7 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Ingeniero DevOps</h4>
                     <p class="text-muted">IBM</p>
                     <span class="badge bg-warning text-dark">Remoto</span>
@@ -200,7 +199,7 @@
 
             <!-- VACANTE 8 -->
             <div class="col-lg-6">
-                <div class="job-card">
+                <div class="job-card p-4">
                     <h4 class="fw-bold">Auxiliar Administrativo</h4>
                     <p class="text-muted">Grupo Bimbo</p>
                     <span class="badge bg-secondary">Presencial</span>
@@ -232,7 +231,7 @@
             <h3 class="fw-bold">¿No encontraste el empleo ideal?</h3>
             <p class="text-muted">Mantén actualizado tu perfil y tu currículum para recibir nuevas recomendaciones de empleo.</p>
             <!-- Corregido el enlace a editar-perfil.php -->
-            <a href="editar-perfil.php" class="btn btn-success">Actualizar Perfil</a>
+            <a href="editar_perfil.php" class="btn btn-success">Actualizar Perfil</a>
         </div>
 
     </div>

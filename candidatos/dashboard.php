@@ -112,8 +112,8 @@
         </div>
         <div class="row g-4">
             <!-- CARD -->
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100">
+            <div class="col-lg-3  col-md-6">
+                <div class="dashboard-card h-100 p-4">
                     <h5 class="fw-bold">
                         Frontend Developer
                     </h5>
@@ -133,14 +133,14 @@
                     </p>
                     <a
                         href="../candidatos/ver-empleo.php"
-                        class="btn btn-candidato w-100">
+                        class="btn btn-candidato w-100 ">
                         Ver Vacante
                     </a>
                 </div>
             </div>
             <!-- CARD -->
             <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100">
+                <div class="dashboard-card h-100 p-4">
                     <h5 class="fw-bold">
                         Diseñador UI / UX
                     </h5>
@@ -167,7 +167,7 @@
             </div>
             <!-- CARD -->
             <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100">
+                <div class="dashboard-card h-100 p-4">
                     <h5 class="fw-bold">
                         Analista de Datos
                     </h5>
@@ -194,7 +194,7 @@
             </div>
             <!-- CARD -->
             <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100">
+                <div class="dashboard-card h-100 p-4">
                     <h5 class="fw-bold">
                         Backend Developer
                     </h5>
@@ -220,11 +220,11 @@
                 </div>
             </div>
                         <!-- PANEL LATERAL -->
-            <div class="row mt-5">
+            <div class="row mt-5 ">
                 <!-- PERFIL -->
                 <div class="col-lg-4 mb-4">
-                    <div class="dashboard-carde flex-column text-center">
-                        <i class="bi bi-person-fill me-3 fs-4"></i>
+                    <div class="dashboard-carde flex-column text-center p-4">
+                        <i class="bi bi-person-fill me-3 fs-4 "></i>
                         <h4 class="fw-bold">
                             Gabriel Montero
                         </h4>
@@ -243,8 +243,8 @@
                     </div>
                 </div>
                 <!-- CURRICULUM -->
-                <div class="col-lg-4 mb-4">
-                    <div class="dashboard-carde flex-column">
+                <div class="col-lg-4 mb-4 ">
+                    <div class="dashboard-carde flex-column p-4">
                         <h5 class="fw-bold mb-3">
                             <i class="bi bi-file-earmark-person-fill me-2"></i>
                             Mi Currículum
@@ -273,7 +273,7 @@
                 </div>
                 <!-- ESTADISTICAS -->
                 <div class="col-lg-4 mb-4">
-                    <div class="dashboard-carde flex-column">
+                    <div class="dashboard-carde flex-column p-4">
                         <h5 class="fw-bold mb-4">
                             Mis Estadísticas
                         </h5>

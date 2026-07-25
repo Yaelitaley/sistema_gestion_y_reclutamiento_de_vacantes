@@ -217,32 +217,6 @@
             </div>
         </div>
 
-        <!-- NIVEL DE CONOCIMIENTOS -->
-        <div class="table-box mb-4">
-            <h4 class="fw-bold mb-4">
-                Nivel de Conocimientos
-            </h4>
-            <p class="mb-2">HTML</p>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-success" style="width:95%;">95%</div>
-            </div>
-            <p class="mb-2">CSS</p>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-info" style="width:90%;">90%</div>
-            </div>
-            <p class="mb-2">Bootstrap</p>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-primary" style="width:88%;">88%</div>
-            </div>
-            <p class="mb-2">JavaScript</p>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-warning" style="width:80%;">80%</div>
-            </div>
-            <p class="mb-2">PHP</p>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-danger" style="width:75%;">75%</div>
-            </div>
-        </div>
 
         <!-- INFORMACIÓN ADICIONAL -->
         <div class="table-box mb-4">
