@@ -9,9 +9,8 @@
             <!-- PANEL IZQUIERDO -->
             <div class="col-md-6 left-panel d-flex flex-column justify-content-center align-items-center">
 
-                <div class="text-center">
-
-                    <h1 class="fw-bold">
+                <div class="text-center w-100 px-4">
+                    <h1 class="fw-bold textowhite">
                         Bienvenido
                     </h1>
 
@@ -19,26 +18,41 @@
                         Candidato
                     </h1>
 
-                    <p class="mt-3 fw-bold">
+                    <p class="fw-bold mt-3 textowhite">
                         Publica tu currículum y encuentra las mejores ofertas laborales.
                     </p>
 
-                    <img
-                        src="../assets/img/candidato02.png"
-                        class="img-fluid mt-4 login-image"
-                        alt="Candidato">
+                     <!-- INICIO DEL BANNER DE IMAGENES (CARRUSEL) -->
+                    <div id="bannerCandidato" class="carousel slide carousel-fade mt-4 w-100 mx-auto" data-bs-ride="carousel" data-bs-interval="4000">
+                        <div class="carousel-inner rounded-3 shadow">
+                            
+                            <!-- Imagen 1 -->
+                            <div class="carousel-item active">
+                                <img src="../assets/img/candi1.AVIF" class="d-block w-100 banner-candidato" alt="Candidato registrándose">
+                            </div>
+                            
+                            <!-- Imagen 2 -->
+                            <div class="carousel-item">
+                                <img src="../assets/img/candi2.AVIF" class="d-block w-100 banner-candidato" alt="Buscando empleo">
+                            </div>
+                            
+                            <!-- Imagen 3 -->
+                            <div class="carousel-item">
+                                <img src="../assets/img/candi3.AVIF" class="d-block w-100 banner-candidato" alt="Entrevista de trabajo">
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- FIN DEL BANNER DE IMAGENES -->
 
                 </div>
 
                 <!-- INFO -->
                 <div class="security-box mt-5">
-
                     <i class="bi bi-shield-lock-fill"></i>
-
                     <span>
                         Acceso exclusivo para los candidatos registrados.
                     </span>
-
                 </div>
 
             </div>
@@ -52,16 +66,14 @@
                     <div class="text-center mb-4">
 
                         <div class="login-icon bg-candidato">
-
                             <i class="bi bi-person-fill"></i>
-
                         </div>
 
                         <p class="mb-1">
                             Iniciar sesión como
                         </p>
 
-                        <h2 class="fw-bold text-candidato">
+                        <h2 class="fw-bold text-candidat">
                             Candidato
                         </h2>
 
@@ -72,67 +84,37 @@
 
                         <!-- CORREO -->
                         <div class="mb-3">
-
                             <div class="input-group">
-
                                 <span class="input-group-text">
                                     <i class="bi bi-envelope-fill"></i>
                                 </span>
-
-                                <input
-                                    type="email"
-                                    id="correo"
-                                    name="correo"
-                                    class="form-control"
-                                    placeholder="Correo electrónico">
-
+                                <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo electrónico">
                             </div>
-
                         </div>
 
                         <!-- PASSWORD -->
                         <div class="mb-2">
-
                             <div class="input-group">
-
                                 <span class="input-group-text">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
-
-                                <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    class="form-control"
-                                    placeholder="Contraseña">
-
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña">
                                 <span class="input-group-text">
                                     <i class="bi bi-eye"></i>
                                 </span>
-
                             </div>
-
                         </div>
 
                         <!-- RECOVERY -->
                         <div class="text-end mb-4">
-
-                            <a href="recovery.php"
-                               class="forgot-password">
-
+                            <a href="recovery.php" class="forgot-password">
                                 ¿Olvidaste tu contraseña?
-
                             </a>
-
                         </div>
 
                         <!-- BOTON -->
-                        <button type="submit"
-                                id="btnLogin"
-                                class="btn btn-candidato w-100">
-
+                        <button type="submit" id="btnLogin" class="btn btn-candidato w-100">
                             Iniciar sesión
-
                         </button>
 
                         <!-- MENSAJE -->
@@ -142,33 +124,20 @@
 
                     <!-- REGISTER -->
                     <div class="text-center mt-4">
-
-                        <a href="register.php"
-                           class="forgot-password">
-
+                        <a href="register.php" class="forgot-password">
                             ¿No tienes cuenta? Regístrate
-
                         </a>
-
                     </div>
 
                     <!-- ALERT -->
                     <div class="alert-box mt-4">
-
                         <i class="bi bi-info-circle-fill"></i>
-
                         <div>
-
-                            <strong>
-                                Acceso seguro
-                            </strong>
-
+                            <strong>Acceso seguro</strong>
                             <p class="mb-0">
                                 Solo los candidatos registrados pueden acceder al sistema.
                             </p>
-
                         </div>
-
                     </div>
 
                 </div>
@@ -176,52 +145,65 @@
             </div>
 
         </div>
-
     </div>
-
 </main>
-
-<script>
-document.getElementById('loginForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const btn     = document.getElementById('btnLogin');
-    const mensaje = document.getElementById('mensajeLogin');
-
-    mensaje.className   = 'alert mt-3 d-none';
-    mensaje.textContent = '';
-
-    btn.disabled    = true;
-    btn.textContent = 'Verificando...';
-
-    const formData = new FormData();
-    formData.append('correo',   document.getElementById('correo').value.trim());
-    formData.append('password', document.getElementById('password').value);
-
-    fetch('actions/login_candidato.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = 'dashboard.php';
-        } else {
-            mensaje.classList.remove('d-none');
-            mensaje.classList.add('alert-danger');
-            mensaje.textContent = data.message;
-            btn.disabled    = false;
-            btn.textContent = 'Iniciar sesión';
+    <!-- jQuery y Bootstrap JS (Al final del documento) -->
+    <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+    // Inicializar el carrusel manualmente
+    document.addEventListener('DOMContentLoaded', function () {
+        var carouselElement = document.getElementById('bannerCandidato');
+        if (carouselElement) {
+            var carousel = new bootstrap.Carousel(carouselElement, {
+                interval: 4000, // Cambia cada 4 segundos
+                ride: true,
+                pause: false // No se pausa al pasar el mouse (opcional)
+            });
         }
-    })
-    .catch(() => {
-        mensaje.classList.remove('d-none');
-        mensaje.classList.add('alert-danger');
-        mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
-        btn.disabled    = false;
-        btn.textContent = 'Iniciar sesión';
-    });
-});
-</script>
 
-<?php include "includes/footer.php"; ?>
+        // Tu código original de login
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const btn     = document.getElementById('btnLogin');
+            const mensaje = document.getElementById('mensajeLogin');
+
+            mensaje.className   = 'alert mt-3 d-none';
+            mensaje.textContent = '';
+
+            btn.disabled    = true;
+            btn.textContent = 'Verificando...';
+
+            const formData = new FormData();
+            formData.append('correo',   document.getElementById('correo').value.trim());
+            formData.append('password', document.getElementById('password').value);
+
+            fetch('actions/login_candidato.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = 'dashboard.php';
+                } else {
+                    mensaje.classList.remove('d-none');
+                    mensaje.classList.add('alert-danger');
+                    mensaje.textContent = data.message;
+                    btn.disabled    = false;
+                    btn.textContent = 'Iniciar sesión';
+                }
+            })
+            .catch(() => {
+                mensaje.classList.remove('d-none');
+                mensaje.classList.add('alert-danger');
+                mensaje.textContent = 'Error de conexión. Intenta de nuevo.';
+                btn.disabled    = false;
+                btn.textContent = 'Iniciar sesión';
+            });
+        });
+    });
+    </script>
+</body>
+</html>

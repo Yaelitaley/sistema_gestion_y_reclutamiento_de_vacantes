@@ -1,29 +1,10 @@
 <?php include "includes/header.php"; ?>
 
-<main class="register-container">
+<main class="register-container ">
 
-    <!-- TOP BAR -->
-    <div class="top-bar">
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
 
-        <i class="bi bi-person-plus-fill"></i>
-
-        <span>
-            Registro de Candidato
-        </span>
-
-    </div>
-
-
-
-
-
-    <div class="container-fluid py-5 d-flex justify-content-center">
-
-        <div class="register-box">
-
-
-
-
+        <div class="register-box p-4">
 
             <!-- TITULO -->
             <div class="text-center mb-4">
@@ -201,33 +182,22 @@
 
 
 
-                <!-- BOTON -->
+                <!-- BOTON REGISTRARSE -->
                 <button
                     type="submit"
                     class="btn btn-candidato w-100">
-
                     Registrarse
-
                 </button>
 
+            </form> <!-- SE CIERRA EL FORMULARIO AQUÍ -->
 
-
-
-
-                <!-- REGRESAR -->
-                <div class="text-center mt-3">
-
-                    <!-- CANCELAR -->
-                <a href="javascript:history.back()"
-                    class="cancel-link">
-
-                        Regresar
-
+            <!-- REGRESAR (FUERA DEL FORMULARIO) -->
+            <div class="mt-3 d-grid">
+                <a href="login.php" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i> Regresar
                 </a>
+            </div>
 
-                </div>
-
-            </form>
 
 
 
@@ -258,4 +228,3 @@
 
 </main>
 
-<?php include "includes/footer.php"; ?>

@@ -93,7 +93,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2">
-                        <button type="submit" class="btn btn-success w-100">Buscar</button>
+                        <button type="submit" class="btn btn-candidato w-100">Buscar</button>
                     </div>
                 </div>
             </div>
@@ -209,7 +209,7 @@
                     <p class="text-muted mb-0">Explora nuevas vacantes disponibles y continúa creciendo profesionalmente.</p>
                 </div>
                 <div class="mt-3 mt-lg-0">
-                    <a href="explorar-empleos.php" class="btn btn-success">
+                    <a href="explorar-empleos.php" class="btn btn-candidato">
                         <i class="bi bi-search me-2"></i>
                         Explorar Empleos
                     </a>

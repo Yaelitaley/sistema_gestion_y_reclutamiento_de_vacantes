@@ -1,54 +1,103 @@
-/* Los colores oficiales de los botones son:  background:linear-gradient(135deg,#4853ec,#5b30a0);*/
-/*El color oficial del fondo es ; background:linear-gradient(#F8FAFC);  */
+/* ==================================================================
+   SISTEMA MINIMALISTA PROFESIONAL (AZUL MARINO / SLATE)
+   TIPOGRAFÍA: SAN FRANCISCO (APPLE) / SISTEMA NATIVA
+================================================================== */
 
 body{
-    font-family:'Poppins',sans-serif;
+    /* Tipografía nativa de Apple (San Francisco) y fallbacks */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin:0;
     padding:0;
-    background:linear-gradient(#F8FAFC);
+    background-color: #F1F5F9; /* Fondo gris azulado muy claro */
+    -webkit-font-smoothing: antialiased; /* Suaviza la fuente en Mac */
+    -moz-osx-font-smoothing: grayscale;
 }
+
 .container-fluid{
-    background-color: #F8FAFC;
+    background-color: #F1F5F9;
 }
-/* PANEL IZQUIERDO */
+
+/* ==================================================
+   FONDO DE PÁGINA DE REGISTRO
+================================================== */
+.register-container {
+    /* Cambia esta ruta asegurándote de que sea correcta desde tu archivo CSS */
+    background-image: 
+      linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75)), 
+      url('../img/fondoregistro.png') !important;
+    
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Nos aseguramos de que el contenedor de adentro sea transparente para que deje ver el fondo */
+.register-container > .container-fluid {
+    background: transparent !important;
+}
+/*==================================================
+=            LOGIN
+==================================================*/
 .left-panel{
-    background-color: #ffeeee;
+    background-color: #0F172A; /* Azul marino oscuro casi negro */
     padding: 40px;
+    border-radius: 0;
 }
-/* IMAGEN */
 .login-image{
     max-width: 250px;
-    border-radius: 10px;
 }
-/* LOGIN BOX */
 .login-box{
     width: 100%;
     max-width: 420px;
 }
 .text-candidato{
-    color: #ff5d52 ;
+    color: #3B82F6; /* Azul vivo para acentos */
+}
+.text-candidat{
+    color: #3B82F6;
 }
 .btn-candidato{
-    background:linear-gradient(135deg,#4853ec,#5b30a0);
-    color:white;
+    background-color: #00586a;
+    color:#ffffff;
     border:none;
+    border-radius: 0;
     transition:.3s;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 .btn-candidato:hover{
-    transform:translateY(-3px);
+    background-color: #2563EB;
+    transform: translateY(-2px);
 }
+
+.btn-candidat{
+    background-color: #0F172A;
+    color:#ffffff;
+    border:none;
+    border-radius: 0;
+    transition:.3s;
+}
+.btn-candidat:hover{
+    background-color: #1E293B;
+    transform: translateY(-2px);
+}
+
 .candidate-profile .dropdown-toggle{
     display:flex;
     align-items:center;
     border:none;
     background:transparent;
-    color:white;
-    border-radius:14px;
+    color:#0F172A;
+    border-radius:0;
     padding:10px 16px;
     transition:.3s;
 }
 .candidate-profile .dropdown-toggle:hover{
-    background:rgba(255,255,255,.10);
+    background:#F1F5F9;
 }
 .candidate-profile .dropdown-toggle:focus{
     box-shadow:none;
@@ -56,14 +105,16 @@ body{
 .section-title{
     font-size:38px;
     font-weight:700;
-    color:white;
+    color:#0F172A;
+    letter-spacing: -0.5px;
 }
-/* ICONO */
+
+/* ICONO LOGIN */
 .login-icon{
-    width: 80px;
-    height: 80px;
-    background-color: #ff5d52 ;
-    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    background-color: #3B82F6;
+    border-radius: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -71,33 +122,47 @@ body{
     margin-bottom: 15px;
 }
 .login-icon i{
-    color: white;
-    font-size: 35px;
+    color: #ffffff;
+    font-size: 30px;
 }
+
 /* LINKS */
 .forgot-password{
     text-decoration: none;
-    color: #ff5d52 ;
+    color: #475569;
     font-size: 14px;
+    font-weight: 500;
 }
-/* SEGURIDAD */
+.forgot-password:hover{
+    color: #3B82F6;
+}
+
+/* SEGURIDAD Y ALERTAS */
 .security-box{
-    background-color: white;
+    background-color: #ffffffd8;
     padding: 15px;
-    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #0F172A;
 }
-/* ALERTA */
 .alert-box{
-    background-color: #eef5ff;
+    background-color: #EFF6FF; /* Azul muy claro */
     padding: 15px;
-    border-radius: 10px;
+    border: 1px solid #BFDBFE;
+    border-left: 5px solid #3B82F6;
+    border-radius: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #1E293B;
 }
+.alert-box i{
+    color: #3B82F6;
+}
+
 /*==================================================
 =            CONTENIDO PRINCIPAL
 ==================================================*/
@@ -106,11 +171,31 @@ body{
     width:100%;
     padding:30px;
     transition:.35s ease;
+    background-color: #F1F5F9;
 }
 .content.sidebar-open{
     margin-left:260px;
     width:calc(100% - 260px);
 }
+.register-box{
+    background-color: #eaebee;
+}
+
+/* Ajuste para el banner del carrusel */
+.banner-candidato {
+    width: 100%;
+    height: 350px; /* Altura fija para todas las imágenes */
+    object-fit: cover; /* Hace que la imagen cubra el área sin deformarse */
+    object-position: center; /* Centra la imagen si tiene que recortarse */
+}
+
+/* Si necesitas que en pantallas grandes sea más alto, puedes agregar esto: */
+@media (min-width: 768px) {
+    .banner-candidato {
+        height: 450px; /* Altura más grande para computadoras */
+    }
+}
+
 /*==================================================
 =            SIDEBAR
 ==================================================*/
@@ -120,38 +205,28 @@ body{
     left:-260px;
     width:260px;
     height:100vh;
-    background:#111827;
-    padding:20px;
+    background:#0F172A; /* Azul marino oscuro */
+    padding:20px 0;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
     transition:left .35s ease;
+    border-right: 1px solid #1E293B;
 }
 .sidebar.active{
     left:0;
 }
-.hero{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.20);
-    transition:.35s;
-    margin-bottom:50px;
-}
-.hero:hover{
-    background:rgba(255,255,255,.16);
-}
 .logo{
-    color: white;
+    color: #ffffff;
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 40px;
+    padding: 0 20px;
+    letter-spacing: -0.5px;
 }
 .logo i{
     margin-right: 10px;
-    color:#6b48ec;
+    color:#3B82F6;
 }
 .menu{
     list-style: none;
@@ -159,39 +234,44 @@ body{
     margin: 0;
 }
 .menu li{
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 .menu a{
     text-decoration: none;
-    color: #d1d5db;
+    color: #94A3B8; /* Gris azulado */
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 14px;
-    border-radius: 12px;
+    padding: 14px 20px;
+    border-left: 4px solid transparent;
     transition: .3s;
+    font-size: 15px;
+    font-weight: 500;
 }
 .menu a:hover{
-    background:linear-gradient(
-        135deg,
-        #484dec,
-        #8d27db
-    );
+    background-color: #1E293B;
+    color: #ffffff;
+    border-left: 4px solid #3B82F6;
 }
 .menu .active{
-    background:linear-gradient(
-        135deg,
-        #4866ec,
-        #6627db
-    );
+    background-color: #1E293B;
+    color: #ffffff;
+    border-left: 4px solid #3B82F6;
 }
 .logout a{
-    color: #ef4444;
+    color: #94A3B8;
     text-decoration: none;
     display: flex;
     gap: 10px;
     align-items: center;
+    padding: 14px 20px;
+    border-left: 4px solid transparent;
 }
+.logout a:hover{
+    background-color: #1E293B;
+    color: #F87171; /* Rojo suave al pasar el mouse sobre salir */
+}
+
 /*==================================================
 =            TOPBAR
 ==================================================*/
@@ -199,438 +279,387 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:18px 25px;
-    border-radius:18px;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    padding:16px 25px;
+    background:#ffffff;
+    border-bottom: 2px solid #0F172A; /* Línea inferior oscura */
     margin-bottom:30px;
 }
 .search-box input{
-    border-radius:14px;
+    border-radius: 0;
+    border: 1px solid #E2E8F0;
+    background-color: #F8FAFC;
+}
+.search-box .form-control:focus{
+    border-color: #3B82F6;
+    box-shadow: none;
+    background-color: #ffffff;
 }
 .search-box .btn{
-    border-radius:14px;
+    border-radius: 0;
+    background-color: #0F172A;
+    border: none;
 }
-.search-box .form-control{
-    border-radius: 10px;
+.search-box .btn:hover{
+    background-color: #1E293B;
 }
 .btn-explorar{
+    background-color: #3B82F6;
+    color: white;
+    border-radius: 0;
     transition:.35s;
 }
 .btn-explorar:hover{
-    transform:translateY(-4px);
-    box-shadow:0 10px 20px rgba(0,0,0,.25);
+    background-color: #2563EB;
+    transform:translateY(-2px);
 }
 .dropdown-toggle{
     border: none;
     background: transparent;
 }
 .dropdown-menu{
-    background:rgba(35,35,55,.95);
-    backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:14px;
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     min-width:220px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 .dropdown-item{
-    color:white;
+    color:#0F172A;
     transition:.3s;
+    font-weight: 500;
 }
 .dropdown-item:hover{
-    background:linear-gradient(135deg,#484dec,
-        #8d27db);
-    color:white;
+    background-color:#F1F5F9;
+    color:#3B82F6;
 }
 .dropdown-divider{
-    border-color:rgba(255,255,255,.15);
+    border-color:#E2E8F0;
 }
+
 /*==================================================
-=            TARJETAS
+=            TARJETAS (CARDS)
 ==================================================*/
 .dashboard-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.20);
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     transition:.35s;
     min-height:140px;
     z-index: 1;
+    padding: 20px;
 }
 .dashboard-carde{
-    background:rgba(255, 233, 233, 0.12);
-    border:1px solid rgba(255,255,255,.15);
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
     text-align: center;
-    backdrop-webkit:blur(15px);
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.20);
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     transition:.35s;
     min-height:140px;
     z-index: 6;
+    padding: 20px;
 }
-.dashboard-card:hover{
-    transform:translateY(-5px);
-    background:rgba(255,255,255,.18);
+.dashboard-card:hover, .dashboard-carde:hover{
+    border-color: #3B82F6;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 .card{
-    background:rgba(255,255,255,.12);
+    background:#ffffff;
     justify-content: center;
     align-items: center;
+    border-radius: 0;
 }
 .glass-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
 }
 .card-icon {
-    width: 60px;
-    height: 60px;
-    min-width: 60px; /* Evita que se deforme */
-    border-radius: 15px;
-    
+    width: 50px;
+    height: 50px;
+    min-width: 50px; 
+    border-radius: 0;
+    background-color: #EFF6FF;
     display: flex;
     justify-content: center;
     align-items: center;
-    
     text-align: center;
-    line-height: 1; /* Mantiene el icono en el centro vertical exacto */
-    font-size: 24px; /* Ajusta el tamaño del ícono si lo necesitas */
-    
-    flex-shrink: 0; /* Evita que se encoja en contenedores flex */
+    line-height: 1; 
+    flex-shrink: 0; 
 }
 .card-icon i{
-    font-size: 30px;
+    font-size: 24px;
+    color: #3B82F6;
 }
+
 /*==================================================
-=            TABLE BOX
+=            TABLE BOX Y BANNERS
 ==================================================*/
 .table-box{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-webkit:blur(15px);
-    border-radius:18px;
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     padding:25px;
 }
-/*==================================================
-=            BANNER PRINCIPAL
-==================================================*/
 .banner{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    border-radius:20px;
+    background:#0F172A;
+    border-radius: 0;
     padding:40px;
-    box-shadow:0 10px 25px rgba(0,0,0,.20);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     position:relative;
     overflow:visible;
 }
-.banner h1,
-.banner h2{
+.banner h1, .banner h2{
     font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
 }
 .banner p{
     opacity: .95;
     margin: 20px 0;
+    color: #CBD5E1;
 }
 .banner img{
     max-width: 320px;
 }
+.img{
+    max-width: 400px;
+    height: 400px;
+}
+
 /*==================================================
-=            BOTONES
+=            BOTONES GENERALES
 ==================================================*/
 .btn-success{
-    border-radius: 10px;
+    background-color: #3B82F6;
+    border: none;
+    border-radius: 0;
     padding: 10px 20px;
     font-weight: 600;
+    transition: .3s;
+}
+.btn-success:hover{
+    background-color: #2563EB;
+    transform: translateY(-2px);
 }
 .btn-outline-success{
-    border-radius: 10px;
+    border: 1px solid #3B82F6;
+    color: #3B82F6;
+    background: transparent;
+    border-radius: 0;
     font-weight: 600;
+    transition:.3s;
 }
+.btn-outline-success:hover{
+    background-color: #3B82F6;
+    color: #ffffff;
+}
+
 /*==================================================
-=            CATEGORÍAS
+=            CATEGORÍAS Y EMPLEOS
 ==================================================*/
 .category-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    border-radius:18px;
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     transition:.35s;
+    padding: 20px;
 }
 .category-card:hover{
-    transform:translateY(-6px);
-    background:rgba(255,255,255,.18);
-    box-shadow:0 15px 25px rgba(0,0,0,.25);
+    border-color: #3B82F6;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 .category-card i{
     font-size:36px;
     margin-bottom:18px;
+    color: #3B82F6;
 }
 .category-card h6{
     font-weight: 600;
+    color: #0F172A;
 }
 .categories{
     margin-bottom:50px;
 }
-/*==================================================
-=            TARJETAS DE EMPLEOS
-==================================================*/
+
 .job-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    color:white;
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    padding: 25px;
+    color:#0F172A;
+    transition:.3s;
 }
 .job-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 15px 30px rgba(0,0,0,.25);
+    border-color: #3B82F6;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.08);
 }
 .job-card h5{
     font-weight: 700;
+    color: #0F172A;
 }
 .job-card p{
-    color:#f3f4f6;
+    color: #64748B;
 }
 .job-card .badge{
     margin-bottom: 15px;
 }
-/*==================================================
-=            ICONOS
-==================================================*/
 .job-card i{
     margin-right: 8px;
+    color: #3B82F6;
 }
+
 /*==================================================
-=            BUSCADOR
+=            BUSCADOR Y ACCIONES
 ==================================================*/
 .search-job{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    padding: 20px;
 }
 .search-job .form-control{
-    border-radius: 10px;
+    border-radius: 0;
+    border: 1px solid #E2E8F0;
 }
 .search-job .btn{
-    border-radius: 10px;
+    border-radius: 0;
 }
-/*==================================================
-=            ACCIONES RÁPIDAS
-==================================================*/
 .quick-actions .btn{
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 0;
     font-weight: 600;
 }
 .action-box{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    border-radius:18px;
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     padding:25px;
+    transition: .3s;
 }
 .action-box:hover{
-    background:rgba(255,255,255,.18);
+    border-color: #3B82F6;
 }
+
 /*==================================================
-=            PERFIL DEL CANDIDATO
+=            PERFIL Y CV
 ==================================================*/
-.profile-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
+.profile-card, .cv-card, .stats-card{
+    background:#ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    padding: 25px;
 }
-/*==================================================
-=            PERFIL CANDIDATO
-==================================================*/
 .candidate-profile{
     display:flex;
     align-items:center;
     gap:15px;
-    padding:12px 18px;
-    border-radius:15px;
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    -webkit-backdrop-filter:blur(15px);
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
+    padding:8px 16px;
+    border:1px solid #E2E8F0;
+    background: #ffffff;
+    border-radius: 0;
+    transition:.3s;
+}
+.candidate-profile:hover{
+    border-color: #3B82F6;
 }
 .profile-card img{
     width: 130px;
     height: 130px;
     object-fit: cover;
-    border-radius: 50%;
-   border:4px solid #ec4899;
+    border-radius: 0;
+    border:2px solid #3B82F6;
     margin-bottom: 20px;
 }
-.profile-card h4{
+.profile-card h4, .cv-card h5, .stats-card h5{
     font-weight: 700;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    color: #0F172A;
 }
 .profile-card p{
-    color:#e5e7eb;
-}
-/*==================================================
-=            CURRICULUM
-==================================================*/
-.cv-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-}
-.cv-card h5{
-    font-weight: 700;
-    margin-bottom: 20px;
-}
-/*==================================================
-=            ESTADÍSTICAS
-==================================================*/
-.stats-card{
-    background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-}
-.stats-card h5{
-    font-weight: 700;
-    margin-bottom: 20px;
+    color: #64748B;
 }
 .stats-item{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-     border-bottom:1px solid rgba(255,255,255,.12);
+    border-bottom:1px solid #E2E8F0;
 }
 .stats-item:last-child{
     border-bottom: none;
 }
+
 /*==================================================
-=            TABLAS
+=            TABLAS Y BADGES
 ==================================================*/
 .table{
+    color: #0F172A;
     margin-bottom: 0;
 }
 .table thead{
-    background:rgba(255,255,255,.08);
+    background-color: #F8FAFC;
 }
 .table th{
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #0F172A;
+}
+.table td{
+    color: #334155;
+    vertical-align: middle;
+    border-color: #E2E8F0;
+}
+.badge{
+    padding: 6px 12px;
+    border-radius: 0;
+    font-size: 12px;
     font-weight: 600;
 }
-.table td{
-    vertical-align: middle;
-}
+
 /*==================================================
-=            BADGES
-==================================================*/
-.badge{
-    padding: 8px 14px;
-    border-radius: 30px;
-    font-size: 13px;
-}
-/*==================================================
-=            IMÁGENES
+=            IMÁGENES Y TEXTOS
 ==================================================*/
 .rounded-circle{
+    border-radius: 0 !important;
     object-fit: cover;
 }
-/*==================================================
-=            FOOTER
-==================================================*/
 footer{
     background:transparent;
-    border-top:1px solid rgba(255,255,255,.15);
+    border-top:1px solid #E2E8F0;
+    color: #475569;
 }
-.dashboard-card{
-    position:relative;
-    overflow:hidden;
-    text-align: center;
-}
-.dashboard-card::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:-120%;
-    width:60%;
-    height:100%;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.15),
-        transparent
-    );
-    transition:.8s;
-}
-.dashboard-card:hover::before{
-    left:150%;
-}
+.dashboard-card::before{ display: none; }
+
 .texto,
-.content h1,
-.content h2,
-.content h3,
-.content h4,
-.content h5,
-.content h6,
-.content p,
-.content span,
-.content label{
-    color:rgb(0, 0, 0);
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6,
+.content p, .content span, .content label{
+    color: #0F172A;
 }
-.table{
-    color:rgb(0, 0, 0);
+.textowhite{
+    color: #ffffff;
 }
-.table th{
-    color:rgb(0, 0, 0);
-}
-.table td{
-    color:#000000;
-}
+
 /*==================================================
 =            RESPONSIVE
 ==================================================*/
 @media(max-width:992px){
-    .sidebar{
-        display: none;
-    }
-    .content{
-        padding: 20px;
-    }
-    .banner{
-        text-align: center;
-    }
-    .banner img{
-        margin-top: 25px;
-    }
+    .sidebar{ display: none; }
+    .content{ padding: 20px; }
+    .banner{ text-align: center; }
+    .banner img{ margin-top: 25px; }
 }
 @media(max-width:768px){
-    .top-bar{
-        flex-direction: column;
-        gap: 20px;
-    }
-    .search-box{
-        width: 100%;
-    }
+    .top-bar{ flex-direction: column; gap: 20px; }
+    .search-box{ width: 100%; }
+    .left-panel{ display: none; }
 } 
 @media(max-width:576px){
-    .content{
-        padding: 15px;
-    }
-    .profile-card{
-        padding: 20px;
-    }
-    .job-card{
-        padding: 20px;
-    }
-}
-/* RESPONSIVE */
-@media(max-width:768px){
-    .left-panel{
-        display: none;
-    }
+    .content{ padding: 15px; }
+    .profile-card{ padding: 20px; }
+    .job-card{ padding: 20px; }
 }

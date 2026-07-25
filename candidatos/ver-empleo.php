@@ -34,7 +34,7 @@
                 <!-- BOTONES -->
                 <div class="col-lg-3">
                     <div class="d-grid gap-3">
-                        <button type="button" class="btn btn-success btn-lg btnPostular">
+                        <button type="button" class="btn btn-candidato btn-lg btnPostular">
                             <i class="bi bi-send-fill me-2"></i>
                             Postularme
                         </button>
@@ -209,7 +209,7 @@
                     <i class="bi bi-heart-fill me-2"></i>
                     Guardar Empleo
                 </button>
-                <button type="button" class="btn btn-success btnPostular">
+                <button type="button" class="btn btn-candidato btnPostular">
                     <i class="bi bi-send-fill me-2"></i>
                     Postularme
                 </button>

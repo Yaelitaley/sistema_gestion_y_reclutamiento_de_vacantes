@@ -11,7 +11,7 @@
 
                 <div class="text-center">
 
-                    <h1 class="fw-bold">
+                    <h1 class="fw-bold textowhite">
                         Recuperar
                     </h1>
 
@@ -19,13 +19,13 @@
                         Contraseña
                     </h1>
 
-                    <p class="mt-3 fw-bold">
+                    <p class="mt-3 fw-bold textowhite">
                         Recupera el acceso a tu cuenta de candidato
                     </p>
 
                     <img
-                        src="../assets/img/reclutador-recovery.png"
-                        class="img-fluid mt-4 login-image"
+                        src="../assets/img/recovery.png"
+                        class="img mt-4 login-image"
                         alt="Recovery">
 
                 </div>
@@ -269,4 +269,3 @@ document.getElementById('recoveryForm').addEventListener('submit', function (e) 
 });
 </script>
 
-<?php include "includes/footer.php"; ?>

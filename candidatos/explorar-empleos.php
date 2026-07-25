@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="col-lg-3">
-                        <button type="submit" class="btn btn-success w-100">Buscar</button>
+                        <button type="submit" class="btn btn-candidato w-100">Buscar</button>
                     </div>
                 </div>
             </div>
@@ -89,8 +89,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $28,000 MXN</p>
                     <p>Desarrollo con HTML, CSS, Bootstrap, JavaScript y React.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -106,8 +106,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $24,000 MXN</p>
                     <p>Diseño de interfaces para aplicaciones web y móviles.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -123,8 +123,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $32,000 MXN</p>
                     <p>Desarrollo de APIs con PHP, Laravel y MySQL.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -140,8 +140,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $30,000 MXN</p>
                     <p>Análisis de datos utilizando SQL, Python y Power BI.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -157,8 +157,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $22,000 MXN</p>
                     <p>Gestión de campañas digitales, SEO y redes sociales.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -174,8 +174,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $27,000 MXN</p>
                     <p>Elaboración de reportes financieros y análisis de indicadores.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -191,8 +191,8 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $38,000 MXN</p>
                     <p>Administración de servidores, Docker, Kubernetes y CI/CD.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
@@ -208,30 +208,19 @@
                     <p><i class="bi bi-cash-stack text-success"></i> $16,000 MXN</p>
                     <p>Apoyo en actividades administrativas y control documental.</p>
                     <div class="d-flex gap-2 mt-3">
-                        <a href="ver-empleo.php" class="btn btn-outline-success">Ver Detalles</a>
-                        <button class="btn btn-success btnPostular">Postularme</button>
+                        <a href="ver-empleo.php" class="btn btn-candidat">Ver Detalles</a>
+                        <button class="btn btn-candidato">Postularme</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- PAGINACIÓN -->
-        <nav class="mt-5">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled"><a class="page-link" href="#">Anterior</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Siguiente</a></li>
-            </ul>
-        </nav>
 
         <!-- BANNER FINAL -->
         <div class="table-box mt-5 text-center">
             <h3 class="fw-bold">¿No encontraste el empleo ideal?</h3>
             <p class="text-muted">Mantén actualizado tu perfil y tu currículum para recibir nuevas recomendaciones de empleo.</p>
             <!-- Corregido el enlace a editar-perfil.php -->
-            <a href="editar_perfil.php" class="btn btn-success">Actualizar Perfil</a>
+            <a href="editar_perfil.php" class="btn btn-candidato">Actualizar Perfil</a>
         </div>
 
     </div>

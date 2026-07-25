@@ -300,7 +300,7 @@
                     <i class="bi bi-file-earmark-person-fill me-2"></i>
                     Ver CV
                 </a>
-                <a href="editar_perfil.php" class="btn btn-success">
+                <a href="editar_perfil.php" class="btn btn-candidato">
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar Perfil
                 </a>

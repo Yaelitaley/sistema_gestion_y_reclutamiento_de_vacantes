@@ -119,7 +119,7 @@ include 'includes/header.php';
                             <label class="form-label fw-bold">Teléfono</label>
                             <input type="text" name="telefono" class="form-control" value="<?= e($cfg['telefono']) ?>" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" <?= !$tablasOk ? 'disabled' : '' ?>><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
+                        <button type="submit" class="btn btn-candidato w-100" <?= !$tablasOk ? 'disabled' : '' ?>><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
                     </form>
                 </div>
             </div>

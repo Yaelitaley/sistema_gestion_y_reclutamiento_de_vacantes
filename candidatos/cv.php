@@ -258,7 +258,7 @@
                 Regresar
             </a>
             <div>
-                <a href="editar_cv.php" class="btn btn-success me-2">
+                <a href="editar_cv.php" class="btn btn-candidato me-2">
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar CV
                 </a>
