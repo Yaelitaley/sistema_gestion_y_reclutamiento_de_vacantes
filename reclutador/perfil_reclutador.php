@@ -67,7 +67,7 @@ include "includes/header.php";
                     <p class="text-muted">Reclutador</p>
                     <span class="badge <?= $perfil['estado'] === 'activo' ? 'bg-success' : 'bg-secondary' ?>"><?= e(ucfirst($perfil['estado'])) ?></span>
                     <hr>
-                    <a href="editar_perfil.php" class="btn btn-primary"><i class="bi bi-pencil-fill me-2"></i>Editar Perfil</a>
+                    <a href="editar_perfil.php" class="btn btn-reclutador"><i class="bi bi-pencil-fill me-2"></i>Editar Perfil</a>
                 </div>
             </div>
 

@@ -41,8 +41,8 @@
             <img
                 src="../assets/img/imagenreclutador.png"
                 class="rounded-circle me-2"
-                width="42"
-                height="42"
+                width="50"
+                height="50"
                 alt="Reclutador">
                 
 

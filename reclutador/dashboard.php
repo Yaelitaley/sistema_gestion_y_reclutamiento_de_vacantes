@@ -134,7 +134,7 @@
                         </h5>
 
                         <a href="vacantes.php"
-                           class="btn btn-sm btn-primary">
+                           class="btn btn-sm btn-reclutador">
 
                             Ver Vacantes
 

@@ -382,7 +382,7 @@ $tipoMensaje = $_GET['type'] ?? 'success';
                     </button>
                     <button
                         type="submit"
-                        class="btn btn-primary">
+                        class="btn btn-reclutador">
                         <i class="bi bi-calendar-plus-fill me-2"></i>
                         Programar Entrevista
                     </button>

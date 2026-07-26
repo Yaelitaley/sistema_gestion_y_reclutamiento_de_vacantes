@@ -106,7 +106,7 @@ include "includes/header.php";
                     <input type="text" name="buscar" class="form-control" placeholder="Buscar entrevista..." value="<?= e($buscar) ?>">
                     <button class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
                 </form>
-                <a href="crear_entrevista.php" class="btn btn-primary"><i class="bi bi-plus-circle-fill me-2"></i>Nueva Entrevista</a>
+                <a href="crear_entrevista.php" class="btn btn-reclutador"><i class="bi bi-plus-circle-fill me-2"></i>Nueva Entrevista</a>
             </div>
         </div>
 

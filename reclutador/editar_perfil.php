@@ -316,7 +316,7 @@
 
                     <button
                         type="submit"
-                        class="btn btn-primary">
+                        class="btn btn-reclutador">
 
                         <i class="bi bi-floppy-fill me-2"></i>
 

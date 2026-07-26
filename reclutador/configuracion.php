@@ -111,7 +111,7 @@ include "includes/header.php";
                             <label class="form-label fw-bold">Empresa</label>
                             <input type="text" class="form-control" value="<?= e($datos['empresa'] ?? 'Sin empresa') ?>" disabled>
                         </div>
-                        <button class="btn btn-primary" type="submit"><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
+                        <button class="btn btn-reclutador" type="submit"><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -133,7 +133,7 @@ include "includes/header.php";
                             <label class="form-label fw-bold">Confirmar nueva contraseña</label>
                             <input type="password" name="password_confirmar" class="form-control" required minlength="6">
                         </div>
-                        <button class="btn btn-primary" type="submit"><i class="bi bi-shield-lock-fill me-2"></i>Actualizar Contraseña</button>
+                        <button class="btn btn-reclutador" type="submit"><i class="bi bi-shield-lock-fill me-2"></i>Actualizar Contraseña</button>
                     </form>
                 </div>
             </div>

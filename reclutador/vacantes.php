@@ -109,7 +109,7 @@ include "includes/header.php";
                 <h2 class="fw-bold">Mis Vacantes</h2>
                 <p class="text-muted">Administra las vacantes que has publicado.</p>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalVacante" onclick="nuevaVacante()">
+            <button type="button" class="btn btn-reclutador" data-bs-toggle="modal" data-bs-target="#modalVacante" onclick="nuevaVacante()">
                 <i class="bi bi-plus-circle-fill me-2"></i>Nueva Vacante
             </button>
         </div>
@@ -265,7 +265,7 @@ include "includes/header.php";
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-reclutador">Guardar</button>
                 </div>
             </form>
         </div>

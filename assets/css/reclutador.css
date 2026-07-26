@@ -117,7 +117,7 @@ body{
     background-color: #EFF6FF;
     padding: 15px;
     border: 1px solid #BFDBFE;
-    border-left: 5px solid #3B82F6;
+    border-left: 5px solid #152f5a;
     border-radius: 0;
     display: flex;
     align-items: center;
@@ -125,7 +125,7 @@ body{
     color: #1E293B;
 }
 .alert-box i{
-    color: #3B82F6;
+    color: #192e6d;
 }
 
 /* TOPBAR */

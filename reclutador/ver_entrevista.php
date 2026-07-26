@@ -1,131 +1,386 @@
-<?php include "includes/header.php"; ?>
+<?php
+
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/connection.php';
+require_once __DIR__ . '/../config/app_helpers.php';
+
+/*
+|--------------------------------------------------------------------------
+| Validar sesión
+|--------------------------------------------------------------------------
+*/
+
+if (($_SESSION['rol_id'] ?? 0) != 3) {
+    redirect_to('login.php');
+}
+
+$usuarioId = (int) $_SESSION['usuario_id'];
+$entrevistaId = (int) ($_GET['id'] ?? 0);
+
+/*
+|--------------------------------------------------------------------------
+| Obtener reclutador
+|--------------------------------------------------------------------------
+*/
+
+$stmt = $conn->prepare("
+    SELECT id
+    FROM reclutadores
+    WHERE usuario_id = ?
+");
+
+$stmt->bind_param("i", $usuarioId);
+$stmt->execute();
+
+$reclutador = $stmt->get_result()->fetch_assoc();
+
+$stmt->close();
+
+if (!$reclutador) {
+    die("No se encontró el perfil del reclutador.");
+}
+
+$reclutadorId = (int) $reclutador['id'];
+
+/*
+|--------------------------------------------------------------------------
+| Validar ID
+|--------------------------------------------------------------------------
+*/
+
+if ($entrevistaId <= 0) {
+
+    redirect_to(
+        'entrevistas.php?type=danger&msg=' .
+        urlencode('La entrevista solicitada no es válida.')
+    );
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Obtener entrevista
+|--------------------------------------------------------------------------
+*/
+
+$stmt = $conn->prepare("
+
+SELECT
+
+    e.*,
+
+    c.nombre_completo,
+    c.correo,
+    c.telefono,
+
+    v.id AS vacante_id,
+    v.trabajo,
+    v.ubicacion,
+
+    p.id AS postulacion_id
+
+FROM entrevistas e
+
+INNER JOIN postulaciones p
+    ON p.id = e.postulacion_id
+
+INNER JOIN candidatos c
+    ON c.id = p.candidato_id
+
+INNER JOIN vacantes v
+    ON v.id = p.vacante_id
+
+WHERE
+
+    e.id = ?
+    AND v.reclutador_id = ?
+
+LIMIT 1
+
+");
+
+$stmt->bind_param(
+    "ii",
+    $entrevistaId,
+    $reclutadorId
+);
+
+$stmt->execute();
+
+$entrevista = $stmt->get_result()->fetch_assoc();
+
+$stmt->close();
+
+/*
+|--------------------------------------------------------------------------
+| Validar entrevista
+|--------------------------------------------------------------------------
+*/
+
+if (!$entrevista) {
+
+    redirect_to(
+        'entrevistas.php?type=danger&msg=' .
+        urlencode('La entrevista no existe o no tienes permisos para visualizarla.')
+    );
+
+}
+
+include "includes/header.php";
+
+?>
 
 <div class="d-flex">
 
-    <!-- SIDEBAR -->
     <?php include "includes/sidebar.php"; ?>
 
-    <!-- CONTENIDO -->
     <div class="content w-100 p-4">
 
         <?php include "includes/topbar.php"; ?>
 
-        <!-- TITULO -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Encabezado -->
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
 
             <div>
 
-                <h2 class="fw-bold">
-
-                    Detalle de la Entrevista
-
+                <h2 class="fw-bold mb-1">
+                    Ver Entrevista
                 </h2>
 
-                <p class="text-muted">
-
-                    Consulta la información de la entrevista y la evaluación del candidato.
-
+                <p class="text-muted mb-0">
+                    Información completa de la entrevista programada.
                 </p>
 
             </div>
 
-            <a href="entrevistas.php"
-               class="btn btn-secondary">
+            <div class="mt-3 mt-md-0">
 
-                <i class="bi bi-arrow-left me-2"></i>
+                <a
+                    href="entrevistas.php"
+                    class="btn btn-outline-secondary">
 
-                Regresar
+                    <i class="bi bi-arrow-left"></i>
 
-            </a>
+                    Regresar
+
+                </a>
+
+            </div>
 
         </div>
 
+        <!-- Tarjetas superiores -->
 
+        <div class="row g-4 mb-4">
 
+            <div class="col-lg-3 col-md-6">
 
+                <div class="dashboard-card">
+
+                    <div class="card-icon bg-primary-subtle">
+
+                        <i class="bi bi-calendar-event-fill text-primary"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="fw-bold">
+
+                            <?= date('d/m/Y', strtotime($entrevista['fecha'])) ?>
+
+                        </h4>
+
+                        <p class="mb-0">
+
+                            Fecha
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon bg-success-subtle">
+
+                        <i class="bi bi-clock-fill text-success"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="fw-bold">
+
+                            <?= date('H:i', strtotime($entrevista['fecha'])) ?>
+
+                        </h4>
+
+                        <p class="mb-0">
+
+                            Hora
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon bg-warning-subtle">
+
+                        <i class="bi bi-camera-video-fill text-warning"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="fw-bold">
+
+                            <?= e($entrevista['modalidad']) ?>
+
+                        </h4>
+
+                        <p class="mb-0">
+
+                            Modalidad
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon bg-info-subtle">
+
+                        <i class="bi bi-check-circle-fill text-info"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="fw-bold">
+
+                            <?= e($entrevista['estado']) ?>
+
+                        </h4>
+
+                        <p class="mb-0">
+
+                            Estado
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Información -->
 
         <div class="row g-4">
 
-            <!-- INFORMACION -->
-            <div class="col-lg-8">
+            <!-- Información del candidato -->
+
+            <div class="col-lg-6">
 
                 <div class="table-box">
 
-                    <h4 class="fw-bold mb-4">
+                    <h4 class="fw-bold mb-3">
 
-                        Información General
+                        <i class="bi bi-person-fill text-primary me-2"></i>
+
+                        Información del Candidato
 
                     </h4>
 
-                    <table class="table table-borderless">
+                    <hr>
 
-                        <tbody>
+                    <table class="table table-borderless mb-0">
 
-                            <tr>
+                        <tr>
 
-                                <th width="35%">Candidato</th>
+                            <th width="35%">
 
-                                <td>Juan Pérez Hernández</td>
+                                Nombre
 
-                            </tr>
+                            </th>
 
-                            <tr>
+                            <td>
 
-                                <th>Vacante</th>
+                                <?= e($entrevista['nombre_completo']) ?>
 
-                                <td>Desarrollador Backend</td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                            <tr>
+                        <tr>
 
-                                <th>Empresa</th>
+                            <th>
 
-                                <td>Tech Solutions</td>
+                                Correo
 
-                            </tr>
+                            </th>
 
-                            <tr>
+                            <td>
 
-                                <th>Entrevistador</th>
+                                <?= e($entrevista['correo']) ?>
 
-                                <td>María González</td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                            <tr>
+                        <tr>
 
-                                <th>Fecha</th>
+                            <th>
 
-                                <td>25 Junio 2026</td>
+                                Teléfono
 
-                            </tr>
+                            </th>
 
-                            <tr>
+                            <td>
 
-                                <th>Hora</th>
+                                <?= e($entrevista['telefono']) ?>
 
-                                <td>10:00 AM</td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                            <tr>
+                        <tr>
 
-                                <th>Lugar</th>
+                            <th>
 
-                                <td>Sala de Juntas A</td>
+                                Vacante
 
-                            </tr>
+                            </th>
 
-                            <tr>
+                            <td>
 
-                                <th>Modalidad</th>
+                                <?= e($entrevista['trabajo']) ?>
 
-                                <td>Presencial</td>
+                            </td>
 
-                            </tr>
-
-                        </tbody>
+                        </tr>
 
                     </table>
 
@@ -133,221 +388,235 @@
 
             </div>
 
+            <!-- Información de la entrevista -->
 
-
-
-
-            <!-- ESTADO -->
-            <div class="col-lg-4">
-
-                <div class="action-box">
-
-                    <h4 class="fw-bold mb-4">
-
-                        Estado
-
-                    </h4>
-
-                    <div class="text-center mb-4">
-
-                        <span class="badge bg-warning text-dark fs-6 p-3">
-
-                            Pendiente
-
-                        </span>
-
-                    </div>
-
-                    <div class="d-grid gap-3">
-
-                        <button class="btn btn-success">
-
-                            <i class="bi bi-check-circle-fill me-2"></i>
-
-                            Marcar Completada
-
-                        </button>
-
-                        <button class="btn btn-danger">
-
-                            <i class="bi bi-x-circle-fill me-2"></i>
-
-                            Denegar
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-
-
-            <!-- OBSERVACIONES -->
-            <div class="col-lg-12">
+            <div class="col-lg-6">
 
                 <div class="table-box">
 
-                    <h4 class="fw-bold mb-4">
+                    <h4 class="fw-bold mb-3">
 
-                        Observaciones
+                        <i class="bi bi-calendar-check-fill text-success me-2"></i>
+
+                        Información de la Entrevista
 
                     </h4>
 
-                    <textarea
-                        class="form-control"
-                        rows="6"
-                        placeholder="Escriba aquí las observaciones de la entrevista..."></textarea>
+                    <hr>
+
+                    <table class="table table-borderless mb-0">
+
+                        <tr>
+
+                            <th width="35%">
+
+                                Fecha
+
+                            </th>
+
+                            <td>
+
+                                <?= date('d/m/Y', strtotime($entrevista['fecha'])) ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Hora
+
+                            </th>
+
+                            <td>
+
+                                <?= date('H:i', strtotime($entrevista['fecha'])) ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Modalidad
+
+                            </th>
+
+                            <td>
+
+                                <?= e($entrevista['modalidad']) ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Lugar
+
+                            </th>
+
+                            <td>
+
+                                <?= e($entrevista['lugar']) ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                Estado
+
+                            </th>
+
+                            <td>
+
+                                <?= badge_estado($entrevista['estado']) ?>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
 
                 </div>
 
             </div>
 
+            
 
+        </div>
 
+        <!-- Notas -->
 
+        <div class="row mt-4">
 
-            <!-- EVALUACION -->
-            <div class="col-lg-12">
+            <div class="col-12">
 
                 <div class="table-box">
 
-                    <h4 class="fw-bold mb-4">
+                    <h4 class="fw-bold mb-3">
 
-                        Evaluación del Candidato
+                        <i class="bi bi-journal-text text-warning me-2"></i>
+
+                        Notas de la Entrevista
 
                     </h4>
 
-                    <div class="row text-center">
+                    <hr>
 
-                        <div class="col-md-3">
+                    <?php if (!empty(trim($entrevista['notas'] ?? ''))): ?>
 
-                            <div class="dashboard-card">
+                        <p
+                            class="text-muted mb-0"
+                            style="white-space: pre-line; text-align: justify;">
 
-                                <h2 class="text-success">
+                            <?= e($entrevista['notas']) ?>
 
-                                    95%
+                        </p>
 
-                                </h2>
+                    <?php else: ?>
 
-                                <p>
+                        <p class="text-muted fst-italic">
 
-                                    Comunicación
+                            No se agregaron notas para esta entrevista.
 
-                                </p>
+                        </p>
 
-                            </div>
-
-                        </div>
-
-
-
-
-
-                        <div class="col-md-3">
-
-                            <div class="dashboard-card">
-
-                                <h2 class="text-primary">
-
-                                    90%
-
-                                </h2>
-
-                                <p>
-
-                                    Conocimientos
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-
-
-
-                        <div class="col-md-3">
-
-                            <div class="dashboard-card">
-
-                                <h2 class="text-warning">
-
-                                    88%
-
-                                </h2>
-
-                                <p>
-
-                                    Trabajo en Equipo
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-
-
-
-                        <div class="col-md-3">
-
-                            <div class="dashboard-card">
-
-                                <h2 class="text-danger">
-
-                                    92%
-
-                                </h2>
-
-                                <p>
-
-                                    Desempeño General
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <?php endif; ?>
 
                 </div>
 
             </div>
 
+        </div>
 
+        <!-- Información adicional -->
 
+        <div class="row mt-4">
 
-
-            <!-- COMENTARIOS -->
-            <div class="col-lg-12">
+            <div class="col-12">
 
                 <div class="table-box">
 
-                    <h4 class="fw-bold mb-4">
+                    <h4 class="fw-bold mb-3">
 
-                        Comentarios Finales
+                        <i class="bi bi-info-circle-fill text-info me-2"></i>
+
+                        Información del Registro
 
                     </h4>
 
-                    <p class="text-muted">
+                    <hr>
 
-                        El candidato demuestra conocimientos sólidos en desarrollo web,
-                        buena comunicación y experiencia en proyectos utilizando PHP,
-                        Bootstrap y MySQL. Se recomienda continuar con el proceso de
-                        contratación.
+                    <table class="table table-borderless mb-0">
 
-                    </p>
+                        <tr>
+
+                            <th width="30%">
+
+                                <i class="bi bi-calendar-plus-fill text-success me-2"></i>
+
+                                Fecha de creación
+
+                            </th>
+
+                            <td>
+
+                                <?= date('d/m/Y H:i', strtotime($entrevista['created_at'])) ?>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>
+
+                                <i class="bi bi-clock-history text-secondary me-2"></i>
+
+                                Última actualización
+
+                            </th>
+
+                            <td>
+
+                                <?= date('d/m/Y H:i', strtotime($entrevista['updated_at'])) ?>
+
+                            </td>
+
+                        </tr>
+
+                    </table>
 
                 </div>
 
             </div>
+
+        </div>
+
+        <!-- Botones inferiores -->
+
+        <div class="d-flex justify-content-end mt-4">
+
+            <a
+                href="entrevistas.php"
+                class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Regresar
+
+            </a>
 
         </div>
 
@@ -356,3 +625,4 @@
 </div>
 
 <?php include "includes/footer.php"; ?>
+    
