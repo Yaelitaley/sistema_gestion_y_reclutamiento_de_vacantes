@@ -102,6 +102,7 @@ include "includes/header.php";
 
     <div class="content w-100 p-4">
         <?php include "includes/topbar.php"; ?>
+        
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -130,8 +131,31 @@ include "includes/header.php";
         </div>
 
         <div class="table-box">
-            <div class="table-responsive">
-                <table class="table align-middle">
+
+    <!-- Buscador y filtro -->
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input
+    type="text"
+    id="buscarVacante"
+    class="form-control"
+    autocomplete="off"
+    placeholder="🔍 Buscar por puesto, categoría o ubicación...">
+        </div>
+
+        <div class="col-md-4">
+            <select id="filtroEstado" class="form-select">
+                <option value="">Todas las vacantes</option>
+                <option value="Activo">Activas</option>
+                <option value="Inactivo">Inactivas</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+
+
+                <table class="table align-middle" id="tablaVacantes">
                     <thead>
                         <tr>
                             <th>Puesto</th>
@@ -166,6 +190,15 @@ include "includes/header.php";
                                         <input type="hidden" name="id" value="<?= (int) $v['id'] ?>">
                                         <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></button>
                                     </form>
+
+                                     <a
+        href="ver_vacante.php?id=<?= (int)$v['id'] ?>"
+        class="btn btn-info btn-sm"
+        title="Ver vacante">
+
+        <i class="bi bi-eye-fill"></i>
+
+    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

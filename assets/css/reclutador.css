@@ -1,26 +1,21 @@
+/* ==================================================================
+   SISTEMA RECLUTADOR (MINIMALISTA / CORPORATIVO)
+================================================================== */
+
 body{
-
-    font-family:'Poppins',sans-serif;
-
+    /* Tipografía nativa de Apple (San Francisco) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin:0;
-
     padding:0;
-
-    background:
-linear-gradient(
-135deg,
-#0f172a,
-#1d4ed8,
-#1e3a8a
-);
-
+    background-color: #F1F5F9; /* Fondo gris azulado claro */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* IMAGEN */
 .img-fluid{
     max-width: 300px;
-    border-radius: 100px;
-    
+    border-radius: 0; /* Sin redondeados */
 }
 
 /* LOGIN BOX */
@@ -29,193 +24,153 @@ linear-gradient(
     max-width: 420px;
 }
 
-/* Este color es unico para palabras claves como "RECLUTADOR"*/
+/* Este color es único para palabras claves como "RECLUTADOR"*/
 .text-reclutador{
-    color: #8b5cf6;
+    color: #3B82F6; /* Azul vivo para mantener la identidad del reclutador */
 }
 .text-center{
-    size: 50px;
-    font-size:larger;
+    font-size: larger;
 }
-
 
 .btn-reclutador{
-
-    background:linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
-
+    background-color: #1a6e72;
+    color: #ffffff;
+    border: none;
+    border-radius: 0; /* Sin redondeados */
+    transition: .3s;
+    font-weight: 600;
 }
 .btn-reclutador:hover{
-
-    transform:translateY(-3px);
-
-    box-shadow:0 10px 20px rgba(37,99,235,.35);
-
+    background-color: #122f6f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
 }
-
 
 .table-box{
-
-    background:rgba(255,255,255,.12);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    backdrop-filter:blur(15px);
-
-    border-radius:18px;
-
-    color:white;
-
+    background-color: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0; /* Sin redondeados */
+    color: #0F172A;
+    padding: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
-
 .table-box .row{
-
-    padding:10px 0;
-
+    padding: 10px 0;
 }
 
-
-
-
-/* ICONO */
+/* ICONO LOGIN */
 .login-icon{
-    width: 80px;
-    height: 80px;
-    background-color: #AC75FF ;
-    border-radius: 50%;
-
+    width: 70px;
+    height: 70px;
+    background-color: #3B82F6; /* Azul de marca */
+    border-radius: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-
     margin: auto;
     margin-bottom: 15px;
 }
-
 .login-icon i{
     color: white;
-    font-size: 35px;
+    font-size: 30px;
 }
 
+/* ICONOS TARJETAS */
 .card-icon{
-
-    width:65px;
-
-    height:65px;
-
-    border-radius:16px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    flex-shrink:0;
-
+    width: 50px;
+    height: 50px;
+    border-radius: 0; /* Sin redondeados */
+    background-color: #EFF6FF; /* Fondo azul muy claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
-
 .card-icon i{
-
-    font-size:30px;
-
+    font-size: 24px;
+    color: #3B82F6;
 }
+
 /* LINKS */
 .forgot-password{
     text-decoration: none;
-    color: #AC75FF ;
+    color: #475569;
     font-size: 14px;
+    font-weight: 500;
+}
+.forgot-password:hover{
+    color: #3B82F6;
 }
 
-/* SEGURIDAD */
+/* SEGURIDAD Y ALERTAS */
 .security-box{
-    background-color: white;
+    background-color: #ffffff;
     padding: 15px;
-    border-radius: 10px;
-
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #0F172A;
 }
-
-/* ALERTA */
 .alert-box{
-    background-color: #eef5ff;
+    background-color: #EFF6FF;
     padding: 15px;
-    border-radius: 10px;
-
+    border: 1px solid #BFDBFE;
+    border-left: 5px solid #3B82F6;
+    border-radius: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    color: #1E293B;
 }
+.alert-box i{
+    color: #3B82F6;
+}
+
+/* TOPBAR */
 .top-bar{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:18px 25px;
-
-    border-radius:18px;
-
-    background:rgba(255,255,255,.12);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    backdrop-filter:blur(15px);
-
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 25px;
+    background: #ffffff;
+    border-bottom: 2px solid #0F172A;
+    border-radius: 0;
+    margin-bottom: 30px;
 }
 
+/* SIDEBAR */
 .sidebar{
-
-    position:fixed;
-
-    top:0;
-
-    left:-260px;
-
-    width:260px;
-
-    height:100vh;
-
-    background:#111827;
-
-    padding:22px;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:space-between;
-
-    transition:left .35s ease;
-
-    z-index:9999;
-
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 260px;
+    height: 100vh;
+    background: #0F172A; /* Azul marino oscuro */
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: left .35s ease;
+    z-index: 9999;
+    border-right: 1px solid #1E293B;
 }
-
 .sidebar.active{
-
-    left:0;
-
+    left: 0;
 }
+
 /* LOGO */
 .logo{
-    color: white;
-
+    color: #ffffff;
     font-size: 22px;
     font-weight: bold;
-
     margin-bottom: 40px;
+    padding: 0 20px;
 }
-
 .logo i{
     margin-right: 10px;
+    color: #3B82F6;
 }
 
 /* MENU */
@@ -224,152 +179,112 @@ linear-gradient(
     padding: 0;
     margin: 0;
 }
-
 .menu li{
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
-
 .menu a{
     text-decoration: none;
-
-    color: #d1d5db;
-
+    color: #94A3B8;
     display: flex;
     align-items: center;
-
-    gap: 10px;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    transition: 0.3s;
+    gap: 12px;
+    padding: 14px 20px;
+    border-left: 4px solid transparent;
+    transition: .3s;
+    font-size: 15px;
+    font-weight: 500;
 }
-
-/* HOVER */
 .menu a:hover{
-
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-
-    color:white;
-
+    background-color: #1E293B;
+    color: #ffffff;
+    border-left: 4px solid #3B82F6;
 }
-
-/* ACTIVE */
 .menu .active{
-
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-
+    background-color: #1E293B;
+    color: #ffffff;
+    border-left: 4px solid #3B82F6;
 }
 
 /* LOGOUT */
 .logout a{
     text-decoration: none;
-
-    color: #ef4444;
-
+    color: #94A3B8;
     display: flex;
     align-items: center;
-
     gap: 10px;
+    padding: 14px 20px;
+    border-left: 4px solid transparent;
 }
+.logout a:hover{
+    background-color: #1E293B;
+    color: #F87171;
+}
+
+/* TARJETAS DASHBOARD */
 .dashboard-card{
-
-    position:relative;
-
-    overflow:hidden;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    padding:22px;
-
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px;
+    transition: .35s;
 }
 .dashboard-card:hover{
-
-    transform:translateY(-5px);
-
-    background:rgba(255,255,255,.18);
-
+    border-color: #3B82F6;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
-
 
 .row{
     text-align: center;
 }
 
+/* PERFIL RECLUTADOR */
 .recruiter-profile{
-
-    display:flex;
-    align-items:center;
-    gap:18px;
-
-    padding:12px 22px;
-
-    border-radius:16px;
-
-    background:rgba(255,255,255,.12);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    backdrop-filter:blur(15px);
-
-    -webkit-backdrop-filter:blur(15px);
-
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 16px;
+    border: 1px solid #E2E8F0;
+    background: #ffffff;
+    border-radius: 0;
+    transition: .3s;
+}
+.recruiter-profile:hover{
+    border-color: #3B82F6;
 }
 
+/* ACTION BOX */
 .action-box{
-
-    background:rgba(255,255,255,.12);
-
-    border:1px solid rgba(255,255,255,.15);
-
-    backdrop-filter:blur(15px);
-
-    border-radius:18px;
-
-    color:white;
-
-    padding:28px;
-
+    background: #ffffff;
+    border: 1px solid #E2E8F0;
+    border-radius: 0;
+    color: #0F172A;
+    padding: 25px;
+    transition: .3s;
+}
+.action-box:hover{
+    border-color: #3B82F6;
 }
 
-/* RESPONSIVE */
-@media(max-width:768px){
-
-    .left-panel{
-        display: none;
-    }
-
-}
-
+/* CONTENT */
 .content{
-
     flex: 1;
-
     width: 100%;
-
     padding: 30px;
-
     margin-left: 0;
-
     transition: margin-left .35s ease;
-
+    background-color: #F1F5F9;
 }
-
 .content.sidebar-open{
-
     margin-left: 260px;
-
 }
 
-
-/* TEXTO GENERAL */
+/* TEXTO GENERAL (Oscuro para contrastar sobre fondos blancos) */
 .texto,
 .content h1,
 .content h2,
@@ -379,19 +294,30 @@ linear-gradient(
 .content p,
 .content span,
 .content label{
-    color:#fff;
+    color: #0F172A;
 }
-
 .content table{
-    color:#fff;
+    color: #0F172A;
 }
-
+.table thead{
+    background-color: #F8FAFC;
+}
 .table th{
-    color:#fff;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    border-bottom: 2px solid #0F172A;
+}
+.table td{
+    color: #334155;
+    vertical-align: middle;
+    border-color: #E2E8F0;
 }
 
-.table td{
-
-    color:#eef2ff;
-
+/* RESPONSIVE */
+@media(max-width:768px){
+    .left-panel{
+        display: none;
+    }
 }

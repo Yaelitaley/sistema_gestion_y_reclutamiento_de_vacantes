@@ -171,31 +171,43 @@
 
                         <div class="d-grid gap-2">
 
-                            <button class="btn btn-success">
+    <button class="btn btn-success">
+        <i class="bi bi-calendar-check-fill me-2"></i>
+        Programar Entrevista
+    </button>
 
-                                <i class="bi bi-calendar-check-fill me-2"></i>
+    <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#modalMensaje">
 
-                                Programar Entrevista
+    <i class="bi bi-chat-dots-fill me-2"></i>
+    Enviar Mensaje
 
-                            </button>
+</button>
 
-                            <button class="btn btn-primary">
+    <div class="d-flex gap-2">
 
-                                <i class="bi bi-chat-dots-fill me-2"></i>
+        <a href="candidatos.php" class="btn btn-secondary flex-fill">
+            <i class="bi bi-arrow-left-circle-fill me-2"></i>
+            Regresar
+        </a>
 
-                                Enviar Mensaje
+        <button
+    type="button"
+    class="btn btn-danger"
+    data-bs-toggle="modal"
+    data-bs-target="#modalRechazar">
 
-                            </button>
+    <i class="bi bi-x-circle me-2"></i>
+    Rechazar
 
-                            <button class="btn btn-danger">
+</button>
 
-                                <i class="bi bi-x-circle-fill me-2"></i>
+    </div>
 
-                                Rechazar
-
-                            </button>
-
-                        </div>
+</div>
 
                     </div>
 
@@ -812,6 +824,21 @@
                         class="form-control"
                         rows="6"
                         placeholder="Escriba aquí las observaciones del candidato..."></textarea>
+
+                        <div class="mt-3 d-flex justify-content-end">
+
+    <button
+    type="button"
+    id="btnGuardarObservaciones"
+    class="btn btn-primary">
+
+    <i class="bi bi-save me-2"></i>
+
+    Guardar Observaciones
+
+</button>
+
+</div>
 
                 </div>
 

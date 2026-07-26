@@ -8,7 +8,6 @@
 
         <?php include "includes/topbar.php"; ?>
 
-
         <!-- CARDS -->
         <div class="row g-4 mb-4">
 

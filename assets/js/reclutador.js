@@ -200,17 +200,126 @@ document.addEventListener("DOMContentLoaded", function () {
     cards.forEach(function(card){
 
         card.addEventListener("mouseenter", function(){
-
             card.style.transform = "translateY(-6px)";
-
         });
 
         card.addEventListener("mouseleave", function(){
-
             card.style.transform = "translateY(0px)";
-
         });
 
     });
+
+    /*=========================================
+    =            BUSCADOR DE CANDIDATOS
+    =========================================*/
+
+    const buscador = document.getElementById("buscarCandidato");
+    const filtro = document.getElementById("filtroEstado");
+
+    if (buscador && filtro) {
+        const filas = document.querySelectorAll("#tablaCandidatos tbody tr");
+
+        function filtrarTabla() {
+            const texto = buscador.value.toLowerCase();
+            const estado = filtro.value.toLowerCase();
+
+            filas.forEach(fila => {
+                if (!fila.cells[1] || !fila.cells[2] || !fila.cells[3]) return;
+
+                const nombre = fila.cells[1].textContent.toLowerCase();
+                const vacante = fila.cells[2].textContent.toLowerCase();
+                const estadoFila = fila.cells[3].textContent.toLowerCase();
+
+                const coincideTexto = nombre.includes(texto) || vacante.includes(texto);
+                const coincideEstado = estado === "todos" || estadoFila.includes(estado);
+
+                fila.style.display = (coincideTexto && coincideEstado) ? "" : "none";
+            });
+        }
+
+        buscador.addEventListener("keyup", filtrarTabla);
+        filtro.addEventListener("change", filtrarTabla);
+    }
+
+    /*=========================================
+    =            ENVIAR MENSAJE (MODAL)
+    =========================================*/
+
+    const btnEnviarMensaje = document.getElementById("btnEnviarMensaje");
+
+    if (btnEnviarMensaje) {
+
+        btnEnviarMensaje.addEventListener("click", () => {
+
+            const asuntoInput = document.getElementById("asuntoMensaje");
+            const mensajeInput = document.getElementById("contenidoMensaje");
+            const modalElement = document.getElementById("modalMensaje");
+
+            if (!asuntoInput || !mensajeInput || !modalElement) return;
+
+            const asunto = asuntoInput.value.trim();
+            const mensajeValor = mensajeInput.value.trim();
+
+            if (asunto === "" || mensajeValor === "") {
+                alert("Complete todos los campos.");
+                return;
+            }
+
+            alert("Mensaje enviado correctamente.");
+
+            asuntoInput.value = "";
+            mensajeInput.value = "";
+
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+            modal.hide();
+
+        });
+    }
+
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const buscador = document.getElementById("buscarVacante");
+    const filtro = document.getElementById("filtroEstado");
+    const filas = document.querySelectorAll("#tablaVacantes tbody tr");
+
+    function filtrarVacantes() {
+
+        const texto = buscador.value.toLowerCase();
+        const estado = filtro.value.toLowerCase();
+
+        let visibles = 0;
+
+        filas.forEach(fila => {
+
+            const puesto = fila.cells[0].textContent.toLowerCase();
+            const categoria = fila.cells[1].textContent.toLowerCase();
+            const ubicacion = fila.cells[2].textContent.toLowerCase();
+            const estadoFila = fila.cells[4].textContent.toLowerCase();
+
+            const coincideTexto =
+                puesto.includes(texto) ||
+                categoria.includes(texto) ||
+                ubicacion.includes(texto);
+
+            const coincideEstado =
+                estado === "" ||
+                estadoFila.includes(estado);
+
+            if (coincideTexto && coincideEstado) {
+                fila.style.display = "";
+                visibles++;
+            } else {
+                fila.style.display = "none";
+            }
+
+        });
+
+    }
+
+    buscador.addEventListener("keyup", filtrarVacantes);
+    filtro.addEventListener("change", filtrarVacantes);
 
 });

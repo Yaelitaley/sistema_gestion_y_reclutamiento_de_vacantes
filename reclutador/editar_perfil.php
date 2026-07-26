@@ -301,11 +301,10 @@
 
                 <div class="d-flex justify-content-end gap-3">
 
-                    <a href="javascript:history.back();" class="cancel-link">
-
-        Regresar
-
-    </a>
+                    <a href="javascript:history.back();" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left me-2"></i>
+    Regresar
+</a>
 
                     <button
                         type="reset"

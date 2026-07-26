@@ -177,20 +177,47 @@
         <!-- TABLA -->
         <div class="table-box">
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+           <div class="d-flex justify-content-between align-items-center mb-4">
 
-                <h4 class="fw-bold">
+    <h4 class="fw-bold mb-0">
 
-                    Lista de Candidatos
+        Lista de Candidatos
 
-                </h4>
+    </h4>
 
-                <input
-                    type="text"
-                    class="form-control w-25"
-                    placeholder="Buscar candidato...">
+    <div class="d-flex gap-2">
 
-            </div>
+        <!-- Buscador -->
+        <div class="input-group">
+
+            <span class="input-group-text">
+                <i class="bi bi-search"></i>
+            </span>
+
+            <input
+                type="text"
+                id="buscarCandidato"
+                class="form-control"
+                placeholder="Buscar candidato...">
+
+        </div>
+
+        <!-- Filtro -->
+        <select
+            id="filtroEstado"
+            class="form-select">
+
+            <option value="Todos">Todos</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Entrevista">Entrevista</option>
+            <option value="Contratado">Contratado</option>
+            <option value="Rechazado">Rechazado</option>
+
+        </select>
+
+    </div>
+
+</div>
 
             <table class="table table-hover align-middle">
 

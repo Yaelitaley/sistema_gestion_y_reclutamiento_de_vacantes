@@ -28,7 +28,7 @@
 
             <li>
 
-                <a href="../vacantes/vacantes.php">
+                <a href="vacantes.php">
 
                     <i class="bi bi-building-fill-check"></i>
 
@@ -76,7 +76,7 @@
 
             <li>
 
-                <a href="../admin/configuracion.php">
+                <a href="configuracion.php">
 
                     <i class="bi bi-gear-fill"></i>
 
