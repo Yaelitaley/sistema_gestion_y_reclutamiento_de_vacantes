@@ -23,7 +23,7 @@
                     </p>
 
                     <img
-                        src="../assets/img/reclutador-recovery.png"
+                        src="../assets/img/recovery.png"
                         class="img-fluid mt-4 login-image"
                         alt="Recovery">
 

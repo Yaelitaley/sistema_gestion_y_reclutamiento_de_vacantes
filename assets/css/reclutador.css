@@ -75,6 +75,19 @@ body{
     font-size: 30px;
 }
 
+.left-panel{
+    color:#fdfeff;
+    background-color: #0F172A;
+}
+
+.banner-reclutador{
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+
 /* ICONOS TARJETAS */
 .card-icon{
     width: 50px;

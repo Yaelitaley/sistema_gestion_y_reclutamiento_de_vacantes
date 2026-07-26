@@ -23,10 +23,42 @@
                         Publica tu propuesta de trabajo y encuentra al candidato ideal para tu empresa.
                     </p>
 
-                    <img
-                        src="../assets/img/reclutador02.png"
-                        class="img-fluid mt-4 login-image"
-                        alt="Reclutador">
+                    <!-- INICIO DEL BANNER DE IMÁGENES (CARRUSEL) -->
+<div id="bannerReclutador"
+     class="carousel slide carousel-fade mt-4 w-100 mx-auto"
+     data-bs-ride="carousel"
+     data-bs-interval="4000">
+
+    <div class="carousel-inner rounded-3 shadow">
+
+        <!-- Imagen 1 -->
+        <div class="carousel-item active">
+            <img
+                src="../assets/img/rec1.AVIF"
+                class="d-block w-100 banner-reclutador"
+                alt="Publicar vacantes">
+        </div>
+
+        <!-- Imagen 2 -->
+        <div class="carousel-item">
+            <img
+                src="../assets/img/rec2.jpg"
+                class="d-block w-100 banner-reclutador"
+                alt="Proceso de selección">
+        </div>
+
+        <!-- Imagen 3 -->
+        <div class="carousel-item">
+            <img
+                src="../assets/img/rec3.jpg"
+                class="d-block w-100 banner-reclutador"
+                alt="Entrevista laboral">
+        </div>
+
+    </div>
+
+</div>
+<!-- FIN DEL BANNER DE IMÁGENES -->
 
                 </div>
 
