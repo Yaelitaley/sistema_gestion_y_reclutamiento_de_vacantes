@@ -340,7 +340,7 @@ if (!empty($candidato['aptitudes'])) {
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar CV
                 </a>
-<<<<<<< HEAD
+
                 <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
                     <i class="bi bi-download me-2"></i>
                     Descargar CV
@@ -349,7 +349,7 @@ if (!empty($candidato['aptitudes'])) {
                     <i class="bi bi-eye me-2"></i>
                     Ver CV 
                 </button>
-=======
+
                 <?php if (!empty($candidato['cv_path'])): ?>
                     <a href="../<?= htmlspecialchars($candidato['cv_path']) ?>" id="btnDescargarCV" class="btn btn-outline-primary" target="_blank" download>
                         <i class="bi bi-download me-2"></i>
@@ -361,7 +361,6 @@ if (!empty($candidato['aptitudes'])) {
                         Descargar PDF
                     </button>
                 <?php endif; ?>
->>>>>>> 91d63df (avances candidatos)
             </div>
         </div>
 
