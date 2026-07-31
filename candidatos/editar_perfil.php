@@ -1,3 +1,47 @@
+<?php
+require_once '../config/config.php';
+require_once '../config/connection.php';
+
+if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 4) {
+    header('Location: login.php');
+    exit;
+}
+
+// Candidato en sesión
+$stmt = $conn->prepare(
+    "SELECT id, nombre_completo, correo, telefono, fecha_nacimiento, nacionalidad, ubicacion, genero,
+            puesto_deseado, salario_esperado, disponibilidad, modalidad,
+            linkedin, github, portafolio, resumen, objetivos,
+            ofertas_empleo, notificaciones_sistema, perfil_publico
+     FROM candidatos WHERE usuario_id = ?"
+);
+$stmt->bind_param('i', $_SESSION['usuario_id']);
+$stmt->execute();
+$candidato = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$candidato) {
+    header('Location: login.php');
+    exit;
+}
+
+$candidato_id = $candidato['id'];
+
+// ----- Habilidades (como texto separado por comas, para el campo de edición rápida) -----
+$stmt = $conn->prepare("SELECT habilidad FROM candidato_habilidades WHERE candidato_id = ?");
+$stmt->bind_param('i', $candidato_id);
+$stmt->execute();
+$habilidadesRes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$habilidadesTexto = implode(', ', array_column($habilidadesRes, 'habilidad'));
+
+// ----- Separar nombre_completo en nombre / apellidos para los dos campos del formulario -----
+$partesNombre = explode(' ', trim($candidato['nombre_completo']), 2);
+$nombre    = $partesNombre[0] ?? '';
+$apellidos = $partesNombre[1] ?? '';
+
+$fechaNacValue = !empty($candidato['fecha_nacimiento']) ? date('Y-m-d', strtotime($candidato['fecha_nacimiento'])) : '';
+?>
 <?php include "includes/header.php"; ?>
 
 <div class="d-flex">
@@ -23,8 +67,8 @@
             </div>
         </div>
 
-        <!-- Se agregó action, method y enctype (por si suben fotos en el futuro) -->
-        <form id="formPerfil" action="guardar-perfil.php" method="POST" enctype="multipart/form-data">
+        <!-- Formulario conectado a actions/actualizar_perfil.php vía fetch en candidato.js -->
+        <form id="formPerfil" action="actions/actualizar_perfil.php" method="POST" enctype="multipart/form-data">
 
             <!-- FOTO -->
             <div class="table-box mb-4">
@@ -39,9 +83,9 @@
                         <label class="form-label">
                             Selecciona una nueva fotografía
                         </label>
-                        <input type="file" class="form-control" name="foto" accept="image/*">
+                        <input type="file" class="form-control" name="foto" accept="image/*" disabled>
                         <small class="text-muted">
-                            Formatos permitidos: JPG, PNG o JPEG.
+                            Próximamente disponible. Formatos permitidos: JPG, PNG o JPEG.
                         </small>
                     </div>
                 </div>
@@ -55,35 +99,40 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="nombre" value="Gabriel">
+                        <input type="text" class="form-control" name="nombre" value="<?= htmlspecialchars($nombre) ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" name="apellidos" value="Montero">
+                        <input type="text" class="form-control" name="apellidos" value="<?= htmlspecialchars($apellidos) ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" name="email" value="gabriel@email.com">
+                        <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($candidato['correo']) ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" name="telefono" value="+52 981 000 0000">
+                        <input type="text" class="form-control" name="telefono" value="<?= htmlspecialchars($candidato['telefono'] ?? '') ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" name="fecha_nacimiento">
+                        <input type="date" class="form-control" name="fecha_nacimiento" value="<?= htmlspecialchars($fechaNacValue) ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Género</label>
                         <select class="form-select" name="genero">
-                            <option selected>Masculino</option>
-                            <option>Femenino</option>
-                            <option>Otro</option>
+                            <option value="">Selecciona una opción</option>
+                            <?php foreach (['Masculino', 'Femenino', 'Otro'] as $opt): ?>
+                                <option value="<?= $opt ?>" <?= $candidato['genero'] === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">
+                        <label class="form-label">Nacionalidad</label>
+                        <input type="text" class="form-control" name="nacionalidad" value="<?= htmlspecialchars($candidato['nacionalidad'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6 mb-3">
                         <label class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" name="ciudad" value="Campeche">
+                        <input type="text" class="form-control" name="ciudad" value="<?= htmlspecialchars($candidato['ubicacion'] ?? '') ?>">
                     </div>
                 </div>
             </div>
@@ -96,32 +145,39 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Puesto Deseado</label>
-                        <input type="text" class="form-control" name="puesto_deseado" value="Desarrollador Frontend">
+                        <input type="text" class="form-control" name="puesto_deseado" value="<?= htmlspecialchars($candidato['puesto_deseado'] ?? '') ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Salario Esperado</label>
-                        <input type="text" class="form-control" name="salario_esperado" value="$20,000 MXN">
+                        <input type="text" class="form-control" name="salario_esperado" value="<?= htmlspecialchars($candidato['salario_esperado'] ?? '') ?>">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Disponibilidad</label>
                         <select class="form-select" name="disponibilidad">
-                            <option selected>Tiempo Completo</option>
-                            <option>Medio Tiempo</option>
-                            <option>Freelance</option>
+                            <option value="">Selecciona una opción</option>
+                            <?php foreach (['Tiempo Completo', 'Medio Tiempo', 'Freelance'] as $opt): ?>
+                                <option value="<?= $opt ?>" <?= $candidato['disponibilidad'] === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Modalidad Preferida</label>
                         <select class="form-select" name="modalidad">
-                            <option selected>Híbrido</option>
-                            <option>Remoto</option>
-                            <option>Presencial</option>
+                            <option value="">Selecciona una opción</option>
+                            <?php foreach (['Híbrido', 'Remoto', 'Presencial'] as $opt): ?>
+                                <option value="<?= $opt ?>" <?= $candidato['modalidad'] === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                            <?php endforeach; ?>
                         </select>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Habilidades (separadas por comas)</label>
+                        <input type="text" class="form-control" name="habilidades" value="<?= htmlspecialchars($habilidadesTexto) ?>" placeholder="Ej. PHP, MySQL, JavaScript">
+                        <small class="text-muted">Reemplaza por completo tu lista de habilidades actual al guardar.</small>
                     </div>
                 </div>
             </div>
 
-            <!-- REDES PROFESIONALES (Valores agregados para coincidir con perfil.php) -->
+            <!-- REDES PROFESIONALES -->
             <div class="table-box mb-4">
                 <h4 class="fw-bold mb-4">
                     Redes Profesionales
@@ -129,41 +185,38 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="form-label">LinkedIn</label>
-                        <input type="url" class="form-control" name="linkedin" value="linkedin.com/in/gabrielmontero">
+                        <input type="url" class="form-control" name="linkedin" value="<?= htmlspecialchars($candidato['linkedin'] ?? '') ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">GitHub</label>
-                        <input type="url" class="form-control" name="github" value="github.com/gabrielmontero">
+                        <input type="url" class="form-control" name="github" value="<?= htmlspecialchars($candidato['github'] ?? '') ?>">
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label">Portafolio</label>
-                        <input type="url" class="form-control" name="portafolio" value="www.gabrielmontero.dev">
+                        <input type="url" class="form-control" name="portafolio" value="<?= htmlspecialchars($candidato['portafolio'] ?? '') ?>">
                     </div>
                 </div>
             </div>
 
-            <!-- RESUMEN DEL PERFIL (Nueva sección agregada) -->
+            <!-- RESUMEN DEL PERFIL -->
             <div class="table-box mb-4">
                 <h4 class="fw-bold mb-4">
                     Resumen del Perfil
                 </h4>
                 <div class="mb-3">
                     <label class="form-label">Escribe un breve resumen sobre ti</label>
-                    <textarea class="form-control" name="resumen" rows="4">Actualmente soy estudiante de Ingeniería en Programación y Web, interesado en desarrollarme como desarrollador Frontend. Me apasiona crear interfaces modernas, intuitivas y responsivas, utilizando tecnologías como HTML, CSS, Bootstrap, JavaScript, PHP y MySQL.</textarea>
+                    <textarea class="form-control" name="resumen" rows="4"><?= htmlspecialchars($candidato['resumen'] ?? '') ?></textarea>
                 </div>
             </div>
 
-            <!-- OBJETIVOS PROFESIONALES (Nueva sección agregada) -->
+            <!-- OBJETIVOS PROFESIONALES -->
             <div class="table-box mb-4">
                 <h4 class="fw-bold mb-4">
                     Objetivos Profesionales
                 </h4>
                 <div class="mb-3">
                     <label class="form-label">Tus objetivos (uno por línea)</label>
-                    <textarea class="form-control" name="objetivos" rows="4">Obtener experiencia profesional en desarrollo web.
-Participar en proyectos innovadores.
-Continuar aprendiendo nuevas tecnologías.
-Crecer profesionalmente dentro del área de desarrollo de software.</textarea>
+                    <textarea class="form-control" name="objetivos" rows="4"><?= htmlspecialchars($candidato['objetivos'] ?? '') ?></textarea>
                 </div>
             </div>
 
@@ -173,19 +226,19 @@ Crecer profesionalmente dentro del área de desarrollo de software.</textarea>
                     Preferencias de la Cuenta
                 </h4>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="ofertas_empleo" value="1" checked>
+                    <input class="form-check-input" type="checkbox" name="ofertas_empleo" value="1" <?= $candidato['ofertas_empleo'] ? 'checked' : '' ?>>
                     <label class="form-check-label">
                         Recibir ofertas de empleo por correo.
                     </label>
                 </div>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" name="notificaciones_sistema" value="1" checked>
+                    <input class="form-check-input" type="checkbox" name="notificaciones_sistema" value="1" <?= $candidato['notificaciones_sistema'] ? 'checked' : '' ?>>
                     <label class="form-check-label">
                         Recibir notificaciones del sistema.
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="perfil_publico" value="1">
+                    <input class="form-check-input" type="checkbox" name="perfil_publico" value="1" <?= $candidato['perfil_publico'] ? 'checked' : '' ?>>
                     <label class="form-check-label">
                         Mostrar mi perfil públicamente para reclutadores.
                     </label>

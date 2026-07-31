@@ -1,3 +1,77 @@
+<?php
+require_once '../config/config.php';
+require_once '../config/connection.php';
+
+if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 4) {
+    header('Location: login.php');
+    exit;
+}
+
+// Candidato en sesión
+$stmt = $conn->prepare(
+    "SELECT id, nombre_completo, correo, telefono, ubicacion, genero, estado,
+            puesto_deseado, disponibilidad, modalidad, salario_esperado,
+            linkedin, github, portafolio, resumen, objetivos,
+            ofertas_empleo, notificaciones_sistema, perfil_publico,
+            fecha_nacimiento, nacionalidad, cv_path
+     FROM candidatos WHERE usuario_id = ?"
+);
+$stmt->bind_param('i', $_SESSION['usuario_id']);
+$stmt->execute();
+$candidato = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$candidato) {
+    header('Location: login.php');
+    exit;
+}
+
+$candidato_id = $candidato['id'];
+
+// ----- Habilidades -----
+$stmt = $conn->prepare("SELECT habilidad, nivel FROM candidato_habilidades WHERE candidato_id = ?");
+$stmt->bind_param('i', $candidato_id);
+$stmt->execute();
+$habilidades = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// ----- Estadísticas de postulaciones -----
+$stmt = $conn->prepare(
+    "SELECT
+        COUNT(*) AS total,
+        SUM(estado_id = 2) AS en_revision,
+        SUM(estado_id = 3) AS entrevistas,
+        SUM(estado_id = 5) AS contratado
+     FROM postulaciones
+     WHERE candidato_id = ?"
+);
+$stmt->bind_param('i', $candidato_id);
+$stmt->execute();
+$stmt->bind_result($totalPostulaciones, $enRevision, $entrevistas, $contratado);
+$stmt->fetch();
+$stmt->close();
+
+$totalPostulaciones = $totalPostulaciones ?? 0;
+$enRevision         = $enRevision ?? 0;
+$entrevistas        = $entrevistas ?? 0;
+$contratado         = $contratado ?? 0;
+
+// ----- Objetivos como lista (una línea por objetivo) -----
+$listaObjetivos = [];
+if (!empty($candidato['objetivos'])) {
+    $listaObjetivos = array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $candidato['objetivos'])));
+}
+
+// ----- Porcentaje de perfil completo (real, basado en campos rellenados) -----
+$camposPerfil = [
+    $candidato['telefono'], $candidato['ubicacion'], $candidato['genero'],
+    $candidato['puesto_deseado'], $candidato['disponibilidad'], $candidato['modalidad'],
+    $candidato['salario_esperado'], $candidato['resumen'], $candidato['objetivos'],
+    $candidato['cv_path'], !empty($habilidades) ? 'ok' : '',
+];
+$camposLlenos = count(array_filter($camposPerfil, function ($v) { return !empty($v); }));
+$porcentajePerfil = (int) round(($camposLlenos / count($camposPerfil)) * 100);
+?>
 <?php include "includes/header.php"; ?>
 
 <div class="d-flex">
@@ -32,46 +106,46 @@
                         class="rounded-circle img-fluid mb-3"
                         style="width:180px; height:180px; object-fit:cover;"
                         alt="Foto de perfil">
-                    <button class="btn btn-outline-primary">
+                    <button class="btn btn-outline-primary" disabled title="Próximamente">
                         <i class="bi bi-camera-fill me-2"></i>
                         Cambiar Foto
                     </button>
                 </div>
                 <div class="col-lg-9">
                     <h2 class="fw-bold">
-                        Gabriel Montero
+                        <?= htmlspecialchars($candidato['nombre_completo']) ?>
                     </h2>
                     <h5 class="text-success">
-                        Desarrollador Frontend
+                        <?= htmlspecialchars($candidato['puesto_deseado'] ?: 'Puesto deseado no definido') ?>
                     </h5>
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
                             <p>
                                 <i class="bi bi-envelope-fill text-primary me-2"></i>
-                                gabriel@email.com
+                                <?= htmlspecialchars($candidato['correo']) ?>
                             </p>
                             <p>
                                 <i class="bi bi-telephone-fill text-success me-2"></i>
-                                +52 981 000 0000
+                                <?= htmlspecialchars($candidato['telefono'] ?: 'Sin teléfono registrado') ?>
                             </p>
                             <p>
-                                <i class="bi bi-calendar-fill text-warning me-2"></i>
-                                Masculino <!-- Ajustado para coincidir con el campo Género de editar-perfil -->
+                                <i class="bi bi-person-fill text-warning me-2"></i>
+                                <?= htmlspecialchars($candidato['genero'] ?: 'Género no especificado') ?>
                             </p>
                         </div>
                         <div class="col-md-6">
                             <p>
                                 <i class="bi bi-geo-alt-fill text-danger me-2"></i>
-                                Campeche
+                                <?= htmlspecialchars($candidato['ubicacion'] ?: 'Ubicación no registrada') ?>
                             </p>
                             <p>
                                 <i class="bi bi-person-badge-fill text-info me-2"></i>
                                 Candidato
                             </p>
                             <p>
-                                <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                Perfil Verificado
+                                <i class="bi bi-<?= strtolower($candidato['estado']) === 'activo' ? 'check-circle-fill text-success' : 'exclamation-circle-fill text-warning' ?> me-2"></i>
+                                <?= htmlspecialchars(ucfirst($candidato['estado'])) ?>
                             </p>
                         </div>
                     </div>
@@ -88,24 +162,35 @@
                 <div class="col-md-6">
                     <p>
                         <strong>Puesto Deseado:</strong>
-                        Desarrollador Frontend
+                        <?= htmlspecialchars($candidato['puesto_deseado'] ?: 'No especificado') ?>
                     </p>
                     <p>
                         <strong>Disponibilidad:</strong>
-                        Tiempo Completo
+                        <?= htmlspecialchars($candidato['disponibilidad'] ?: 'No especificada') ?>
                     </p>
                 </div>
                 <div class="col-md-6">
                     <p>
                         <strong>Modalidad Preferida:</strong>
-                        Híbrido
+                        <?= htmlspecialchars($candidato['modalidad'] ?: 'No especificada') ?>
                     </p>
                     <p>
                         <strong>Salario Esperado:</strong>
-                        $20,000 MXN
+                        <?= htmlspecialchars($candidato['salario_esperado'] ?: 'No especificado') ?>
                     </p>
                 </div>
             </div>
+            <?php if (!empty($habilidades)): ?>
+                <hr>
+                <strong>Habilidades:</strong>
+                <div class="mt-2">
+                    <?php foreach ($habilidades as $h): ?>
+                        <span class="badge bg-primary me-2 mb-2">
+                            <?= htmlspecialchars($h['habilidad']) ?><?= !empty($h['nivel']) ? ' — ' . htmlspecialchars($h['nivel']) : '' ?>
+                        </span>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
 
         <!-- ESTADÍSTICAS -->
@@ -116,7 +201,7 @@
                         <i class="bi bi-send-check-fill text-primary"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">12</h3>
+                        <h3 class="fw-bold"><?= (int) $totalPostulaciones ?></h3>
                         <p class="text-muted mb-0">Postulaciones</p>
                     </div>
                 </div>
@@ -127,7 +212,7 @@
                         <i class="bi bi-clock-history text-warning"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">4</h3>
+                        <h3 class="fw-bold"><?= (int) $enRevision ?></h3>
                         <p class="text-muted mb-0">En Revisión</p>
                     </div>
                 </div>
@@ -138,7 +223,7 @@
                         <i class="bi bi-calendar-event-fill text-info"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">3</h3>
+                        <h3 class="fw-bold"><?= (int) $entrevistas ?></h3>
                         <p class="text-muted mb-0">Entrevistas</p>
                     </div>
                 </div>
@@ -149,7 +234,7 @@
                         <i class="bi bi-check-circle-fill text-success"></i>
                     </div>
                     <div>
-                        <h3 class="fw-bold">1</h3>
+                        <h3 class="fw-bold"><?= (int) $contratado ?></h3>
                         <p class="text-muted mb-0">Contratado</p>
                     </div>
                 </div>
@@ -197,15 +282,15 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label">LinkedIn</label>
-                    <input type="text" class="form-control" value="linkedin.com/in/gabrielmontero" readonly>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($candidato['linkedin'] ?: 'No registrado') ?>" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">GitHub</label>
-                    <input type="text" class="form-control" value="github.com/gabrielmontero" readonly>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($candidato['github'] ?: 'No registrado') ?>" readonly>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Portafolio</label>
-                    <input type="text" class="form-control" value="www.gabrielmontero.dev" readonly>
+                    <input type="text" class="form-control" value="<?= htmlspecialchars($candidato['portafolio'] ?: 'No registrado') ?>" readonly>
                 </div>
             </div>
         </div>
@@ -215,12 +300,8 @@
             <h4 class="fw-bold mb-3">
                 Resumen del Perfil
             </h4>
-            <p class="text-muted">
-                Actualmente soy estudiante de Ingeniería en Programación y Web,
-                interesado en desarrollarme como desarrollador Frontend.
-                Me apasiona crear interfaces modernas, intuitivas y responsivas,
-                utilizando tecnologías como HTML, CSS, Bootstrap, JavaScript,
-                PHP y MySQL.
+            <p class="text-muted mb-0">
+                <?= !empty($candidato['resumen']) ? nl2br(htmlspecialchars($candidato['resumen'])) : 'Aún no has escrito un resumen de tu perfil. Agrégalo desde "Editar Perfil".' ?>
             </p>
         </div>
 
@@ -229,52 +310,46 @@
             <h4 class="fw-bold mb-3">
                 Objetivos Profesionales
             </h4>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                    Obtener experiencia profesional en desarrollo web.
-                </li>
-                <li class="list-group-item">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                    Participar en proyectos innovadores.
-                </li>
-                <li class="list-group-item">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                    Continuar aprendiendo nuevas tecnologías.
-                </li>
-                <li class="list-group-item">
-                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                    Crecer profesionalmente dentro del área de desarrollo de software.
-                </li>
-            </ul>
+            <?php if (empty($listaObjetivos)): ?>
+                <p class="text-muted mb-0">Aún no has definido tus objetivos profesionales.</p>
+            <?php else: ?>
+                <ul class="list-group list-group-flush">
+                    <?php foreach ($listaObjetivos as $obj): ?>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            <?= htmlspecialchars($obj) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
         </div>
 
-        <!-- PREFERENCIAS DE LA CUENTA (Agregado para coincidir con editar-perfil) -->
+        <!-- PREFERENCIAS DE LA CUENTA -->
         <div class="table-box mb-4">
             <h4 class="fw-bold mb-4">
                 Preferencias de la Cuenta
             </h4>
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" checked disabled>
+                <input class="form-check-input" type="checkbox" <?= $candidato['ofertas_empleo'] ? 'checked' : '' ?> disabled>
                 <label class="form-check-label">
                     Recibir ofertas de empleo por correo.
                 </label>
             </div>
             <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" checked disabled>
+                <input class="form-check-input" type="checkbox" <?= $candidato['notificaciones_sistema'] ? 'checked' : '' ?> disabled>
                 <label class="form-check-label">
                     Recibir notificaciones del sistema.
                 </label>
             </div>
-            <div class="form-check" mb-3>
-                <input class="form-check-input" type="checkbox" checked disabled>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" <?= $candidato['perfil_publico'] ? 'checked' : '' ?> disabled>
                 <label class="form-check-label">
                     Mostrar mi perfil públicamente para reclutadores.
                 </label>
             </div>
         </div>
 
-        <!-- ESTADO DE LA CUENTA (Agregado para coincidir con editar-perfil) -->
+        <!-- ESTADO DE LA CUENTA -->
         <div class="table-box mb-5">
             <h4 class="fw-bold mb-4">
                 Estado de la Cuenta
@@ -282,7 +357,7 @@
             <div class="alert alert-info d-flex align-items-center">
                 <i class="bi bi-info-circle-fill fs-4 me-3"></i>
                 <div>
-                    Tu perfil está completo en un <strong>85%</strong>.
+                    Tu perfil está completo en un <strong><?= $porcentajePerfil ?>%</strong>.
                     Mantén tu información actualizada para aumentar tus
                     oportunidades de ser contactado por los reclutadores.
                 </div>

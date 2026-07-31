@@ -336,21 +336,56 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     // ==========================
-    // GUARDAR EMPLEO
+    // GUARDAR EMPLEO (llamada real a actions/guardar_vacante.php)
     // ==========================
 
-    const botonesGuardar = document.querySelectorAll(".btnGuardar");
+    document.addEventListener("click", function(e){
 
-    botonesGuardar.forEach(function(boton){
+        const boton = e.target.closest(".btnGuardar");
 
-        boton.addEventListener("click", function(){
+        if(!boton) return;
 
-            boton.classList.remove("btn-outline-success");
+        const vacanteId = boton.dataset.vacanteId;
 
-            boton.classList.add("btn-success");
+        if(!vacanteId) return;
 
-            boton.innerHTML = '<i class="bi bi-heart-fill me-2"></i>Guardado';
+        const yaGuardado = boton.classList.contains("btn-success");
+        const accion = yaGuardado ? "quitar" : "guardar";
 
+        boton.disabled = true;
+
+        const datos = new FormData();
+        datos.append("vacante_id", vacanteId);
+        datos.append("accion", accion);
+
+        fetch("actions/guardar_vacante.php", {
+            method: "POST",
+            body: datos
+        })
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+
+            boton.disabled = false;
+
+            if(!data.success){
+                alert(data.message);
+                return;
+            }
+
+            if(data.guardado){
+                boton.classList.remove("btn-outline-success");
+                boton.classList.add("btn-success");
+                boton.innerHTML = '<i class="bi bi-heart-fill me-2"></i>Guardado';
+            } else {
+                boton.classList.remove("btn-success");
+                boton.classList.add("btn-outline-success");
+                boton.innerHTML = '<i class="bi bi-heart me-2"></i>Guardar Empleo';
+            }
+
+        })
+        .catch(function(){
+            alert("Ocurrió un error al conectar con el servidor.");
+            boton.disabled = false;
         });
 
     });
