@@ -132,8 +132,9 @@ include 'includes/header.php';
 ?>
 
 <div class="d-flex">
-    <?php include 'includes/sidebar.php'; ?>
-
+   <?php include "includes/sidebar.php"; ?>
+    <div class="content">
+        <?php include "includes/topbar.php"; ?>
     <div class="content w-100 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -173,7 +174,7 @@ include 'includes/header.php';
                             <input type="email" name="correo_contacto" class="form-control" value="<?= e($cfg['correo_contacto']) ?>" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
+                        <button type="submit" class="btn btn-reclutador w-100"><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -197,7 +198,7 @@ include 'includes/header.php';
                             <label class="form-check-label" for="mantenimiento">Activar modo mantenimiento</label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-gear-fill me-2"></i>Guardar Configuración</button>
+                        <button type="submit" class="btn btn-reclutador w-100"><i class="bi bi-gear-fill me-2"></i>Guardar Configuración</button>
                     </form>
                 </div>
             </div>
@@ -222,7 +223,7 @@ include 'includes/header.php';
                         </div>
 
                         <div class="col-md-12">
-                            <button type="submit" class="btn btn-dark"><i class="bi bi-shield-lock-fill me-2"></i>Actualizar Contraseña</button>
+                            <button type="submit" class="btn btn-reclutador"><i class="bi bi-shield-lock-fill me-2"></i>Actualizar Contraseña</button>
                         </div>
                     </form>
                 </div>
@@ -231,5 +232,5 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
-
+        </div>
 <?php include 'includes/footer.php'; ?>

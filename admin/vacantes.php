@@ -119,7 +119,9 @@ include 'includes/header.php';
 ?>
 
 <div class="d-flex">
-    <?php include 'includes/sidebar.php'; ?>
+    <?php include "includes/sidebar.php"; ?>
+    <div class="content">
+        <?php include "includes/topbar.php"; ?>
 
     <div class="content w-100 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -128,7 +130,7 @@ include 'includes/header.php';
                 <p class="text-muted">Administra, filtra, edita y elimina vacantes del sistema.</p>
             </div>
 
-            <a href="../vacantes/register.php" class="btn btn-primary">
+            <a href="../vacantes/register.php" class="btn btn-reclutador">
                 <i class="bi bi-plus-circle me-2"></i>Nueva Vacante
             </a>
         </div>
@@ -185,7 +187,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="col-md-3">
-                    <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search me-2"></i>Aplicar filtros</button>
+                    <button class="btn btn-reclutador w-100" type="submit"><i class="bi bi-search me-2"></i>Aplicar filtros</button>
                 </div>
             </form>
 
@@ -244,5 +246,5 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
-
+</div>
 <?php include 'includes/footer.php'; ?>

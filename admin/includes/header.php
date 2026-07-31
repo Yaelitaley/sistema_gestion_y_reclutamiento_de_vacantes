@@ -35,8 +35,7 @@
      <link rel="stylesheet"
 href="../assets/css/admin.css">
 
-    <link rel="stylesheet"
-    href="../assets/css/global.css">
+
 
   
 

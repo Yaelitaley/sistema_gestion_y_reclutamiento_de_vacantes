@@ -1,5 +1,5 @@
 /* ==================================================================
-   SISTEMA RECLUTADOR (MINIMALISTA / CORPORATIVO)
+   SISTEMA ADMINISTRADOR (MINIMALISTA / CORPORATIVO)
 ================================================================== */
 
 body{
@@ -10,6 +10,29 @@ body{
     background-color: #F1F5F9; /* Fondo gris azulado claro */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==================================================
+   FONDO DE PÁGINA DE REGISTRO
+================================================== */
+.register-container {
+    /* Asegúrate de que la ruta de la imagen sea correcta desde tu archivo CSS */
+    background-image: 
+      linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75)), 
+      url('../img/fondoregistro.png') !important;
+    
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Nos aseguramos de que el contenedor de adentro sea transparente para que deje ver el fondo */
+.register-container > .container-fluid {
+    background: transparent !important;
 }
 
 /* IMAGEN */
@@ -24,16 +47,16 @@ body{
     max-width: 420px;
 }
 
-/* Este color es único para palabras claves como "RECLUTADOR"*/
+/* Este color es único para palabras claves */
 .text-reclutador{
-    color: #3B82F6; /* Azul vivo para mantener la identidad del reclutador */
+    color: #1E293B; 
 }
 .text-center{
     font-size: larger;
 }
 
 .btn-reclutador{
-    background-color: #1a6e72;
+    background-color: #1E293B;
     color: #ffffff;
     border: none;
     border-radius: 0; /* Sin redondeados */
@@ -41,16 +64,16 @@ body{
     font-weight: 600;
 }
 .btn-reclutador:hover{
-    background-color: #122f6f;
+    background-color: #0F172A;
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2);
 }
 
 .table-box{
     background-color: #ffffff;
     border: 1px solid #E2E8F0;
     border-radius: 0; /* Sin redondeados */
-    color: #0F172A;
+    color: #1E293B;
     padding: 25px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
@@ -62,7 +85,7 @@ body{
 .login-icon{
     width: 70px;
     height: 70px;
-    background-color: #3B82F6; /* Azul de marca */
+    background-color: #1E293B; /* Azul marino oscuro */
     border-radius: 0;
     display: flex;
     justify-content: center;
@@ -84,16 +107,15 @@ body{
     width: 100%;
     height: 300px;
     object-fit: cover;
-    border-radius: 15px;
+    border-radius: 0; /* Mantenido sin redondeados */
 }
-
 
 /* ICONOS TARJETAS */
 .card-icon{
     width: 50px;
     height: 50px;
     border-radius: 0; /* Sin redondeados */
-    background-color: #EFF6FF; /* Fondo azul muy claro */
+    background-color: #F1F5F9; /* Fondo gris azulado muy claro */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -101,18 +123,18 @@ body{
 }
 .card-icon i{
     font-size: 24px;
-    color: #3B82F6;
+    color: #1E293B;
 }
 
 /* LINKS */
 .forgot-password{
     text-decoration: none;
-    color: #475569;
+    color: #64748B;
     font-size: 14px;
     font-weight: 500;
 }
 .forgot-password:hover{
-    color: #3B82F6;
+    color: #1E293B;
 }
 
 /* SEGURIDAD Y ALERTAS */
@@ -124,21 +146,21 @@ body{
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #0F172A;
+    color: #1E293B;
 }
 .alert-box{
-    background-color: #EFF6FF;
+    background-color: #F8FAFC;
     padding: 15px;
-    border: 1px solid #BFDBFE;
-    border-left: 5px solid #152f5a;
+    border: 1px solid #CBD5E1;
+    border-left: 5px solid #1E293B;
     border-radius: 0;
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #1E293B;
+    color: #334155;
 }
 .alert-box i{
-    color: #192e6d;
+    color: #1E293B;
 }
 
 /* TOPBAR */
@@ -148,7 +170,7 @@ body{
     align-items: center;
     padding: 16px 25px;
     background: #ffffff;
-    border-bottom: 2px solid #0F172A;
+    border-bottom: 2px solid #1E293B;
     border-radius: 0;
     margin-bottom: 30px;
 }
@@ -183,7 +205,7 @@ body{
 }
 .logo i{
     margin-right: 10px;
-    color: #3B82F6;
+    color: #475569; /* Gris azulado para destacar sobre el fondo oscuro */
 }
 
 /* MENU */
@@ -210,12 +232,12 @@ body{
 .menu a:hover{
     background-color: #1E293B;
     color: #ffffff;
-    border-left: 4px solid #3B82F6;
+    border-left: 4px solid #475569;
 }
 .menu .active{
     background-color: #1E293B;
     color: #ffffff;
-    border-left: 4px solid #3B82F6;
+    border-left: 4px solid #ffffff;
 }
 
 /* LOGOUT */
@@ -248,7 +270,7 @@ body{
     transition: .35s;
 }
 .dashboard-card:hover{
-    border-color: #3B82F6;
+    border-color: #1E293B;
     box-shadow: 0 4px 8px rgba(0,0,0,0.08);
 }
 
@@ -256,7 +278,7 @@ body{
     text-align: center;
 }
 
-/* PERFIL RECLUTADOR */
+/* PERFIL RECLUTADOR (Usado en Admin también) */
 .recruiter-profile{
     display: flex;
     align-items: center;
@@ -268,7 +290,7 @@ body{
     transition: .3s;
 }
 .recruiter-profile:hover{
-    border-color: #3B82F6;
+    border-color: #1E293B;
 }
 
 /* ACTION BOX */
@@ -276,12 +298,12 @@ body{
     background: #ffffff;
     border: 1px solid #E2E8F0;
     border-radius: 0;
-    color: #0F172A;
+    color: #1E293B;
     padding: 25px;
     transition: .3s;
 }
 .action-box:hover{
-    border-color: #3B82F6;
+    border-color: #1E293B;
 }
 
 /* CONTENT */
@@ -307,10 +329,10 @@ body{
 .content p,
 .content span,
 .content label{
-    color: #0F172A;
+    color: #1E293B;
 }
 .content table{
-    color: #0F172A;
+    color: #1E293B;
 }
 .table thead{
     background-color: #F8FAFC;
@@ -320,12 +342,76 @@ body{
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;
-    border-bottom: 2px solid #0F172A;
+    border-bottom: 2px solid #1E293B;
 }
 .table td{
     color: #334155;
     vertical-align: middle;
     border-color: #E2E8F0;
+}
+
+/* ==================================================
+   ESTILOS PARA LA CAJA DE REGISTRO
+================================================== */
+.register-box {
+    width: 500%;
+    max-width: 1000px;
+    background: #edecec;
+    padding: 35px;
+    border-radius: 0; /* Sin redondeados */
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.icon-reclutador{
+    max-width: 400px;
+    font-size: 50px;
+    color: #1E293B;
+    margin-bottom: 15px;
+}
+
+.register-image {
+    max-width: 180px;
+    margin-bottom: 15px;
+}
+
+/* Forzar inputs y selects sin redondeados y con borde sutil */
+.register-box .form-control,
+.register-box .form-select {
+    border-radius: 0 !important;
+    border: 1px solid #E2E8F0 !important;
+    background-color: #F8FAFC !important;
+    padding: 12px;
+    height: auto;
+}
+
+.register-box .form-control:focus,
+.register-box .form-select:focus {
+    border-color: #1E293B !important;
+    box-shadow: none !important;
+    background-color: #ffffff !important;
+}
+
+/* Quitar redondeados a los input-group */
+.register-box .input-group-text {
+    border-radius: 0 !important;
+    border: 1px solid #E2E8F0 !important;
+    background-color: #F8FAFC !important;
+}
+
+/* Botón principal oscuro */
+.register-box .btn-primary {
+    background-color: #1E293B !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 14px;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.register-box .btn-primary:hover {
+    background-color: #0F172A !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2);
 }
 
 /* RESPONSIVE */

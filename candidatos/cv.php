@@ -264,7 +264,11 @@
                 </a>
                 <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
                     <i class="bi bi-download me-2"></i>
-                    Descargar PDF
+                    Descargar CV
+                </button>
+                <button type="button" id="btnVerCV" class="btn btn-outline-primary">
+                    <i class="bi bi-eye me-2"></i>
+                    Ver CV 
                 </button>
             </div>
         </div>

@@ -98,8 +98,9 @@ include 'includes/header.php';
 ?>
 
 <div class="d-flex">
-    <?php include 'includes/sidebar.php'; ?>
-
+    <?php include "includes/sidebar.php"; ?>
+    <div class="content">
+        <?php include "includes/topbar.php"; ?>
     <div class="content w-100 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -256,5 +257,5 @@ include 'includes/header.php';
         </div>
     </div>
 </div>
-
+</div>
 <?php include 'includes/footer.php'; ?>

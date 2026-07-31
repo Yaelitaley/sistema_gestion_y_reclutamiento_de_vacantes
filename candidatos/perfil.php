@@ -296,10 +296,10 @@
                 Regresar
             </a>
             <div>
-                <a href="cv.php" class="btn btn-outline-primary me-2">
-                    <i class="bi bi-file-earmark-person-fill me-2"></i>
+                <button type="button" id="btnVerCV" class="btn btn-outline-primary">
+                    <i class="bi bi-eye me-2"></i>
                     Ver CV
-                </a>
+                </button>
                 <a href="editar_perfil.php" class="btn btn-candidato">
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar Perfil

@@ -7,7 +7,8 @@ include "includes/header.php";
 <div class="d-flex">
 
     <?php include "includes/sidebar.php"; ?>
-
+    <div class="content">
+        <?php include "includes/topbar.php"; ?>
     <div class="content w-100 p-4">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +17,7 @@ include "includes/header.php";
                 <p class="text-muted">Administra los reclutadores registrados en el sistema.</p>
             </div>
 
-            <a href="../reclutador/register.php" class="btn btn-primary">
+            <a href="../reclutador/register.php" class="btn btn-reclutador">
                 <i class="bi bi-plus-circle-fill me-2"></i>
                 Agregar Reclutador
             </a>
@@ -81,8 +82,6 @@ include "includes/header.php";
     </div>
 </div>
 
-<div class="text-center mt-3">
-    <a href="../admin/dashboard.php" class="cancel-link">Regresar</a>
-</div>
 
+</div>
 <?php include "includes/footer.php"; ?>

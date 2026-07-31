@@ -691,9 +691,9 @@
             </div>
 
                         <!-- CV -->
-            <div class="col-lg-8">
+            <div class="col-lg-12">
 
-                <div class="candidate-card">
+                <div class="candidate-card ">
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -705,17 +705,18 @@
 
                         </h4>
 
-                        <button class="btn btn-danger">
-
-                            <i class="bi bi-download me-2"></i>
-
-                            Descargar CV
-
-                        </button>
+                        <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
+                    <i class="bi bi-download me-2"></i>
+                    Descargar PDF
+                </button>
+                <button type="button" id="btnVerCV" class="btn btn-outline-primary">
+                    <i class="bi bi-eye me-2"></i>
+                    Ver CV
+                </button>
 
                     </div>
 
-                    <div class="cv-preview">
+                    <div class="cv-preview col-lg-12">
 
                         <div class="text-center py-5">
 
@@ -741,71 +742,6 @@
                 </div>
 
             </div>
-
-
-
-
-
-            <!-- DOCUMENTOS -->
-            <div class="col-lg-4">
-
-                <div class="candidate-card">
-
-                    <h4 class="fw-bold mb-4">
-
-                        <i class="bi bi-folder-fill me-2"></i>
-
-                        Documentos
-
-                    </h4>
-
-                    <div class="list-group">
-
-                        <a href="#"
-                           class="list-group-item list-group-item-action">
-
-                            <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>
-
-                            Currículum.pdf
-
-                        </a>
-
-                        <a href="#"
-                           class="list-group-item list-group-item-action">
-
-                            <i class="bi bi-file-earmark-person-fill text-primary me-2"></i>
-
-                            INE.pdf
-
-                        </a>
-
-                        <a href="#"
-                           class="list-group-item list-group-item-action">
-
-                            <i class="bi bi-file-earmark-medical-fill text-success me-2"></i>
-
-                            Constancia.pdf
-
-                        </a>
-
-                        <a href="#"
-                           class="list-group-item list-group-item-action">
-
-                            <i class="bi bi-file-earmark-text-fill text-warning me-2"></i>
-
-                            Carta de Presentación.pdf
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-
 
             <!-- OBSERVACIONES -->
             <div class="col-lg-12">
