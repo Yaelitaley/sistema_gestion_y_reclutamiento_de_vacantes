@@ -89,7 +89,7 @@ include "includes/header.php";
         <div class="row g-4">
             <!-- RECLUTADORES -->
             <div class="col-md-8">
-                <div class="table-box">
+                <div class="table-responsive">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="texto fw-bold">
                             Reclutadores recientes

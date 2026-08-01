@@ -23,7 +23,7 @@ include "includes/header.php";
             </a>
         </div>
 
-        <div class="table-box">
+        <div class="table-responsive">
             <table class="table align-middle">
                 <thead>
                     <tr>
