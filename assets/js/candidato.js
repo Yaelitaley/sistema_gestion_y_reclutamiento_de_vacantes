@@ -663,15 +663,48 @@ document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.querySelector(".sidebar");
     const content = document.querySelector(".content");
 
-    if(menuToggle && sidebar && content){
-
-        menuToggle.addEventListener("click", function(){
-
-            sidebar.classList.toggle("active");
-            content.classList.toggle("sidebar-open");
-
-        });
-
+    // 1. Creamos el fondo oscuro (Overlay) dinámicamente
+    let overlay = document.querySelector(".overlay");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.className = "overlay";
+        document.body.appendChild(overlay);
     }
+
+    // 2. Función para ABRIR el menú
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+            if (content) content.classList.add("sidebar-open");
+        });
+    }
+
+    // 3. Función para CERRAR el menú (Clic en el fondo oscuro)
+    if (overlay) {
+        overlay.addEventListener("click", function () {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+            if (content) content.classList.remove("sidebar-open");
+        });
+    }
+
+    // 4. Función para CERRAR el menú (Clic fuera, a prueba de errores)
+    document.addEventListener("click", function (e) {
+        // Si el sidebar no existe o no está activo, no hacemos nada
+        if (!sidebar || !sidebar.classList.contains("active")) return;
+
+        // Si el clic fue dentro del sidebar, no hacemos nada
+        if (sidebar.contains(e.target)) return;
+
+        // Si el clic fue en el botón de menú, no hacemos nada
+        if (menuToggle && menuToggle.contains(e.target)) return;
+
+        // Si pasó todas las validaciones, cerramos el menú
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        if (content) content.classList.remove("sidebar-open");
+    });
 
 });

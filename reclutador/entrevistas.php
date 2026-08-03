@@ -126,7 +126,7 @@ include "includes/header.php";
             </div>
         </div>
 
-        <div class="table-box">
+        <div class="table-responsive">
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>

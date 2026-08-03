@@ -722,3 +722,156 @@ body{
     background-color: #D97706;
     color: #ffffff;
 }
+
+/* ==================================================
+   KIT DE SALVVIDAS RESPONSIVO (CELULARES Y TABLETS)
+   Complemento para Bootstrap 5
+================================================== */
+
+/* 1. Evitar desbordamientos horizontales globales */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Asegurar que las imágenes y SVGs nunca se salgan del contenedor */
+img, svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 2. BARRA SUPERIOR (TOPBAR) EN MÓVIL */
+@media (max-width: 992px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 0;
+    }
+    .top-bar .search-box,
+    .top-bar form {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    .admin-profile, .recruiter-profile, .candidate-profile {
+        width: 100%;
+        justify-content: space-between;
+        padding: 10px 15px;
+    }
+}
+
+/* 3. MENU LATERAL (SIDEBAR) Y CONTENIDO EN MÓVIL */
+@media (max-width: 992px) {
+    /* El contenido ocupa todo el ancho siempre en móvil */
+    .content,
+    .content.sidebar-open {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px;
+    }
+    
+    /* El sidebar se vuelve una capa flotante (Overlay) */
+    .sidebar {
+        z-index: 1050;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    
+    /* Capa oscura detrás del menú cuando está abierto */
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: .3s;
+        z-index: 1040;
+    }
+    .overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* 4. TABLAS (Scroll horizontal suave sin romper el diseño) */
+.table-responsive {
+    -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+    overflow-x: auto;
+}
+.table th, .table td {
+    white-space: nowrap; /* Evita que las palabras largas rompan la fila */
+}
+.table .btn-sm {
+    padding: 5px 8px;
+    margin: 2px;
+}
+
+/* 5. TARJETAS DASHBOARD EN PANTALLAS PEQUEÑAS */
+@media (max-width: 576px) {
+    .dashboard-card {
+        padding: 15px;
+        gap: 12px;
+        text-align: left !important;
+    }
+    .card-icon {
+        width: 45px;
+        height: 45px;
+    }
+    .card-icon i {
+        font-size: 20px;
+    }
+    .dashboard-card h3 {
+        font-size: 1.25rem;
+    }
+    .dashboard-card p {
+        font-size: 0.85rem;
+    }
+}
+
+/* 6. BOTONES Y CONTENEDORES FLEX EN MÓVIL */
+@media (max-width: 576px) {
+    /* Fuerza a que los contenedores de botones se apilen */
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 15px;
+    }
+    .d-flex.gap-2,
+    .d-flex.gap-3 {
+        flex-direction: column;
+        width: 100%;
+    }
+    .d-flex.gap-2 .btn,
+    .d-flex.gap-3 .btn,
+    .d-flex.gap-2 a,
+    .d-flex.gap-3 a {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-bottom: 5px;
+    }
+    .btn-dashboard {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* 7. MODALES EN MÓVIL (Que ocupen mejor la pantalla) */
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    .modal-body {
+        padding: 1rem;
+    }
+}
+
+/* 8. FORMULARIOS (Inputs más altos para tocarlos fácil en celular) */
+@media (max-width: 576px) {
+    .form-control, .form-select {
+        padding: 12px;
+        font-size: 16px; /* Evita el zoom automático de iOS */
+    }
+    .input-group-text {
+        padding: 12px 15px;
+    }
+}

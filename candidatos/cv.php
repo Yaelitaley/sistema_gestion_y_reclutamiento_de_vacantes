@@ -340,7 +340,7 @@ if (!empty($candidato['aptitudes'])) {
                     <i class="bi bi-pencil-square me-2"></i>
                     Editar CV
                 </a>
-
+                
                 <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
                     <i class="bi bi-download me-2"></i>
                     Descargar CV
@@ -358,6 +358,7 @@ if (!empty($candidato['aptitudes'])) {
                 <?php else: ?>
                     <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
                         <i class="bi bi-download me-2"></i>
+                        
                         Descargar PDF
                     </button>
                 <?php endif; ?>

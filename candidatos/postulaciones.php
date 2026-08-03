@@ -168,7 +168,7 @@ function badgeEstadoPostulacion($estado) {
 
         <!-- BUSCADOR Y FILTROS -->
         <form action="postulaciones.php" method="GET">
-            <div class="table-box mb-4">
+            <div class="table-responsive mb-4">
                 <div class="row g-3">
                     <div class="col-lg-8">
                         <div class="input-group">

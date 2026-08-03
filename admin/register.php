@@ -95,10 +95,7 @@ include 'includes/header.php';
 ?>
 
 <main class="register-container">
-    <div class="top-bar">
-        <i class="bi bi-gear-fill"></i>
-        <span>Registrar Administrador</span>
-    </div>
+    
 
     <div class="container-fluid py-5 d-flex justify-content-center">
         <div class="register-box">
@@ -199,7 +196,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary w-100" <?= !$tablasOk ? 'disabled' : '' ?>>Registrar Administrador</button>
+                    <button type="submit" class="btn btn-reclutador w-100" <?= !$tablasOk ? 'disabled' : '' ?>>Registrar Administrador</button>
                 </div>
 
                 <div class="text-center mt-3">
