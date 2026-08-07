@@ -1,6 +1,5 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/connection.php';
 require_once '../config/app_helpers.php';
 
 require_admin_login();
@@ -27,6 +26,8 @@ include "includes/header.php";
             </a>
         </div>
 
+        <div id="alertaReclutadores"></div>
+
         <div class="table-responsive">
             <table class="table align-middle">
                 <thead>
@@ -39,47 +40,8 @@ include "includes/header.php";
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    $sql = "SELECT r.id, r.nombre_completo, u.correo, e.nombre AS empresa, r.estado
-                            FROM reclutadores r
-                            INNER JOIN usuarios u ON r.usuario_id = u.id
-                            LEFT JOIN empresas e ON r.empresa_id = e.id
-                            ORDER BY r.id DESC";
-                    $result = $conn->query($sql);
-
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $estado = strtolower($row['estado']);
-                            if ($estado === 'activo') {
-                                $badge = 'bg-success';
-                            } elseif ($estado === 'pendiente') {
-                                $badge = 'bg-warning text-dark';
-                            } elseif ($estado === 'bloqueado') {
-                                $badge = 'bg-danger';
-                            } else {
-                                $badge = 'bg-secondary';
-                            }
-                            echo '<tr>';
-                            echo '<td>' . $row['id'] . '</td>';
-                            echo '<td>' . htmlspecialchars($row['nombre_completo']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['empresa'] ?? 'Sin empresa') . '</td>';
-                            echo '<td><span class="badge ' . $badge . '">' . htmlspecialchars(ucfirst($estado)) . '</span></td>';
-                            echo '<td>
-                                    <a href="edit_reclutador.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <button class="btn btn-danger btn-sm btnEliminarReclutador" data-id="' . $row['id'] . '">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                  </td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="6" class="text-center text-muted">No hay reclutadores registrados.</td></tr>';
-                    }
-                    ?>
+                <tbody id="tbodyReclutadores">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Cargando reclutadores...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -88,4 +50,68 @@ include "includes/header.php";
 
 
 </div>
+
+<script src="../assets/js/api-client.js"></script>
+<script>
+const BADGES = { activo: 'bg-success', pendiente: 'bg-warning text-dark', bloqueado: 'bg-danger' };
+
+function mostrarAlerta(mensaje, tipo) {
+    document.getElementById('alertaReclutadores').innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+}
+
+function renderTabla(reclutadores) {
+    const tbody = document.getElementById('tbodyReclutadores');
+
+    if (!reclutadores.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay reclutadores registrados.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = reclutadores.map(r => {
+        const estado = (r.estado || '').toLowerCase();
+        const badge = BADGES[estado] || 'bg-secondary';
+        return `
+            <tr>
+                <td>${r.id}</td>
+                <td>${r.nombre_completo}</td>
+                <td>${r.correo ?? ''}</td>
+                <td>${r.empresa_nombre ?? 'Sin empresa'}</td>
+                <td><span class="badge ${badge}">${estado.charAt(0).toUpperCase() + estado.slice(1)}</span></td>
+                <td>
+                    <a href="edit_reclutador.php?id=${r.id}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarReclutador(${r.id})"><i class="bi bi-trash-fill"></i></button>
+                </td>
+            </tr>`;
+    }).join('');
+}
+
+async function cargarReclutadores() {
+    const { ok, data, message } = await Api.get('reclutadores', { limit: 200 });
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudieron cargar los reclutadores.', 'danger');
+        return;
+    }
+
+    renderTabla(data);
+}
+
+async function eliminarReclutador(id) {
+    if (!confirm('¿Deseas eliminar este reclutador?')) return;
+
+    const { ok, message } = await Api.del('reclutadores', id);
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudo eliminar el reclutador.', 'danger');
+        return;
+    }
+
+    mostrarAlerta('Reclutador eliminado correctamente.', 'success');
+    await cargarReclutadores();
+}
+
+document.addEventListener('DOMContentLoaded', cargarReclutadores);
+</script>
+
 <?php include "includes/footer.php"; ?>
+

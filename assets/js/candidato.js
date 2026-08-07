@@ -315,18 +315,40 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     // ==========================
-    // BOTÓN POSTULARME
+    // BOTÓN POSTULARME (conectado a la API REST assets/api/api-postulaciones.php)
+    // Se usa delegación de eventos porque algunas páginas (explorar-empleos)
+    // generan las tarjetas de vacante dinámicamente después de cargar la página.
     // ==========================
 
-    const botonesPostular = document.querySelectorAll(".btnPostular");
+    document.addEventListener("click", async function (e) {
 
-    botonesPostular.forEach(function(boton){
+        const boton = e.target.closest(".btnPostular");
 
-        boton.addEventListener("click", function(){
+        if (!boton || typeof Api === "undefined") return;
 
-            alert("¡Tu postulación fue enviada correctamente!");
+        const vacanteId = boton.dataset.vacanteId;
 
-        });
+        if (!vacanteId) return;
+
+        boton.disabled = true;
+        const textoOriginal = boton.innerHTML;
+        boton.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Enviando...';
+
+        const { ok, message } = await Api.post("postulaciones", { vacante_id: Number(vacanteId) });
+
+        if (!ok) {
+            boton.disabled = false;
+            boton.innerHTML = textoOriginal;
+            alert(message || "No se pudo enviar tu postulación.");
+            return;
+        }
+
+        boton.classList.remove("btn-candidato");
+        boton.classList.add("btn-secondary");
+        boton.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Postulado';
+        alert("¡Tu postulación fue enviada correctamente!");
+
+        document.dispatchEvent(new CustomEvent("postulacion:creada", { detail: { vacanteId: Number(vacanteId) } }));
 
     });
 
@@ -452,25 +474,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
 document.addEventListener("DOMContentLoaded", function(){
 
-    const botonesCancelar = document.querySelectorAll(".btnCancelarPostulacion");
-
-    botonesCancelar.forEach(function(boton){
-
-        boton.addEventListener("click", function(){
-
-            const confirmar = confirm("¿Estás seguro de cancelar esta postulación?");
-
-            if(confirmar){
-
-                alert("La postulación ha sido cancelada correctamente.");
-
-                this.closest("tr").remove();
-
-            }
-
-        });
-
-    });
+    // El botón "Cancelar postulación" se maneja directamente en
+    // candidatos/postulaciones.php (llama a la API real de postulaciones).
 
 });
 

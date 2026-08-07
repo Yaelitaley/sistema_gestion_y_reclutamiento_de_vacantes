@@ -12,6 +12,8 @@
 </footer>
 <!-- Bootstrap -->
 <script src="../assets/vendors/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Cliente de la API REST -->
+<script src="../assets/js/api-client.js"></script>
 <!-- JavaScript -->
 <script src="../assets/js/candidato.js"></script>
 </body>

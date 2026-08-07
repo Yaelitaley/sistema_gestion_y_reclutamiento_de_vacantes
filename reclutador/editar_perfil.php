@@ -28,7 +28,6 @@ $empresas = $conn->query("SELECT id, nombre FROM empresas ORDER BY nombre ASC")-
 $mensaje = $_GET['msg'] ?? '';
 $tipoMensaje = $_GET['type'] ?? 'success';
 
-// ----- Foto de perfil (con archivo real si existe, o imagen por defecto) -----
 $fotoPerfilSrc = !empty($reclutador['foto_perfil'])
     ? '../' . htmlspecialchars($reclutador['foto_perfil']) . '?v=' . time()
     : '../assets/img/reclutador02.png';

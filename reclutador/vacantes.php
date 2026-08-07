@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
+
 
 if (($_SESSION['rol_id'] ?? 0) != 3) {
     redirect_to('login.php');
@@ -9,100 +9,14 @@ if (($_SESSION['rol_id'] ?? 0) != 3) {
 
 $usuarioId = (int) $_SESSION['usuario_id'];
 
-// Obtener el id del reclutador a partir del usuario logueado
-$stmt = $conn->prepare("SELECT id, empresa_id FROM reclutadores WHERE usuario_id = ?");
-$stmt->bind_param('i', $usuarioId);
-$stmt->execute();
-$reclutador = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-if (!$reclutador) {
-    die('No se encontró el perfil de reclutador asociado a este usuario.');
-}
-$reclutadorId = (int) $reclutador['id'];
-
-$mensaje = $_GET['msg'] ?? '';
-$tipoMensaje = $_GET['type'] ?? 'success';
-
-// crear, editar y eliminar 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'] ?? '';
-
-    if ($accion === 'guardar') {
-        $id          = (int) ($_POST['id'] ?? 0);
-        $trabajo     = trim($_POST['trabajo'] ?? '');
-        $descripcion = trim($_POST['descripcion'] ?? '');
-        $categoria   = trim($_POST['categoria'] ?? '');
-        $requisitos  = trim($_POST['requisitos'] ?? '');
-        $salario     = trim($_POST['salario'] ?? '');
-        $ubicacion   = trim($_POST['ubicacion'] ?? '');
-        $nivel       = trim($_POST['nivel_experiencia'] ?? '');
-        $activa      = isset($_POST['activa']) ? 1 : 0;
-
-        if ($trabajo === '' || $descripcion === '' || $categoria === '' || $ubicacion === '' || $nivel === '') {
-            redirect_to('vacantes.php?type=danger&msg=' . urlencode('Completa todos los campos obligatorios.'));
-        }
-
-        $salarioVal = $salario === '' ? null : (float) $salario;
-
-        if ($id > 0) {
-            $stmt = $conn->prepare("UPDATE vacantes SET trabajo=?, descripcion=?, categoria=?, requisitos=?, salario=?, ubicacion=?, nivel_experiencia=?, activa=? WHERE id=? AND reclutador_id=?");
-            $stmt->bind_param('ssssdssiii', $trabajo, $descripcion, $categoria, $requisitos, $salarioVal, $ubicacion, $nivel, $activa, $id, $reclutadorId);
-            $stmt->execute();
-            $stmt->close();
-            redirect_to('vacantes.php?type=success&msg=' . urlencode('Vacante actualizada correctamente.'));
-        } else {
-            $stmt = $conn->prepare("INSERT INTO vacantes (reclutador_id, trabajo, descripcion, categoria, requisitos, salario, ubicacion, nivel_experiencia, activa) VALUES (?,?,?,?,?,?,?,?,?)");
-            $stmt->bind_param('issssdssi', $reclutadorId, $trabajo, $descripcion, $categoria, $requisitos, $salarioVal, $ubicacion, $nivel, $activa);
-            $stmt->execute();
-            $stmt->close();
-            redirect_to('vacantes.php?type=success&msg=' . urlencode('Vacante creada correctamente.'));
-        }
-    }
-
-    if ($accion === 'eliminar') {
-        $id = (int) ($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $conn->begin_transaction();
-            try {
-                $stmt = $conn->prepare("DELETE FROM postulaciones WHERE vacante_id = ?");
-                $stmt->bind_param('i', $id);
-                $stmt->execute();
-                $stmt->close();
-
-                $stmt = $conn->prepare("DELETE FROM vacantes WHERE id = ? AND reclutador_id = ?");
-                $stmt->bind_param('ii', $id, $reclutadorId);
-                $stmt->execute();
-                $stmt->close();
-                $conn->commit();
-                redirect_to('vacantes.php?type=success&msg=' . urlencode('Vacante eliminada correctamente.'));
-            } catch (Throwable $e) {
-                $conn->rollback();
-                redirect_to('vacantes.php?type=danger&msg=' . urlencode('No se pudo eliminar: ' . $e->getMessage()));
-            }
-        }
-    }
-}
-
-// ---------- LISTADO ----------
-$stmt = $conn->prepare("SELECT v.*, (SELECT COUNT(*) FROM postulaciones p WHERE p.vacante_id = v.id) AS total_postulaciones
-                         FROM vacantes v WHERE v.reclutador_id = ? ORDER BY v.id DESC");
-$stmt->bind_param('i', $reclutadorId);
-$stmt->execute();
-$vacantes = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
-
-$totalActivas = 0;
-foreach ($vacantes as $v) { if ((int)$v['activa'] === 1) $totalActivas++; }
-
-include "includes/header.php";
+include 'includes/header.php';
 ?>
+
 <div class="d-flex">
-    <?php include "includes/sidebar.php"; ?>
+    <?php include 'includes/sidebar.php'; ?>
 
     <div class="content w-100 p-4">
-        <?php include "includes/topbar.php"; ?>
-        
+        <?php include 'includes/topbar.php'; ?>
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
@@ -114,47 +28,43 @@ include "includes/header.php";
             </button>
         </div>
 
-        <?php if ($mensaje !== ''): ?>
-            <div class="alert alert-<?= e($tipoMensaje) ?>"><?= e($mensaje) ?></div>
-        <?php endif; ?>
+        <div id="alertaVacantes"></div>
 
         <div class="row g-4 mb-4">
             <div class="col-md-4">
-                <div class="dashboard-card"><div class="card-icon bg-primary-subtle"><i class="bi bi-briefcase-fill text-primary"></i></div><div><h3 class="fw-bold"><?= count($vacantes) ?></h3><p class="mb-0">Total de Vacantes</p></div></div>
+                <div class="dashboard-card"><div class="card-icon bg-primary-subtle"><i class="bi bi-briefcase-fill text-primary"></i></div><div><h3 class="fw-bold" id="statTotal">0</h3><p class="mb-0">Total de Vacantes</p></div></div>
             </div>
             <div class="col-md-4">
-                <div class="dashboard-card"><div class="card-icon bg-success-subtle"><i class="bi bi-check-circle-fill text-success"></i></div><div><h3 class="fw-bold"><?= $totalActivas ?></h3><p class="mb-0">Activas</p></div></div>
+                <div class="dashboard-card"><div class="card-icon bg-success-subtle"><i class="bi bi-check-circle-fill text-success"></i></div><div><h3 class="fw-bold" id="statActivas">0</h3><p class="mb-0">Activas</p></div></div>
             </div>
             <div class="col-md-4">
-                <div class="dashboard-card"><div class="card-icon bg-warning-subtle"><i class="bi bi-people-fill text-warning"></i></div><div><h3 class="fw-bold"><?= array_sum(array_column($vacantes, 'total_postulaciones')) ?></h3><p class="mb-0">Postulaciones Recibidas</p></div></div>
+                <div class="dashboard-card"><div class="card-icon bg-warning-subtle"><i class="bi bi-people-fill text-warning"></i></div><div><h3 class="fw-bold" id="statPostulaciones">0</h3><p class="mb-0">Postulaciones Recibidas</p></div></div>
             </div>
         </div>
 
         <div class="table-box">
 
-    <!-- Buscador y filtro -->
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <input
-    type="text"
-    id="buscarVacante"
-    class="form-control"
-    autocomplete="off"
-    placeholder="🔍 Buscar por puesto, categoría o ubicación...">
-        </div>
+            <!-- Buscador y filtro -->
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <input
+                        type="text"
+                        id="buscarVacante"
+                        class="form-control"
+                        autocomplete="off"
+                        placeholder="🔍 Buscar por puesto, categoría o ubicación...">
+                </div>
 
-        <div class="col-md-4">
-            <select id="filtroEstado" class="form-select">
-                <option value="">Todas las vacantes</option>
-                <option value="Activo">Activas</option>
-                <option value="Inactivo">Inactivas</option>
-            </select>
-        </div>
-    </div>
+                <div class="col-md-4">
+                    <select id="filtroEstado" class="form-select">
+                        <option value="">Todas las vacantes</option>
+                        <option value="Activo">Activas</option>
+                        <option value="Inactivo">Inactivas</option>
+                    </select>
+                </div>
+            </div>
 
-    <div class="table-responsive">
-
-
+            <div class="table-responsive">
                 <table class="table align-middle" id="tablaVacantes">
                     <thead>
                         <tr>
@@ -167,41 +77,8 @@ include "includes/header.php";
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php if (!$vacantes): ?>
-                            <tr><td colspan="7" class="text-center text-muted py-4">Aún no has publicado vacantes.</td></tr>
-                        <?php endif; ?>
-                        <?php foreach ($vacantes as $v): ?>
-                            <tr>
-                                <td><strong><?= e($v['trabajo']) ?></strong><br><small class="text-muted"><?= e(texto_corto($v['descripcion'], 60)) ?></small></td>
-                                <td><span class="badge bg-primary"><?= e($v['categoria']) ?></span></td>
-                                <td><?= e($v['ubicacion']) ?></td>
-                                <td><?= $v['salario'] !== null ? '$' . number_format((float)$v['salario'], 2) : 'No especificado' ?></td>
-                                <td><?= badge_estado($v['activa'] ? 'Activo' : 'Inactivo') ?></td>
-                                <td><?= (int) $v['total_postulaciones'] ?></td>
-                                <td>
-                                    <button type="button" class="btn btn-warning btn-sm"
-                                        onclick='editarVacante(<?= json_encode($v) ?>)'
-                                        data-bs-toggle="modal" data-bs-target="#modalVacante">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </button>
-                                    <form method="POST" class="d-inline" onsubmit="return confirm('¿Eliminar esta vacante?');">
-                                        <input type="hidden" name="accion" value="eliminar">
-                                        <input type="hidden" name="id" value="<?= (int) $v['id'] ?>">
-                                        <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></button>
-                                    </form>
-
-                                     <a
-        href="ver_vacante.php?id=<?= (int)$v['id'] ?>"
-        class="btn btn-info btn-sm"
-        title="Ver vacante">
-
-        <i class="bi bi-eye-fill"></i>
-
-    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <tbody id="tbodyVacantes">
+                        <tr><td colspan="7" class="text-center text-muted py-4">Cargando vacantes...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -213,66 +90,166 @@ include "includes/header.php";
 <div class="modal fade" id="modalVacante" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="POST">
+            <form id="formVacante">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalVacanteTitulo">Nueva Vacante</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="accion" value="guardar">
-                    <input type="hidden" name="id" id="f_id" value="0">
+                    <input type="hidden" id="f_id" value="0">
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Puesto</label>
-                            <input type="text" name="trabajo" id="f_trabajo" class="form-control" required>
+                            <input type="text" id="f_trabajo" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Categoría</label>
-                            <input type="text" name="categoria" id="f_categoria" class="form-control" required>
+                            <input type="text" id="f_categoria" class="form-control" required>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Ubicación</label>
-                            <input type="text" name="ubicacion" id="f_ubicacion" class="form-control" required>
+                            <input type="text" id="f_ubicacion" class="form-control" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Salario</label>
-                            <input type="number" step="0.01" name="salario" id="f_salario" class="form-control">
+                            <input type="number" step="0.01" id="f_salario" class="form-control">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-bold">Nivel de experiencia</label>
-                            <input type="text" name="nivel_experiencia" id="f_nivel" class="form-control" placeholder="Ej. Junior, Senior" required>
+                            <input type="text" id="f_nivel" class="form-control" placeholder="Ej. Junior, Senior" required>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Descripción</label>
-                        <textarea name="descripcion" id="f_descripcion" class="form-control" rows="3" required></textarea>
+                        <textarea id="f_descripcion" class="form-control" rows="3" required></textarea>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Requisitos</label>
-                        <textarea name="requisitos" id="f_requisitos" class="form-control" rows="3"></textarea>
+                        <textarea id="f_requisitos" class="form-control" rows="3"></textarea>
                     </div>
 
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" name="activa" id="f_activa" checked>
+                        <input type="checkbox" class="form-check-input" id="f_activa" checked>
                         <label class="form-check-label" for="f_activa">Vacante activa</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-reclutador">Guardar</button>
+                    <button type="submit" class="btn btn-reclutador" id="btnGuardarVacante">Guardar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script src="../assets/js/api-client.js"></script>
 <script>
+const SESSION_USUARIO_ID = <?= json_encode($usuarioId) ?>;
+
+let reclutadorId = null;
+let todasLasVacantes = [];
+let modalVacanteEl = null;
+
+function mostrarAlerta(mensaje, tipo) {
+    const cont = document.getElementById('alertaVacantes');
+    cont.innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+}
+
+function formatoSalario(salario) {
+    return (salario !== null && salario !== '' && salario !== undefined)
+        ? '$' + Number(salario).toLocaleString('es-MX', { minimumFractionDigits: 2 })
+        : 'No especificado';
+}
+
+function badgeEstado(activa) {
+    return activa == 1
+        ? '<span class="badge bg-success">Activo</span>'
+        : '<span class="badge bg-secondary">Inactivo</span>';
+}
+
+function textoCorto(texto, limite = 60) {
+    texto = (texto || '').toString();
+    return texto.length > limite ? texto.slice(0, limite - 3) + '...' : texto;
+}
+
+function renderVacantes(vacantes) {
+    const tbody = document.getElementById('tbodyVacantes');
+
+    if (!vacantes.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Aún no has publicado vacantes.</td></tr>';
+    } else {
+        tbody.innerHTML = vacantes.map(v => `
+            <tr>
+                <td><strong>${v.trabajo}</strong><br><small class="text-muted">${textoCorto(v.descripcion)}</small></td>
+                <td><span class="badge bg-primary">${v.categoria}</span></td>
+                <td>${v.ubicacion}</td>
+                <td>${formatoSalario(v.salario)}</td>
+                <td>${badgeEstado(v.activa)}</td>
+                <td>${v.total_postulaciones ?? 0}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-sm" onclick="editarVacante(${v.id})" data-bs-toggle="modal" data-bs-target="#modalVacante">
+                        <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarVacante(${v.id})">
+                        <i class="bi bi-trash-fill"></i>
+                    </button>
+                    <a href="ver_vacante.php?id=${v.id}" class="btn btn-info btn-sm" title="Ver vacante">
+                        <i class="bi bi-eye-fill"></i>
+                    </a>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    document.getElementById('statTotal').textContent = vacantes.length;
+    document.getElementById('statActivas').textContent = vacantes.filter(v => v.activa == 1).length;
+    document.getElementById('statPostulaciones').textContent = vacantes.reduce((acc, v) => acc + Number(v.total_postulaciones || 0), 0);
+}
+
+function aplicarFiltros() {
+    const texto = (document.getElementById('buscarVacante').value || '').toLowerCase().trim();
+    const estado = document.getElementById('filtroEstado').value;
+
+    const filtradas = todasLasVacantes.filter(v => {
+        const coincideTexto = !texto || [v.trabajo, v.categoria, v.ubicacion].join(' ').toLowerCase().includes(texto);
+        const coincideEstado = !estado || (estado === 'Activo' ? v.activa == 1 : v.activa == 0);
+        return coincideTexto && coincideEstado;
+    });
+
+    renderVacantes(filtradas);
+}
+
+async function cargarVacantes() {
+    const { ok, data, message } = await Api.get('vacantes', { reclutador_id: reclutadorId, limit: 200 });
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudieron cargar las vacantes.', 'danger');
+        return;
+    }
+
+    todasLasVacantes = data;
+    aplicarFiltros();
+}
+
+async function inicializar() {
+    const { ok, data, message } = await Api.get('reclutadores', { usuario_id: SESSION_USUARIO_ID });
+
+    if (!ok || !data) {
+        mostrarAlerta(message || 'No se encontró el perfil de reclutador asociado a este usuario.', 'danger');
+        return;
+    }
+
+    reclutadorId = data.id;
+    modalVacanteEl = new bootstrap.Modal(document.getElementById('modalVacante'));
+    await cargarVacantes();
+}
+
 function nuevaVacante() {
     document.getElementById('modalVacanteTitulo').innerText = 'Nueva Vacante';
     document.getElementById('f_id').value = 0;
@@ -286,18 +263,81 @@ function nuevaVacante() {
     document.getElementById('f_activa').checked = true;
 }
 
-function editarVacante(v) {
+function editarVacante(id) {
+    const v = todasLasVacantes.find(item => item.id == id);
+    if (!v) return;
+
     document.getElementById('modalVacanteTitulo').innerText = 'Editar Vacante';
     document.getElementById('f_id').value = v.id;
     document.getElementById('f_trabajo').value = v.trabajo;
     document.getElementById('f_categoria').value = v.categoria;
     document.getElementById('f_ubicacion').value = v.ubicacion;
-    document.getElementById('f_salario').value = v.salario;
+    document.getElementById('f_salario').value = v.salario ?? '';
     document.getElementById('f_nivel').value = v.nivel_experiencia;
     document.getElementById('f_descripcion').value = v.descripcion;
-    document.getElementById('f_requisitos').value = v.requisitos;
+    document.getElementById('f_requisitos').value = v.requisitos ?? '';
     document.getElementById('f_activa').checked = v.activa == 1;
 }
+
+async function eliminarVacante(id) {
+    if (!confirm('¿Eliminar esta vacante?')) return;
+
+    const { ok, message } = await Api.del('vacantes', id);
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudo eliminar la vacante.', 'danger');
+        return;
+    }
+
+    mostrarAlerta('Vacante eliminada correctamente.', 'success');
+    await cargarVacantes();
+}
+
+document.getElementById('formVacante').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const id = parseInt(document.getElementById('f_id').value, 10);
+    const salarioValor = document.getElementById('f_salario').value;
+
+    const payload = {
+        trabajo: document.getElementById('f_trabajo').value.trim(),
+        categoria: document.getElementById('f_categoria').value.trim(),
+        ubicacion: document.getElementById('f_ubicacion').value.trim(),
+        salario: salarioValor === '' ? null : Number(salarioValor),
+        nivel_experiencia: document.getElementById('f_nivel').value.trim(),
+        descripcion: document.getElementById('f_descripcion').value.trim(),
+        requisitos: document.getElementById('f_requisitos').value.trim(),
+        activa: document.getElementById('f_activa').checked ? 1 : 0,
+    };
+
+    if (!payload.trabajo || !payload.descripcion || !payload.categoria || !payload.ubicacion || !payload.nivel_experiencia) {
+        mostrarAlerta('Completa todos los campos obligatorios.', 'danger');
+        return;
+    }
+
+    const btn = document.getElementById('btnGuardarVacante');
+    btn.disabled = true;
+
+    const resultado = (id > 0)
+        ? await Api.patch('vacantes', id, payload)
+        : await Api.post('vacantes', { ...payload, reclutador_id: reclutadorId });
+
+    btn.disabled = false;
+
+    if (!resultado.ok) {
+        mostrarAlerta(resultado.message || 'No se pudo guardar la vacante.', 'danger');
+        return;
+    }
+
+    modalVacanteEl.hide();
+    mostrarAlerta(id > 0 ? 'Vacante actualizada correctamente.' : 'Vacante creada correctamente.', 'success');
+    await cargarVacantes();
+});
+
+document.getElementById('buscarVacante').addEventListener('input', aplicarFiltros);
+document.getElementById('filtroEstado').addEventListener('change', aplicarFiltros);
+
+document.addEventListener('DOMContentLoaded', inicializar);
 </script>
 
-<?php include "includes/footer.php"; ?>
+<?php include 'includes/footer.php'; ?>

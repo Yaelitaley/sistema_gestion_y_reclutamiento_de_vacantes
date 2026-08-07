@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/Auth.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
 class UsuarioController extends BaseController
@@ -28,6 +29,9 @@ class UsuarioController extends BaseController
 
     protected function beforeCreate(array $data): array
     {
+       
+        Auth::requireRole([1, 2]);
+
         if (isset($data['password'])) {
             $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
@@ -36,10 +40,18 @@ class UsuarioController extends BaseController
 
     protected function beforeUpdate(array $data, $id): array
     {
+        Auth::requireRole([1, 2]);
+
         if (isset($data['password'])) {
             $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
         return $data;
+    }
+
+    protected function handleDelete(): void
+    {
+        Auth::requireRole([1, 2]);
+        parent::handleDelete();
     }
 
     // Nunca devolver el hash de la contraseña ni la clave de seguridad 

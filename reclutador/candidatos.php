@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
 
 if (($_SESSION['rol_id'] ?? 0) != 3) {
@@ -9,176 +8,55 @@ if (($_SESSION['rol_id'] ?? 0) != 3) {
 
 $usuarioId = (int) $_SESSION['usuario_id'];
 
-$stmt = $conn->prepare("SELECT id FROM reclutadores WHERE usuario_id = ?");
-$stmt->bind_param('i', $usuarioId);
-$stmt->execute();
-$reclutador = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-if (!$reclutador) {
-    die('No se encontró el perfil de reclutador asociado a este usuario.');
-}
-$reclutadorId = (int) $reclutador['id'];
-
-$buscar = trim($_GET['buscar'] ?? '');
-$filtroEstado = trim($_GET['estado'] ?? 'Todos');
-
-// ---------- TARJETAS DE RESUMEN ----------
-$stmt = $conn->prepare("SELECT
-        COUNT(*) AS total,
-        SUM(ep.nombre = 'En revisión') AS revision,
-        SUM(ep.nombre = 'Entrevista') AS entrevista,
-        SUM(ep.nombre = 'Contratado') AS contratados
-        FROM postulaciones p
-        INNER JOIN vacantes v ON p.vacante_id = v.id
-        INNER JOIN estados_postulacion ep ON p.estado_id = ep.id
-        WHERE v.reclutador_id = ?");
-$stmt->bind_param('i', $reclutadorId);
-$stmt->execute();
-$resumen = $stmt->get_result()->fetch_assoc() ?: [];
-$stmt->close();
-foreach (['total', 'revision', 'entrevista', 'contratados'] as $k) {
-    $resumen[$k] = (int) ($resumen[$k] ?? 0);
-}
-
-// ---------- LISTADO ----------
-$sql = "SELECT p.id AS postulacion_id, c.id AS candidato_id, c.nombre_completo, c.puesto_deseado,
-               v.trabajo AS vacante, ep.nombre AS estado, p.fecha_postulacion
-        FROM postulaciones p
-        INNER JOIN vacantes v ON p.vacante_id = v.id
-        INNER JOIN candidatos c ON p.candidato_id = c.id
-        INNER JOIN estados_postulacion ep ON p.estado_id = ep.id
-        WHERE v.reclutador_id = ?";
-$params = [$reclutadorId];
-$types = 'i';
-
-if ($buscar !== '') {
-    $sql .= " AND (c.nombre_completo LIKE ? OR v.trabajo LIKE ?)";
-    $like = '%' . $buscar . '%';
-    $params[] = $like;
-    $params[] = $like;
-    $types .= 'ss';
-}
-if ($filtroEstado !== '' && $filtroEstado !== 'Todos') {
-    $sql .= " AND ep.nombre = ?";
-    $params[] = $filtroEstado;
-    $types .= 's';
-}
-$sql .= " ORDER BY p.fecha_postulacion DESC";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param($types, ...$params);
-$stmt->execute();
-$candidatos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
-
 include "includes/header.php";
 ?>
 <div class="d-flex">
     <?php include "includes/sidebar.php"; ?>
     <div class="content w-100 p-4">
         <?php include "includes/topbar.php"; ?>
-        <!-- TITULO -->
+
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold">
-                    Gestión de Candidatos
-                </h2>
-                <p class="text-muted">
-                    Consulta los candidatos postulados a tus vacantes.
-                </p>
+                <h2 class="fw-bold">Gestión de Candidatos</h2>
+                <p class="text-muted">Consulta los candidatos postulados a tus vacantes.</p>
             </div>
         </div>
-        <!-- CARDS -->
+
+        <div id="alertaCandidatos"></div>
+
         <div class="row g-4 mb-4">
             <div class="col-md-3">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-primary-subtle">
-                        <i class="bi bi-people-fill text-primary"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold"><?= $resumen['total'] ?></h3>
-                        <p class="mb-0 text-muted">
-                            Total Candidatos
-                        </p>
-                    </div>
-                </div>
+                <div class="dashboard-card"><div class="card-icon bg-primary-subtle"><i class="bi bi-people-fill text-primary"></i></div><div><h3 class="fw-bold" id="statTotal">0</h3><p class="mb-0 text-muted">Total Candidatos</p></div></div>
             </div>
             <div class="col-md-3">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-warning-subtle">
-                        <i class="bi bi-search text-warning"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold"><?= $resumen['revision'] ?></h3>
-                        <p class="mb-0 text-muted">
-                            En Revisión
-                        </p>
-                    </div>
-                </div>
+                <div class="dashboard-card"><div class="card-icon bg-warning-subtle"><i class="bi bi-search text-warning"></i></div><div><h3 class="fw-bold" id="statRevision">0</h3><p class="mb-0 text-muted">En Revisión</p></div></div>
             </div>
             <div class="col-md-3">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-info-subtle">
-                        <i class="bi bi-calendar-event-fill text-info"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold"><?= $resumen['entrevista'] ?></h3>
-                        <p class="mb-0 text-muted">
-                            Entrevistas
-                        </p>
-                    </div>
-                </div>
+                <div class="dashboard-card"><div class="card-icon bg-info-subtle"><i class="bi bi-calendar-event-fill text-info"></i></div><div><h3 class="fw-bold" id="statEntrevista">0</h3><p class="mb-0 text-muted">Entrevistas</p></div></div>
             </div>
             <div class="col-md-3">
-                <div class="dashboard-card">
-                    <div class="card-icon bg-success-subtle">
-                        <i class="bi bi-person-check-fill text-success"></i>
-                    </div>
-                    <div>
-                        <h3 class="fw-bold"><?= $resumen['contratados'] ?></h3>
-                        <p class="mb-0 text-muted">
-                            Contratados
-                        </p>
-                    </div>
-                </div>
+                <div class="dashboard-card"><div class="card-icon bg-success-subtle"><i class="bi bi-person-check-fill text-success"></i></div><div><h3 class="fw-bold" id="statContratados">0</h3><p class="mb-0 text-muted">Contratados</p></div></div>
             </div>
         </div>
-        <!-- TABLA -->
+
         <div class="table-responsive">
-           <form method="GET" class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="fw-bold mb-0">
-        Lista de Candidatos
-    </h4>
-    <div class="d-flex gap-2">
-        <!-- Buscador -->
-        <div class="input-group">
-            <span class="input-group-text">
-                <i class="bi bi-search"></i>
-            </span>
-            <input
-                type="text"
-                name="buscar"
-                id="buscarCandidato"
-                class="form-control"
-                value="<?= e($buscar) ?>"
-                placeholder="Buscar candidato...">
-        </div>
-        <!-- Filtro -->
-        <select
-            id="filtroEstado"
-            name="estado"
-            class="form-select"
-            onchange="this.form.submit()">
-            <option value="Todos" <?= $filtroEstado === 'Todos' ? 'selected' : '' ?>>Todos</option>
-            <option value="En revisión" <?= $filtroEstado === 'En revisión' ? 'selected' : '' ?>>En revisión</option>
-            <option value="Entrevista" <?= $filtroEstado === 'Entrevista' ? 'selected' : '' ?>>Entrevista</option>
-            <option value="Contratado" <?= $filtroEstado === 'Contratado' ? 'selected' : '' ?>>Contratado</option>
-            <option value="Rechazado" <?= $filtroEstado === 'Rechazado' ? 'selected' : '' ?>>Rechazado</option>
-        </select>
-        <button class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
-    </div>
-</form>
+            <form id="formFiltrosCandidatos" class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Lista de Candidatos</h4>
+                <div class="d-flex gap-2">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="buscarCandidato" class="form-control" placeholder="Buscar candidato...">
+                    </div>
+                    <select id="filtroEstado" class="form-select">
+                        <option value="Todos">Todos</option>
+                        <option value="En revisión">En revisión</option>
+                        <option value="Entrevista">Entrevista</option>
+                        <option value="Contratado">Contratado</option>
+                        <option value="Rechazado">Rechazado</option>
+                    </select>
+                    <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
@@ -187,48 +65,120 @@ include "includes/header.php";
                         <th>Vacante</th>
                         <th>Estado</th>
                         <th>Fecha</th>
-                        <th class="text-center">
-                            Acciones
-                        </th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php if (empty($candidatos)): ?>
-                    <tr>
-                        <td colspan="6" class="text-center text-muted py-4">Todavía no hay candidatos postulados a tus vacantes.</td>
-                    </tr>
-                    <?php else: foreach ($candidatos as $cand): ?>
-                    <tr>
-                        <td>
-                            <img
-                                src="../assets/img/candidato02.png"
-                                width="50"
-                                class="rounded-circle">
-                        </td>
-                        <td>
-                            <?= e($cand['nombre_completo']) ?>
-                        </td>
-                        <td>
-                            <?= e($cand['vacante']) ?>
-                        </td>
-                        <td>
-                            <?= badge_estado($cand['estado']) ?>
-                        </td>
-                        <td>
-                            <?= e(date('d/m/Y', strtotime($cand['fecha_postulacion']))) ?>
-                        </td>
-                        <td class="text-center">
-                            <a href="ver_candidatos.php?id=<?= (int) $cand['postulacion_id'] ?>"
-                               class="btn btn-primary btn-sm">
-                                <i class="bi bi-eye-fill"></i>
-                                Ver
-                            </a>
-                        </td>
-                    </tr>
-                    <?php endforeach; endif; ?>
+                <tbody id="tbodyCandidatos">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Cargando candidatos...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script src="../assets/js/api-client.js"></script>
+<script>
+const SESSION_USUARIO_ID = <?= json_encode($usuarioId) ?>;
+let reclutadorId = null;
+let todasLasPostulaciones = [];
+
+const MAPA_BADGE = {
+    'Postulado':   'bg-secondary',
+    'En revisión': 'bg-warning text-dark',
+    'Entrevista':  'bg-info',
+    'Rechazado':   'bg-danger',
+    'Contratado':  'bg-success',
+};
+
+function mostrarAlerta(mensaje, tipo) {
+    document.getElementById('alertaCandidatos').innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+}
+
+function badgeEstado(nombre) {
+    const clase = MAPA_BADGE[nombre] || 'bg-secondary';
+    return `<span class="badge ${clase}">${nombre}</span>`;
+}
+
+function formatoFecha(fecha) {
+    if (!fecha) return '-';
+    return new Date(fecha).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function renderTabla(postulaciones) {
+    const tbody = document.getElementById('tbodyCandidatos');
+
+    if (!postulaciones.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Todavía no hay candidatos postulados a tus vacantes.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = postulaciones.map(p => `
+        <tr>
+            <td><img src="../assets/img/candidato02.png" width="50" class="rounded-circle"></td>
+            <td>${p.candidato_nombre ?? '-'}</td>
+            <td>${p.trabajo ?? '-'}</td>
+            <td>${badgeEstado(p.estado_nombre)}</td>
+            <td>${formatoFecha(p.fecha_postulacion || p.created_at)}</td>
+            <td class="text-center">
+                <a href="ver_candidatos.php?id=${p.id}" class="btn btn-primary btn-sm"><i class="bi bi-eye-fill"></i> Ver</a>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function actualizarStats(postulaciones) {
+    document.getElementById('statTotal').textContent = postulaciones.length;
+    document.getElementById('statRevision').textContent = postulaciones.filter(p => p.estado_nombre === 'En revisión').length;
+    document.getElementById('statEntrevista').textContent = postulaciones.filter(p => p.estado_nombre === 'Entrevista').length;
+    document.getElementById('statContratados').textContent = postulaciones.filter(p => p.estado_nombre === 'Contratado').length;
+}
+
+function aplicarFiltros() {
+    const texto = document.getElementById('buscarCandidato').value.toLowerCase().trim();
+    const estado = document.getElementById('filtroEstado').value;
+
+    const filtradas = todasLasPostulaciones.filter(p => {
+        const coincideTexto = !texto || [p.candidato_nombre, p.trabajo].join(' ').toLowerCase().includes(texto);
+        const coincideEstado = estado === 'Todos' || p.estado_nombre === estado;
+        return coincideTexto && coincideEstado;
+    });
+
+    renderTabla(filtradas);
+}
+
+async function cargarCandidatos() {
+    const { ok, data, message } = await Api.get('postulaciones', { reclutador_id: reclutadorId, limit: 200 });
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudieron cargar los candidatos.', 'danger');
+        return;
+    }
+
+    todasLasPostulaciones = data;
+    actualizarStats(data);
+    aplicarFiltros();
+}
+
+async function inicializar() {
+    const { ok, data, message } = await Api.get('reclutadores', { usuario_id: SESSION_USUARIO_ID });
+
+    if (!ok || !data) {
+        mostrarAlerta(message || 'No se encontró el perfil de reclutador asociado a este usuario.', 'danger');
+        return;
+    }
+
+    reclutadorId = data.id;
+    await cargarCandidatos();
+}
+
+document.getElementById('formFiltrosCandidatos').addEventListener('submit', function (e) {
+    e.preventDefault();
+    aplicarFiltros();
+});
+document.getElementById('buscarCandidato').addEventListener('input', aplicarFiltros);
+document.getElementById('filtroEstado').addEventListener('change', aplicarFiltros);
+
+document.addEventListener('DOMContentLoaded', inicializar);
+</script>
+
 <?php include "includes/footer.php"; ?>

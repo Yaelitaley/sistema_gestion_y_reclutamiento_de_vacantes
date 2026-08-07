@@ -1,6 +1,5 @@
 <?php
 require_once '../config/config.php';
-require_once '../config/connection.php';
 require_once '../config/app_helpers.php';
 
 require_admin_login();
@@ -11,7 +10,6 @@ include "includes/header.php";
 <?php include "includes/sidebar.php"; ?>
     <div class="content">
         <?php include "includes/topbar.php"; ?>
-
 
 <div class="d-flex">
 
@@ -29,6 +27,8 @@ include "includes/header.php";
             </a>
         </div>
 
+        <div id="alertaCandidatos"></div>
+
         <div class="table-responsive">
             <table class="table align-middle">
                 <thead>
@@ -41,46 +41,8 @@ include "includes/header.php";
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    $sql = "SELECT c.id, c.nombre_completo, u.correo, c.ubicacion, c.estado
-                            FROM candidatos c
-                            INNER JOIN usuarios u ON c.usuario_id = u.id
-                            ORDER BY c.id DESC";
-                    $result = $conn->query($sql);
-
-                    if ($result && $result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $estado = strtolower($row['estado']);
-                            if ($estado === 'activo') {
-                                $badge = 'bg-success';
-                            } elseif ($estado === 'pendiente') {
-                                $badge = 'bg-warning text-dark';
-                            } elseif ($estado === 'bloqueado') {
-                                $badge = 'bg-danger';
-                            } else {
-                                $badge = 'bg-secondary';
-                            }
-                            echo '<tr>';
-                            echo '<td>' . $row['id'] . '</td>';
-                            echo '<td>' . htmlspecialchars($row['nombre_completo']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
-                            echo '<td>' . htmlspecialchars($row['ubicacion'] ?? 'Sin definir') . '</td>';
-                            echo '<td><span class="badge ' . $badge . '">' . htmlspecialchars(ucfirst($estado)) . '</span></td>';
-                            echo '<td>
-                                    <a href="../candidatos/edit_candidatos.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-                                    <button class="btn btn-danger btn-sm btnEliminar" data-id="' . $row['id'] . '">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                  </td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="6" class="text-center text-muted">No hay candidatos registrados.</td></tr>';
-                    }
-                    ?>
+                <tbody id="tbodyCandidatos">
+                    <tr><td colspan="6" class="text-center text-muted py-4">Cargando candidatos...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -91,4 +53,67 @@ include "includes/header.php";
     <a href="javascript:history.back()" class="cancel-link">Regresar</a>
 </div>
 </div>
+
+<script src="../assets/js/api-client.js"></script>
+<script>
+const BADGES = { activo: 'bg-success', pendiente: 'bg-warning text-dark', bloqueado: 'bg-danger' };
+
+function mostrarAlerta(mensaje, tipo) {
+    document.getElementById('alertaCandidatos').innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+}
+
+function renderTabla(candidatos) {
+    const tbody = document.getElementById('tbodyCandidatos');
+
+    if (!candidatos.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay candidatos registrados.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = candidatos.map(c => {
+        const estado = (c.estado || '').toLowerCase();
+        const badge = BADGES[estado] || 'bg-secondary';
+        return `
+            <tr>
+                <td>${c.id}</td>
+                <td>${c.nombre_completo}</td>
+                <td>${c.correo ?? ''}</td>
+                <td>${c.ubicacion ?? 'Sin definir'}</td>
+                <td><span class="badge ${badge}">${estado.charAt(0).toUpperCase() + estado.slice(1)}</span></td>
+                <td>
+                    <a href="../candidatos/edit_candidatos.php?id=${c.id}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarCandidato(${c.id})"><i class="bi bi-trash-fill"></i></button>
+                </td>
+            </tr>`;
+    }).join('');
+}
+
+async function cargarCandidatos() {
+    const { ok, data, message } = await Api.get('candidatos', { limit: 200 });
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudieron cargar los candidatos.', 'danger');
+        return;
+    }
+
+    renderTabla([...data].sort((a, b) => b.id - a.id));
+}
+
+async function eliminarCandidato(id) {
+    if (!confirm('¿Deseas eliminar este candidato?')) return;
+
+    const { ok, message } = await Api.del('candidatos', id);
+
+    if (!ok) {
+        mostrarAlerta(message || 'No se pudo eliminar el candidato.', 'danger');
+        return;
+    }
+
+    mostrarAlerta('Candidato eliminado correctamente.', 'success');
+    await cargarCandidatos();
+}
+
+document.addEventListener('DOMContentLoaded', cargarCandidatos);
+</script>
+
 <?php include "includes/footer.php"; ?>

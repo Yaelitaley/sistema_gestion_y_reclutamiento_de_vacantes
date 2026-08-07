@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . '/config/Auth.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
 class CandidatoController extends BaseController
@@ -30,9 +31,39 @@ class CandidatoController extends BaseController
         }
     }
 
+    protected function handleGet(): void
+    {
+        $id = $_GET['id'] ?? null;
+
+        if ($id !== null) {
+            $this->getOne($id);
+            return;
+        }
+
+     
+        if (isset($_GET['usuario_id']) && $_GET['usuario_id'] !== '') {
+            try {
+                $stmt = $this->db->prepare('SELECT * FROM candidatos WHERE usuario_id = :uid LIMIT 1');
+                $stmt->bindValue(':uid', (int)$_GET['usuario_id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $row = $stmt->fetch();
+
+                Response::json([
+                    'success' => true,
+                    'data'    => $row ? $this->sanitizeRow($row) : null,
+                ], 200);
+            } catch (PDOException $e) {
+                Response::error('Error al consultar el candidato.', 500, $e->getMessage());
+            }
+            return;
+        }
+
+        parent::handleGet();
+    }
+
     protected function getOne($id): void
     {
-        // Si el cliente pide ?full=1, devolvemos el candidato con sus relaciones.
+
         if (isset($_GET['full']) && $_GET['full'] == '1') {
             $stmt = $this->db->prepare("SELECT * FROM candidatos WHERE id = :id LIMIT 1");
             $stmt->bindValue(':id', $id);
@@ -69,6 +100,32 @@ class CandidatoController extends BaseController
         }
 
         parent::getOne($id);
+    }
+
+    protected function handleDelete(): void
+    {
+      
+        Auth::requireRole([1, 2]);
+
+        $id = $this->requireExistingId('eliminar');
+
+        $stmt = $this->db->prepare('SELECT usuario_id FROM candidatos WHERE id = :id LIMIT 1');
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            Response::error('Candidato no encontrado.', 404);
+        }
+
+        try {
+            $this->db->prepare('DELETE FROM candidatos WHERE id = :id')->execute([':id' => $id]);
+            $this->db->prepare('DELETE FROM usuarios WHERE id = :uid AND rol_id = 4')->execute([':uid' => $row['usuario_id']]);
+
+            Response::json(['success' => true, 'message' => 'Candidato eliminado correctamente.'], 200);
+        } catch (PDOException $e) {
+            Response::error('No se pudo eliminar. Puede tener postulaciones asociadas.', 500, $e->getMessage());
+        }
     }
 }
 
