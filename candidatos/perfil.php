@@ -13,7 +13,7 @@ $stmt = $conn->prepare(
             puesto_deseado, disponibilidad, modalidad, salario_esperado,
             linkedin, github, portafolio, resumen, objetivos,
             ofertas_empleo, notificaciones_sistema, perfil_publico,
-            fecha_nacimiento, nacionalidad, cv_path
+            fecha_nacimiento, nacionalidad, cv_path, foto_perfil
      FROM candidatos WHERE usuario_id = ?"
 );
 $stmt->bind_param('i', $_SESSION['usuario_id']);
@@ -71,6 +71,11 @@ $camposPerfil = [
 ];
 $camposLlenos = count(array_filter($camposPerfil, function ($v) { return !empty($v); }));
 $porcentajePerfil = (int) round(($camposLlenos / count($camposPerfil)) * 100);
+
+// ----- Foto de perfil (con archivo real si existe, o imagen por defecto) -----
+$fotoPerfilSrc = !empty($candidato['foto_perfil'])
+    ? '../' . htmlspecialchars($candidato['foto_perfil']) . '?v=' . time()
+    : '../assets/img/candidato.png';
 ?>
 <?php include "includes/header.php"; ?>
 
@@ -102,14 +107,14 @@ $porcentajePerfil = (int) round(($camposLlenos / count($camposPerfil)) * 100);
             <div class="row align-items-center">
                 <div class="col-lg-3 text-center">
                     <img
-                        src="../assets/img/candidato.png"
+                        src="<?= $fotoPerfilSrc ?>"
                         class="rounded-circle img-fluid mb-3"
                         style="width:180px; height:180px; object-fit:cover;"
                         alt="Foto de perfil">
-                    <button class="btn btn-outline-primary" disabled title="Próximamente">
+                    <a href="editar_perfil.php" class="btn btn-outline-primary">
                         <i class="bi bi-camera-fill me-2"></i>
                         Cambiar Foto
-                    </button>
+                    </a>
                 </div>
                 <div class="col-lg-9">
                     <h2 class="fw-bold">

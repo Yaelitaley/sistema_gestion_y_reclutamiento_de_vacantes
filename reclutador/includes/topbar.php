@@ -1,3 +1,23 @@
+<?php
+// ----- Datos del reclutador para el topbar (nombre y foto), independiente de lo que ya haya cargado la página -----
+$fotoPerfilTopbar = '../assets/img/imagenreclutador.png';
+$nombreTopbar = 'Reclutador';
+
+if (isset($_SESSION['usuario_id']) && isset($conn)) {
+    $stmtTopbar = $conn->prepare("SELECT nombre_completo, foto_perfil FROM reclutadores WHERE usuario_id = ?");
+    $stmtTopbar->bind_param('i', $_SESSION['usuario_id']);
+    $stmtTopbar->execute();
+    $datosTopbar = $stmtTopbar->get_result()->fetch_assoc();
+    $stmtTopbar->close();
+
+    if ($datosTopbar) {
+        $nombreTopbar = $datosTopbar['nombre_completo'];
+        if (!empty($datosTopbar['foto_perfil'])) {
+            $fotoPerfilTopbar = '../' . $datosTopbar['foto_perfil'] . '?v=' . time();
+        }
+    }
+}
+?>
 <div class="top-bar mb-4">
 
     <!-- IZQUIERDA -->
@@ -41,16 +61,17 @@
         <div class="d-flex align-items-center">
 
             <img
-                src="../assets/img/imagenreclutador.png"
+                src="<?= htmlspecialchars($fotoPerfilTopbar) ?>"
                 class="rounded-circle me-2"
                 width="50"
                 height="50"
+                style="object-fit:cover;"
                 alt="Reclutador">
                 
 
             <span class="texto fw-semibold">
 
-                Reclutador
+                <?= htmlspecialchars($nombreTopbar) ?>
 
             </span>
 
@@ -59,4 +80,3 @@
     </div>
 
 </div>
-

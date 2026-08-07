@@ -3,6 +3,8 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
 
+require_admin_login();
+
 $tieneVacantes = table_exists($conn, 'vacantes');
 $tienePostulaciones = table_exists($conn, 'postulaciones');
 $tieneEntrevistas = table_exists($conn, 'entrevistas');

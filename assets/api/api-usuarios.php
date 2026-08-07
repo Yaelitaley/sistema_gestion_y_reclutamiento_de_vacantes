@@ -3,15 +3,6 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-usuarios.php
- *
- * GET    /api/api-usuarios.php           -> lista todos (paginado: ?page=1&limit=20)
- * GET    /api/api-usuarios.php?id=1      -> obtiene un usuario
- * POST   /api/api-usuarios.php           -> crea un usuario (body JSON)
- * PUT    /api/api-usuarios.php?id=1      -> actualiza un usuario (body JSON)
- * DELETE /api/api-usuarios.php?id=1      -> elimina un usuario
- */
 class UsuarioController extends BaseController
 {
     public function __construct(PDO $db)
@@ -51,7 +42,7 @@ class UsuarioController extends BaseController
         return $data;
     }
 
-    // Nunca devolver el hash de la contraseña ni la clave de seguridad en las respuestas.
+    // Nunca devolver el hash de la contraseña ni la clave de seguridad 
     protected function sanitizeRow(array $row): array
     {
         unset($row['password'], $row['clave_seguridad']);

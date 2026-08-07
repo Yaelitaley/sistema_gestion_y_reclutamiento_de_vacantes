@@ -4,6 +4,8 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
 
+require_admin_login();
+
 $tablasOk = admin_required_tables_ok($conn, ['usuarios', 'administradores']);
 $mensaje = '';
 $tipoMensaje = '';
@@ -14,7 +16,7 @@ if (!$tablasOk) {
 } elseif ($id <= 0) {
     redirect_to('index_administrador.php?type=danger&msg=' . urlencode('Administrador no válido.'));
 } else {
-    $stmt = $conn->prepare('SELECT a.id, a.usuario_id, a.nombre_completo, a.correo, a.empresa, a.estado, u.email
+    $stmt = $conn->prepare('SELECT a.id, a.usuario_id, a.nombre_completo, a.correo, a.empresa, a.estado, a.foto_perfil, u.email
                             FROM administradores a
                             INNER JOIN usuarios u ON u.id = a.usuario_id
                             WHERE a.id = ? LIMIT 1');
@@ -62,6 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $admin) {
     } elseif (!in_array($estado, ['Activo', 'Pendiente', 'Bloqueado', 'Inactivo'], true)) {
         $mensaje = 'El estado seleccionado no es válido.';
         $tipoMensaje = 'danger';
+    } elseif (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK && !in_array(strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png'], true)) {
+        $mensaje = 'La foto debe ser JPG, JPEG o PNG.';
+        $tipoMensaje = 'danger';
+    } elseif (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK && $_FILES['foto']['size'] > 3 * 1024 * 1024) {
+        $mensaje = 'La foto no debe superar 3 MB.';
+        $tipoMensaje = 'danger';
     } else {
         $stmt = $conn->prepare('SELECT id FROM usuarios WHERE email = ? AND id <> ? LIMIT 1');
         $stmt->bind_param('si', $correo, $admin['usuario_id']);
@@ -76,6 +84,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk && $admin) {
         } else {
             $conn->begin_transaction();
             try {
+                // ----- Foto de perfil (opcional) -----
+                if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+                    $archivoFoto = $_FILES['foto'];
+                    $extensionFoto = strtolower(pathinfo($archivoFoto['name'], PATHINFO_EXTENSION));
+                    $finfoFoto = finfo_open(FILEINFO_MIME_TYPE);
+                    $mimeFoto = finfo_file($finfoFoto, $archivoFoto['tmp_name']);
+                    finfo_close($finfoFoto);
+
+                    if (in_array($mimeFoto, ['image/jpeg', 'image/png'], true) && @getimagesize($archivoFoto['tmp_name']) !== false) {
+                        $carpetaDestinoFoto = __DIR__ . '/../assets/uploads/perfil/';
+                        if (!is_dir($carpetaDestinoFoto)) {
+                            mkdir($carpetaDestinoFoto, 0755, true);
+                        }
+
+                        $nombreArchivoFoto = 'admin_' . $id . '_' . time() . '.' . $extensionFoto;
+                        $rutaDestinoFoto = $carpetaDestinoFoto . $nombreArchivoFoto;
+                        $rutaRelativaFoto = 'assets/uploads/perfil/' . $nombreArchivoFoto;
+
+                        if (move_uploaded_file($archivoFoto['tmp_name'], $rutaDestinoFoto)) {
+                            $stmtFoto = $conn->prepare('UPDATE administradores SET foto_perfil = ? WHERE id = ?');
+                            $stmtFoto->bind_param('si', $rutaRelativaFoto, $id);
+                            $stmtFoto->execute();
+                            $stmtFoto->close();
+
+                            if (!empty($admin['foto_perfil'])) {
+                                $rutaAnteriorFoto = __DIR__ . '/../' . $admin['foto_perfil'];
+                                if (is_file($rutaAnteriorFoto) && $rutaAnteriorFoto !== $rutaDestinoFoto) {
+                                    @unlink($rutaAnteriorFoto);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $stmt = $conn->prepare('UPDATE administradores SET nombre_completo = ?, correo = ?, empresa = ?, estado = ? WHERE id = ?');
                 $stmt->bind_param('ssssi', $nombre, $correo, $empresa, $estado, $id);
                 $stmt->execute();
@@ -143,8 +185,24 @@ include 'includes/header.php';
 
         <?php if ($admin): ?>
             <div class="table-box">
-                <form id="adminEditForm" method="POST" autocomplete="off">
+                <form id="adminEditForm" method="POST" autocomplete="off" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="<?= (int) $admin['id'] ?>">
+
+                    <div class="text-center mb-4">
+                        <img
+                            src="<?= !empty($admin['foto_perfil']) ? '../' . e($admin['foto_perfil']) . '?v=' . time() : '../assets/img/imagenadministrador.png' ?>"
+                            id="previewFotoPerfil"
+                            class="rounded-circle shadow mb-3"
+                            width="150"
+                            height="150"
+                            style="object-fit:cover;"
+                            alt="Foto">
+                        <div class="col-md-6 mx-auto text-start">
+                            <label class="form-label fw-bold">Cambiar foto de perfil</label>
+                            <input type="file" name="foto" id="inputFotoPerfil" class="form-control" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+                            <small class="text-muted">Formatos permitidos: JPG, JPEG o PNG. Tamaño máximo 3 MB.</small>
+                        </div>
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Nombre completo</label>
@@ -224,5 +282,21 @@ include 'includes/header.php';
 
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var inputFoto = document.getElementById("inputFotoPerfil");
+    var preview = document.getElementById("previewFotoPerfil");
+    if (inputFoto && preview) {
+        inputFoto.addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                var lector = new FileReader();
+                lector.onload = function (e) { preview.src = e.target.result; };
+                lector.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>

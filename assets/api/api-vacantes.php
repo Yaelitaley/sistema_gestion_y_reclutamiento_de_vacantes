@@ -3,15 +3,6 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-vacantes.php
- * CRUD completo sobre la tabla `vacantes`.
- *
- * Extra:
- *   GET /api/api-vacantes.php            -> lista SOLO vacantes activas por defecto.
- *   GET /api/api-vacantes.php?activa=0   -> incluye también las inactivas.
- *   GET /api/api-vacantes.php?categoria=Tecnología -> filtra por categoría.
- */
 class VacanteController extends BaseController
 {
     public function __construct(PDO $db)

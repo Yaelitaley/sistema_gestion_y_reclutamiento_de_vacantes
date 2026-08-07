@@ -9,7 +9,7 @@ if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || $_SESSION[
 
 // Candidato en sesión
 $stmt = $conn->prepare(
-    "SELECT id, nombre_completo, correo, telefono, ubicacion, fecha_nacimiento, cv_path,
+    "SELECT id, nombre_completo, correo, telefono, ubicacion, fecha_nacimiento, cv_path, foto_perfil,
             perfil_profesional, objetivo_profesional, aptitudes, disponibilidad, modalidad,
             puesto_deseado
      FROM candidatos WHERE usuario_id = ?"
@@ -74,6 +74,11 @@ $listaAptitudes = [];
 if (!empty($candidato['aptitudes'])) {
     $listaAptitudes = array_filter(array_map('trim', preg_split('/\r\n|\r|\n|,/', $candidato['aptitudes'])));
 }
+
+// ----- Foto de perfil (con archivo real si existe, o imagen por defecto) -----
+$fotoPerfilSrc = !empty($candidato['foto_perfil'])
+    ? '../' . htmlspecialchars($candidato['foto_perfil']) . '?v=' . time()
+    : '../assets/img/candidato.png';
 ?>
 <?php include "includes/header.php"; ?>
 
@@ -100,11 +105,22 @@ if (!empty($candidato['aptitudes'])) {
             </div>
         </div>
 
+        <!-- ALERTA: NO TIENE CV CARGADO -->
+        <?php if (empty($candidato['cv_path'])): ?>
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <div>
+                No tienes un CV ingresado. Sube tu currículum en formato PDF para que los reclutadores puedan revisarlo.
+                <a href="editar_cv.php" class="alert-link">Subir CV ahora</a>.
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- INFORMACIÓN PERSONAL -->
         <div class="table-box mb-4">
             <div class="row align-items-center">
                 <div class="col-lg-2 text-center">
-                    <img src="../assets/img/candidato.png" class="rounded-circle img-fluid" style="width:140px; height:140px; object-fit:cover;">
+                    <img src="<?= $fotoPerfilSrc ?>" class="rounded-circle img-fluid" style="width:140px; height:140px; object-fit:cover;">
                 </div>
                 <div class="col-lg-10">
                     <h3 class="fw-bold">
@@ -341,24 +357,22 @@ if (!empty($candidato['aptitudes'])) {
                     Editar CV
                 </a>
                 
-                <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
-                    <i class="bi bi-download me-2"></i>
-                    Descargar CV
-                </button>
-                <button type="button" id="btnVerCV" class="btn btn-outline-primary">
-                    <i class="bi bi-eye me-2"></i>
-                    Ver CV 
-                </button>
-
                 <?php if (!empty($candidato['cv_path'])): ?>
-                    <a href="../<?= htmlspecialchars($candidato['cv_path']) ?>" id="btnDescargarCV" class="btn btn-outline-primary" target="_blank" download>
+                    <a href="../<?= htmlspecialchars($candidato['cv_path']) ?>" id="btnVerCV" class="btn btn-outline-primary" target="_blank">
+                        <i class="bi bi-eye me-2"></i>
+                        Ver CV
+                    </a>
+                    <a href="../<?= htmlspecialchars($candidato['cv_path']) ?>" id="btnDescargarCV" class="btn btn-outline-primary" download>
                         <i class="bi bi-download me-2"></i>
                         Descargar PDF
                     </a>
                 <?php else: ?>
-                    <button type="button" id="btnDescargarCV" class="btn btn-outline-primary">
+                    <button type="button" id="btnVerCV" class="btn btn-outline-primary" disabled title="Aún no has subido tu CV">
+                        <i class="bi bi-eye me-2"></i>
+                        Ver CV
+                    </button>
+                    <button type="button" id="btnDescargarCV" class="btn btn-outline-primary" disabled title="Aún no has subido tu CV">
                         <i class="bi bi-download me-2"></i>
-                        
                         Descargar PDF
                     </button>
                 <?php endif; ?>

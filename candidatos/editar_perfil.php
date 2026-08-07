@@ -12,7 +12,7 @@ $stmt = $conn->prepare(
     "SELECT id, nombre_completo, correo, telefono, fecha_nacimiento, nacionalidad, ubicacion, genero,
             puesto_deseado, salario_esperado, disponibilidad, modalidad,
             linkedin, github, portafolio, resumen, objetivos,
-            ofertas_empleo, notificaciones_sistema, perfil_publico
+            ofertas_empleo, notificaciones_sistema, perfil_publico, foto_perfil
      FROM candidatos WHERE usuario_id = ?"
 );
 $stmt->bind_param('i', $_SESSION['usuario_id']);
@@ -41,6 +41,11 @@ $nombre    = $partesNombre[0] ?? '';
 $apellidos = $partesNombre[1] ?? '';
 
 $fechaNacValue = !empty($candidato['fecha_nacimiento']) ? date('Y-m-d', strtotime($candidato['fecha_nacimiento'])) : '';
+
+// ----- Foto de perfil (con archivo real si existe, o imagen por defecto) -----
+$fotoPerfilSrc = !empty($candidato['foto_perfil'])
+    ? '../' . htmlspecialchars($candidato['foto_perfil']) . '?v=' . time()
+    : '../assets/img/candidato.png';
 ?>
 <?php include "includes/header.php"; ?>
 
@@ -77,16 +82,17 @@ $fechaNacValue = !empty($candidato['fecha_nacimiento']) ? date('Y-m-d', strtotim
                 </h4>
                 <div class="row align-items-center">
                     <div class="col-lg-3 text-center">
-                        <img src="../assets/img/candidato.png" class="rounded-circle img-fluid mb-3" style="width:160px;height:160px;object-fit:cover;">
+                        <img id="previewFotoPerfil" src="<?= $fotoPerfilSrc ?>" class="rounded-circle img-fluid mb-3" style="width:160px;height:160px;object-fit:cover;">
                     </div>
                     <div class="col-lg-9">
                         <label class="form-label">
                             Selecciona una nueva fotografía
                         </label>
-                        <input type="file" class="form-control" name="foto" accept="image/*" disabled>
+                        <input type="file" class="form-control" id="inputFotoPerfil" name="foto" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
                         <small class="text-muted">
-                            Próximamente disponible. Formatos permitidos: JPG, PNG o JPEG.
+                            Formatos permitidos: JPG, JPEG o PNG. Tamaño máximo 3 MB. Se sube automáticamente al seleccionarla.
                         </small>
+                        <div id="mensajeFotoPerfil" class="mt-2"></div>
                     </div>
                 </div>
             </div>

@@ -3,14 +3,6 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-postulaciones.php
- * CRUD completo sobre la tabla `postulaciones`.
- *
- * Al crear una postulación (POST), automáticamente se registra
- * también en `historial_estados_postulacion` (misma lógica que
- * usa el sistema para el timeline de una postulación).
- */
 class PostulacionController extends BaseController
 {
     public function __construct(PDO $db)

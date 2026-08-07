@@ -1,6 +1,10 @@
 <?php
 require_once '../config/config.php';
 require_once '../config/connection.php';
+require_once '../config/app_helpers.php';
+
+require_admin_login();
+
 include "includes/header.php";
 ?>
 
@@ -63,10 +67,10 @@ include "includes/header.php";
                             echo '<td>' . htmlspecialchars($row['empresa'] ?? 'Sin empresa') . '</td>';
                             echo '<td><span class="badge ' . $badge . '">' . htmlspecialchars(ucfirst($estado)) . '</span></td>';
                             echo '<td>
-                                    <a href="../reclutador/edit_reclutador.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">
+                                    <a href="edit_reclutador.php?id=' . $row['id'] . '" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil-fill"></i>
                                     </a>
-                                    <button class="btn btn-danger btn-sm btnEliminar" data-id="' . $row['id'] . '">
+                                    <button class="btn btn-danger btn-sm btnEliminarReclutador" data-id="' . $row['id'] . '">
                                         <i class="bi bi-trash-fill"></i>
                                     </button>
                                   </td>';

@@ -1,3 +1,23 @@
+<?php
+// ----- Datos del candidato para el topbar (nombre y foto), independiente de lo que ya haya cargado la página -----
+$fotoPerfilTopbar = '../assets/img/imagencandidato.png';
+$nombreTopbar = 'Candidato';
+
+if (isset($_SESSION['usuario_id']) && isset($conn)) {
+    $stmtTopbar = $conn->prepare("SELECT nombre_completo, foto_perfil FROM candidatos WHERE usuario_id = ?");
+    $stmtTopbar->bind_param('i', $_SESSION['usuario_id']);
+    $stmtTopbar->execute();
+    $datosTopbar = $stmtTopbar->get_result()->fetch_assoc();
+    $stmtTopbar->close();
+
+    if ($datosTopbar) {
+        $nombreTopbar = $datosTopbar['nombre_completo'];
+        if (!empty($datosTopbar['foto_perfil'])) {
+            $fotoPerfilTopbar = '../' . $datosTopbar['foto_perfil'] . '?v=' . time();
+        }
+    }
+}
+?>
 <div class="top-bar mb-4">
 
     <!-- IZQUIERDA -->
@@ -60,7 +80,7 @@
                 aria-expanded="false">
 
                 <img
-                    src="../assets/img/imagencandidato.png"
+                    src="<?= htmlspecialchars($fotoPerfilTopbar) ?>"
                     class="rounded-circle me-3"
                     width="42"
                     height="42"
@@ -70,7 +90,7 @@
 
                     <div class="texto fw-semibold">
 
-                        Gabriel Montero
+                        <?= htmlspecialchars($nombreTopbar) ?>
 
                     </div>
 

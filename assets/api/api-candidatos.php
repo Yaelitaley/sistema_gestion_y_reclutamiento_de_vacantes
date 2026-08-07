@@ -3,15 +3,6 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-candidatos.php
- * CRUD completo sobre la tabla `candidatos`.
- *
- * Extra:
- *   GET /api/api-candidatos.php?id=1&full=1
- *   Devuelve el candidato junto con sus habilidades, experiencia,
- *   formación e idiomas (tablas relacionadas).
- */
 class CandidatoController extends BaseController
 {
     public function __construct(PDO $db)

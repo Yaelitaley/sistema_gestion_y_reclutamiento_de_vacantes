@@ -93,6 +93,19 @@
 
             <li>
 
+                <a href="usuarios.php">
+
+                    <i class="bi bi-people-fill"></i>
+
+                    Usuarios
+
+                </a>
+
+            </li>
+
+
+            <li>
+
                 <a href="reportes.php">
 
                     <i class="bi bi-bar-chart-fill"></i>

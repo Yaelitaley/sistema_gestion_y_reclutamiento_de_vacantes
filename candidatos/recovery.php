@@ -269,3 +269,4 @@ document.getElementById('recoveryForm').addEventListener('submit', function (e) 
 });
 </script>
 
+<?php include "includes/footer.php"; ?>

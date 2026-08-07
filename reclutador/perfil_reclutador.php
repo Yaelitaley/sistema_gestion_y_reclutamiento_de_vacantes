@@ -46,6 +46,11 @@ $entrevistasRealizadas = (int) ($stmt->get_result()->fetch_assoc()['total'] ?? 0
 $stmt->close();
 
 include "includes/header.php";
+
+// ----- Foto de perfil (con archivo real si existe, o imagen por defecto) -----
+$fotoPerfilSrc = !empty($perfil['foto_perfil'])
+    ? '../' . htmlspecialchars($perfil['foto_perfil']) . '?v=' . time()
+    : '../assets/img/reclutador-avatar.png';
 ?>
 <div class="d-flex">
     <?php include "includes/sidebar.php"; ?>
@@ -62,7 +67,7 @@ include "includes/header.php";
         <div class="row">
             <div class="col-lg-4">
                 <div class="table-box text-center">
-                    <img src="../assets/img/reclutador-avatar.png" class="rounded-circle shadow mb-3" width="180" height="180" alt="Reclutador">
+                    <img src="<?= $fotoPerfilSrc ?>" class="rounded-circle shadow mb-3" width="180" height="180" style="object-fit:cover;" alt="Reclutador">
                     <h3 class="fw-bold"><?= e($perfil['nombre_completo']) ?></h3>
                     <p class="text-muted">Reclutador</p>
                     <span class="badge <?= $perfil['estado'] === 'activo' ? 'bg-success' : 'bg-secondary' ?>"><?= e(ucfirst($perfil['estado'])) ?></span>

@@ -3,10 +3,7 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-estados_postulacion.php
- * CRUD completo sobre la tabla `estados_postulacion`.
- */
+
 class EstadoPostulacionController extends BaseController
 {
     public function __construct(PDO $db)

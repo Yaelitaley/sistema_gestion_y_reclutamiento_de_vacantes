@@ -1,4 +1,74 @@
-<?php include "includes/header.php"; ?>
+<?php
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/connection.php';
+require_once __DIR__ . '/../config/app_helpers.php';
+
+if (($_SESSION['rol_id'] ?? 0) != 4) {
+    redirect_to('login.php');
+}
+
+$usuarioId = (int) $_SESSION['usuario_id'];
+
+$stmt = $conn->prepare("SELECT c.id, c.nombre_completo, c.puesto_deseado, c.cv_path
+                         FROM candidatos c WHERE c.usuario_id = ?");
+$stmt->bind_param('i', $usuarioId);
+$stmt->execute();
+$candidato = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$candidato) {
+    die('No se encontró el perfil del candidato asociado a este usuario.');
+}
+$candidatoId = (int) $candidato['id'];
+
+// ---------- CATEGORÍAS CON VACANTES ACTIVAS ----------
+$categorias = $conn->query("SELECT categoria, COUNT(*) AS total FROM vacantes WHERE activa = 1 AND categoria IS NOT NULL AND categoria <> '' GROUP BY categoria ORDER BY total DESC LIMIT 6")->fetch_all(MYSQLI_ASSOC);
+
+// ---------- EMPLEOS RECOMENDADOS (últimas vacantes activas) ----------
+$stmt = $conn->prepare("SELECT v.id, v.trabajo, v.ubicacion, v.salario, v.modalidad, e.nombre AS empresa
+                         FROM vacantes v
+                         INNER JOIN reclutadores r ON v.reclutador_id = r.id
+                         INNER JOIN empresas e ON r.empresa_id = e.id
+                         WHERE v.activa = 1
+                         AND v.id NOT IN (SELECT vacante_id FROM postulaciones WHERE candidato_id = ?)
+                         ORDER BY v.created_at DESC
+                         LIMIT 4");
+$stmt->bind_param('i', $candidatoId);
+$stmt->execute();
+$recomendados = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// ---------- ESTADÍSTICAS ----------
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM postulaciones WHERE candidato_id = ?");
+$stmt->bind_param('i', $candidatoId);
+$stmt->execute();
+$totalPostulaciones = (int) ($stmt->get_result()->fetch_assoc()['total'] ?? 0);
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM entrevistas e
+                         INNER JOIN postulaciones p ON e.postulacion_id = p.id
+                         WHERE p.candidato_id = ?");
+$stmt->bind_param('i', $candidatoId);
+$stmt->execute();
+$totalEntrevistas = (int) ($stmt->get_result()->fetch_assoc()['total'] ?? 0);
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM vacantes_guardadas WHERE candidato_id = ?");
+$stmt->bind_param('i', $candidatoId);
+$stmt->execute();
+$totalGuardadas = (int) ($stmt->get_result()->fetch_assoc()['total'] ?? 0);
+$stmt->close();
+
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM empresas_seguidas WHERE candidato_id = ?");
+$stmt->bind_param('i', $candidatoId);
+$stmt->execute();
+$totalSeguidas = (int) ($stmt->get_result()->fetch_assoc()['total'] ?? 0);
+$stmt->close();
+
+$iconos = ['bi-code-slash text-primary', 'bi-palette-fill text-danger', 'bi-megaphone-fill text-warning', 'bi-graph-up-arrow text-success', 'bi-bank text-info', 'bi-grid-fill text-secondary'];
+
+include "includes/header.php";
+?>
 <div class="d-flex">
     <!-- SIDEBAR -->
     <?php include "includes/sidebar.php"; ?>
@@ -6,6 +76,18 @@
     <div class="content w-100 p-4">
         <!-- TOPBAR -->
         <?php include "includes/topbar.php"; ?>
+
+        <!-- ALERTA: NO TIENE CV CARGADO -->
+        <?php if (empty($candidato['cv_path'])): ?>
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <div>
+                No tienes un CV ingresado. Sube tu currículum en formato PDF para que los reclutadores puedan revisarlo.
+                <a href="editar_cv.php" class="alert-link">Subir CV ahora</a>.
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- BANNER PRINCIPAL -->
         <div class="dashboard-carde hero-banner mb-5">
             <div class="row g-0 align-items-center">
@@ -38,7 +120,7 @@
                 </div>
             </div>
         </div>
-                <!-- CATEGORÍAS POPULARES -->
+        <!-- CATEGORÍAS POPULARES -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold">
                 Categorías Populares
@@ -50,54 +132,21 @@
             </a>
         </div>
         <div class="row g-3 mb-5">
+            <?php if (empty($categorias)): ?>
+            <p class="text-muted">Aún no hay vacantes con categoría asignada.</p>
+            <?php else: foreach ($categorias as $i => $cat): ?>
             <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-code-slash fs-1 text-primary"></i>
-                    <h6 class="mt-3">
-                        Tecnología
-                    </h6>
-                </div>
+                <a href="explorar-empleos.php?categoria=<?= urlencode($cat['categoria']) ?>" class="text-decoration-none">
+                    <div class="dashboard-card text-center">
+                        <i class="bi <?= e($iconos[$i % count($iconos)]) ?> fs-1"></i>
+                        <h6 class="mt-3 texto">
+                            <?= e($cat['categoria']) ?>
+                        </h6>
+                        <small class="text-muted"><?= (int) $cat['total'] ?> vacantes</small>
+                    </div>
+                </a>
             </div>
-            <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-palette-fill fs-1 text-danger"></i>
-                    <h6 class="mt-3">
-                        Diseño
-                    </h6>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-megaphone-fill fs-1 text-warning"></i>
-                    <h6 class="mt-3">
-                        Marketing
-                    </h6>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-graph-up-arrow fs-1 text-success"></i>
-                    <h6 class="mt-3">
-                        Ventas
-                    </h6>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-bank fs-1 text-info"></i>
-                    <h6 class="mt-3">
-                        Finanzas
-                    </h6>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-4">
-                <div class="dashboard-card text-center">
-                    <i class="bi bi-grid-fill fs-1 text-secondary"></i>
-                    <h6 class="mt-3">
-                        Más categorías
-                    </h6>
-                </div>
-            </div>
+            <?php endforeach; endif; ?>
         </div>
         <!-- EMPLEOS RECOMENDADOS -->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -111,128 +160,50 @@
             </a>
         </div>
         <div class="row g-4">
-            <!-- CARD -->
-            <div class="col-lg-3  col-md-6">
-                <div class="dashboard-card h-100 p-4">
-                    <h5 class="fw-bold">
-                        Frontend Developer
-                    </h5>
-                    <p class="texto opacity-75">
-                        Google México
-                    </p>
-                    <span class="badge bg-success mb-3">
-                        Tiempo Completo
-                    </span>
-                    <p>
-                        <i class="bi bi-geo-alt-fill text-danger"></i>
-                        Ciudad de México
-                    </p>
-                    <p>
-                        <i class="bi bi-cash-stack text-success"></i>
-                        $28,000 MXN
-                    </p>
-                    <a
-                        href="../candidatos/ver-empleo.php"
-                        class="btn btn-candidato w-100 ">
-                        Ver Vacante
-                    </a>
-                </div>
-            </div>
-            <!-- CARD -->
+            <?php if (empty($recomendados)): ?>
+            <p class="text-muted">No hay vacantes nuevas por ahora. Vuelve pronto.</p>
+            <?php else: foreach ($recomendados as $v): ?>
             <div class="col-lg-3 col-md-6">
                 <div class="dashboard-card h-100 p-4">
                     <h5 class="fw-bold">
-                        Diseñador UI / UX
+                        <?= e($v['trabajo']) ?>
                     </h5>
                     <p class="texto opacity-75">
-                        Microsoft
+                        <?= e($v['empresa']) ?>
                     </p>
                     <span class="badge bg-primary mb-3">
-                        Híbrido
+                        <?= e($v['modalidad'] ?: 'No especificada') ?>
                     </span>
                     <p>
                         <i class="bi bi-geo-alt-fill text-danger"></i>
-                        Guadalajara
+                        <?= e($v['ubicacion'] ?: 'No especificada') ?>
                     </p>
                     <p>
                         <i class="bi bi-cash-stack text-success"></i>
-                        $24,000 MXN
+                        <?= $v['salario'] ? '$' . number_format((float) $v['salario'], 2) : 'A convenir' ?>
                     </p>
                     <a
-                        href="../candidatos/ver-empleo.php"
+                        href="ver-empleo.php?id=<?= (int) $v['id'] ?>"
                         class="btn btn-candidato w-100">
                         Ver Vacante
                     </a>
                 </div>
             </div>
-            <!-- CARD -->
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100 p-4">
-                    <h5 class="fw-bold">
-                        Analista de Datos
-                    </h5>
-                    <p class="texto opacity-75">
-                        Amazon
-                    </p>
-                    <span class="badge bg-warning text-dark mb-3">
-                        Remoto
-                    </span>
-                    <p>
-                        <i class="bi bi-geo-alt-fill text-danger"></i>
-                        Monterrey
-                    </p>
-                    <p>
-                        <i class="bi bi-cash-stack text-success"></i>
-                        $30,000 MXN
-                    </p>
-                    <a
-                        href="../candidatos/ver-empleo.php"
-                        class="btn btn-candidato w-100">
-                        Ver Vacante
-                    </a>
-                </div>
-            </div>
-            <!-- CARD -->
-            <div class="col-lg-3 col-md-6">
-                <div class="dashboard-card h-100 p-4">
-                    <h5 class="fw-bold">
-                        Backend Developer
-                    </h5>
-                    <p class="texto opacity-75">
-                        Oracle
-                    </p>
-                    <span class="badge bg-danger mb-3">
-                        Presencial
-                    </span>
-                    <p>
-                        <i class="bi bi-geo-alt-fill text-danger"></i>
-                        Querétaro
-                    </p>
-                    <p>
-                        <i class="bi bi-cash-stack text-success"></i>
-                        $32,000 MXN
-                    </p>
-                    <a
-                        href="vacantes.php"
-                        class="btn btn-candidato w-100">
-                        Ver Vacante
-                    </a>
-                </div>
-            </div>
-                        <!-- PANEL LATERAL -->
+            <?php endforeach; endif; ?>
+            <!-- PANEL LATERAL -->
             <div class="row mt-5 ">
                 <!-- PERFIL -->
                 <div class="col-lg-4 mb-4">
                     <div class="dashboard-carde flex-column text-center p-4">
                         <i class="bi bi-person-fill me-3 fs-4 "></i>
                         <h4 class="fw-bold">
-                            Gabriel Montero
+                            <?= e($candidato['nombre_completo']) ?>
                         </h4>
                         <p class="texto opacity-75">
-                            Desarrollador Web
+                            <?= e($candidato['puesto_deseado'] ?: 'Sin puesto deseado definido') ?>
                         </p>
-                        <span class="badge bg-success mb-3">
-                            Perfil Completo
+                        <span class="badge <?= $candidato['cv_path'] ? 'bg-success' : 'bg-warning text-dark' ?> mb-3">
+                            <?= $candidato['cv_path'] ? 'Perfil con CV' : 'Falta subir CV' ?>
                         </span>
                         <a
                             href="perfil.php"
@@ -282,7 +253,7 @@
                                 Postulaciones
                             </span>
                             <strong>
-                                12
+                                <?= $totalPostulaciones ?>
                             </strong>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
@@ -290,7 +261,7 @@
                                 Entrevistas
                             </span>
                             <strong>
-                                4
+                                <?= $totalEntrevistas ?>
                             </strong>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
@@ -298,7 +269,7 @@
                                 Vacantes Guardadas
                             </span>
                             <strong>
-                                8
+                                <?= $totalGuardadas ?>
                             </strong>
                         </div>
                         <div class="d-flex justify-content-between">
@@ -306,7 +277,7 @@
                                 Empresas Seguidas
                             </span>
                             <strong>
-                                5
+                                <?= $totalSeguidas ?>
                             </strong>
                         </div>
                     </div>

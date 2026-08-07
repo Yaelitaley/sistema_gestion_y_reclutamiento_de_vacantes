@@ -2,150 +2,162 @@
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
-$tablasOk = admin_required_tables_ok($conn, ['configuracion', 'usuarios']);
+
+if (($_SESSION['rol_id'] ?? 0) != 4) {
+    redirect_to('login.php');
+}
+
+$usuarioId = (int) $_SESSION['usuario_id'];
+
+$stmt = $conn->prepare("SELECT c.id, c.nombre_completo, u.email, u.clave_seguridad
+                         FROM candidatos c
+                         INNER JOIN usuarios u ON u.id = c.usuario_id
+                         WHERE c.usuario_id = ?");
+$stmt->bind_param('i', $usuarioId);
+$stmt->execute();
+$cuenta = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$cuenta) {
+    die('No se encontró la cuenta asociada a este usuario.');
+}
+
 $mensaje = $_GET['msg'] ?? '';
 $tipoMensaje = $_GET['type'] ?? 'success';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tablasOk) {
-    $form = $_POST['form'] ?? '';
-    try {
-        if ($form === 'general') {
-            $nombreSistema = trim($_POST['nombre_sistema'] ?? '');
-            $correoSoporte = trim($_POST['correo_soporte'] ?? '');
-            $telefono = trim($_POST['telefono'] ?? '');
-            if ($nombreSistema === '' || $correoSoporte === '' || $telefono === '') {
-                redirect_to('configuracion.php?type=danger&msg=' . urlencode('Completa todos los datos generales.'));
-            }
-            if (!filter_var($correoSoporte, FILTER_VALIDATE_EMAIL)) {
-                redirect_to('configuracion.php?type=danger&msg=' . urlencode('El correo de soporte no es válido.'));
-            }
-            set_config_value($conn, 'nombre_sistema', $nombreSistema);
-            set_config_value($conn, 'correo_soporte', $correoSoporte);
-            set_config_value($conn, 'telefono', $telefono);
-            redirect_to('configuracion.php?type=success&msg=' . urlencode('Información del sistema actualizada.'));
-        }
-        if ($form === 'seguridad') {
-            $password = trim($_POST['password'] ?? '');
-            $confirmPassword = trim($_POST['confirmPassword'] ?? '');
-            $mantenerSesion = isset($_POST['mantener_sesion']) ? '1' : '0';
-            set_config_value($conn, 'mantener_sesion', $mantenerSesion);
-            if ($password !== '' || $confirmPassword !== '') {
-                if (strlen($password) < 6) {
-                    redirect_to('configuracion.php?type=danger&msg=' . urlencode('La contraseña debe tener al menos 6 caracteres.'));
-                }
-                if ($password !== $confirmPassword) {
-                    redirect_to('configuracion.php?type=danger&msg=' . urlencode('Las contraseñas no coinciden.'));
-                }
-                $usuarioId = (int) ($_SESSION['usuario_id'] ?? 0);
-                if ($usuarioId <= 0) {
-                    $result = $conn->query('SELECT id FROM usuarios WHERE rol_id IN (1, 2) ORDER BY id ASC LIMIT 1');
-                    $row = $result ? $result->fetch_assoc() : null;
-                    $usuarioId = $row ? (int) $row['id'] : 0;
-                }
-                if ($usuarioId <= 0) {
-                    redirect_to('configuracion.php?type=danger&msg=' . urlencode('No se encontró un administrador para actualizar contraseña.'));
-                }
-                $hash = password_hash($password, PASSWORD_BCRYPT);
-                $stmt = $conn->prepare('UPDATE usuarios SET password = ? WHERE id = ?');
-                $stmt->bind_param('si', $hash, $usuarioId);
-                $stmt->execute();
-                $stmt->close();
-            }
-            redirect_to('configuracion.php?type=success&msg=' . urlencode('Configuración de seguridad actualizada.'));
-        }
-        if ($form === 'apariencia') {
-            $color = trim($_POST['color_principal'] ?? 'Azul');
-            $tema = trim($_POST['tema'] ?? 'Claro');
-            $idioma = trim($_POST['idioma'] ?? 'Español');
-            if (!in_array($color, ['Azul', 'Morado', 'Verde', 'Rojo'], true)) {
-                $color = 'Azul';
-            }
-            if (!in_array($tema, ['Claro', 'Oscuro'], true)) {
-                $tema = 'Claro';
-            }
-            if (!in_array($idioma, ['Español', 'Inglés'], true)) {
-                $idioma = 'Español';
-            }
-            set_config_value($conn, 'color_principal', $color);
-            set_config_value($conn, 'tema', $tema);
-            set_config_value($conn, 'idioma', $idioma);
-            redirect_to('configuracion.php?type=success&msg=' . urlencode('Preferencias visuales actualizadas.'));
-        }
-    } catch (Throwable $e) {
-        redirect_to('configuracion.php?type=danger&msg=' . urlencode('Error al guardar configuración: ' . $e->getMessage()));
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['accion'] ?? '') === 'cambiar_password') {
+    $actual = trim($_POST['password_actual'] ?? '');
+    $nueva = trim($_POST['password_nueva'] ?? '');
+    $confirmar = trim($_POST['password_confirmar'] ?? '');
+
+    $stmt = $conn->prepare("SELECT password FROM usuarios WHERE id = ?");
+    $stmt->bind_param('i', $usuarioId);
+    $stmt->execute();
+    $hashActual = $stmt->get_result()->fetch_assoc()['password'] ?? '';
+    $stmt->close();
+
+    if (!password_verify($actual, $hashActual)) {
+        redirect_to('configuracion.php?type=danger&msg=' . urlencode('La contraseña actual no es correcta.'));
+    } elseif (strlen($nueva) < 6) {
+        redirect_to('configuracion.php?type=danger&msg=' . urlencode('La nueva contraseña debe tener al menos 6 caracteres.'));
+    } elseif ($nueva !== $confirmar) {
+        redirect_to('configuracion.php?type=danger&msg=' . urlencode('Las contraseñas nuevas no coinciden.'));
+    } else {
+        $hash = password_hash($nueva, PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("UPDATE usuarios SET password = ? WHERE id = ?");
+        $stmt->bind_param('si', $hash, $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+        redirect_to('configuracion.php?type=success&msg=' . urlencode('Contraseña actualizada correctamente.'));
     }
 }
-$cfg = [
-    'nombre_sistema' => get_config_value($conn, 'nombre_sistema', 'Portal de Empleos'),
-    'correo_soporte' => get_config_value($conn, 'correo_soporte', 'soporte@portal.com'),
-    'telefono' => get_config_value($conn, 'telefono', '9811234567'),
-    'mantener_sesion' => get_config_value($conn, 'mantener_sesion', '1'),
-    'color_principal' => get_config_value($conn, 'color_principal', 'Azul'),
-    'tema' => get_config_value($conn, 'tema', 'Claro'),
-    'idioma' => get_config_value($conn, 'idioma', 'Español')
-];
-include 'includes/header.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['accion'] ?? '') === 'cambiar_clave_seguridad') {
+    $nuevaClave = trim($_POST['clave_seguridad'] ?? '');
+    $confirmarClave = trim($_POST['confirmar_clave_seguridad'] ?? '');
+
+    if (strlen($nuevaClave) < 4) {
+        redirect_to('configuracion.php?type=danger&msg=' . urlencode('La clave de seguridad debe tener al menos 4 caracteres.'));
+    } elseif ($nuevaClave !== $confirmarClave) {
+        redirect_to('configuracion.php?type=danger&msg=' . urlencode('Las claves de seguridad no coinciden.'));
+    } else {
+        $hashClave = password_hash($nuevaClave, PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("UPDATE usuarios SET clave_seguridad = ? WHERE id = ?");
+        $stmt->bind_param('si', $hashClave, $usuarioId);
+        $stmt->execute();
+        $stmt->close();
+        redirect_to('configuracion.php?type=success&msg=' . urlencode('Clave de seguridad actualizada correctamente.'));
+    }
+}
+
+include "includes/header.php";
 ?>
 <div class="d-flex">
-    <?php include 'includes/sidebar.php'; ?>
+    <?php include "includes/sidebar.php"; ?>
     <div class="content w-100 p-4">
         <?php include "includes/topbar.php"; ?>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold">Configuración</h2>
-                <p class="text-muted">Administra las configuraciones generales del sistema.</p>
+                <h3 class="fw-bold">Configuración de la cuenta</h3>
+                <p class="text-muted">Administra la seguridad de tu cuenta, <?= e($cuenta['nombre_completo']) ?>.</p>
             </div>
         </div>
-        <?php if (!$tablasOk): ?>
-            <div class="alert alert-warning">Faltan las tablas <strong>configuracion</strong> o <strong>usuarios</strong>. Importa <strong>database_chris.sql</strong>.</div>
-        <?php endif; ?>
+
         <?php if ($mensaje !== ''): ?>
             <div class="alert alert-<?= e($tipoMensaje) ?>"><?= e($mensaje) ?></div>
         <?php endif; ?>
+
         <div class="row g-4">
-            <div class="col-md-6">
+            <!-- CAMBIAR CONTRASEÑA -->
+            <div class="col-lg-6">
                 <div class="table-box">
-                    <h5 class="fw-bold mb-4">Información del sistema</h5>
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-shield-lock-fill me-2"></i>
+                        Cambiar contraseña
+                    </h5>
                     <form method="POST">
-                        <input type="hidden" name="form" value="general">
+                        <input type="hidden" name="accion" value="cambiar_password">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nombre del sistema</label>
-                            <input type="text" name="nombre_sistema" class="form-control" value="<?= e($cfg['nombre_sistema']) ?>" required>
+                            <label class="form-label fw-bold">Contraseña actual</label>
+                            <input type="password" name="password_actual" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Correo de soporte</label>
-                            <input type="email" name="correo_soporte" class="form-control" value="<?= e($cfg['correo_soporte']) ?>" required>
+                            <label class="form-label fw-bold">Nueva contraseña</label>
+                            <input type="password" name="password_nueva" class="form-control" minlength="6" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Teléfono</label>
-                            <input type="text" name="telefono" class="form-control" value="<?= e($cfg['telefono']) ?>" required>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Confirmar nueva contraseña</label>
+                            <input type="password" name="password_confirmar" class="form-control" minlength="6" required>
                         </div>
-                        <button type="submit" class="btn btn-candidato w-100" <?= !$tablasOk ? 'disabled' : '' ?>><i class="bi bi-save-fill me-2"></i>Guardar Cambios</button>
+                        <button type="submit" class="btn btn-candidato">
+                            <i class="bi bi-floppy-fill me-2"></i>
+                            Actualizar contraseña
+                        </button>
                     </form>
                 </div>
             </div>
-            <div class="col-md-6">
+            <!-- CLAVE DE SEGURIDAD -->
+            <div class="col-lg-6">
                 <div class="table-box">
-                    <h5 class="fw-bold mb-4">Seguridad</h5>
-                    <form method="POST" autocomplete="off">
-                        <input type="hidden" name="form" value="seguridad">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-key-fill me-2"></i>
+                        Clave de seguridad
+                    </h5>
+                    <p class="text-muted">
+                        Se usa junto con tu correo para recuperar tu contraseña si la olvidas.
+                    </p>
+                    <form method="POST">
+                        <input type="hidden" name="accion" value="cambiar_clave_seguridad">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nueva contraseña</label>
-                            <input type="password" name="password" class="form-control" placeholder="Nueva contraseña">
-                            <small class="text-muted">Déjala vacía si no quieres cambiarla.</small>
+                            <label class="form-label fw-bold">Nueva clave de seguridad</label>
+                            <input type="password" name="clave_seguridad" class="form-control" minlength="4" required>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Confirmar contraseña</label>
-                            <input type="password" name="confirmPassword" class="form-control" placeholder="Confirmar contraseña">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Confirmar clave de seguridad</label>
+                            <input type="password" name="confirmar_clave_seguridad" class="form-control" minlength="4" required>
                         </div>
-                        <div class="form-check form-switch mb-4">
-                            <input class="form-check-input" type="checkbox" name="mantener_sesion" id="mantenerSesion" <?= $cfg['mantener_sesion'] === '1' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="mantenerSesion">Mantener sesión iniciada</label>
-                        </div>
-                        <button type="submit" class="btn btn-dark w-100" <?= !$tablasOk ? 'disabled' : '' ?>><i class="bi bi-shield-lock-fill me-2"></i>Actualizar Seguridad</button>
+                        <button type="submit" class="btn btn-candidato">
+                            <i class="bi bi-floppy-fill me-2"></i>
+                            Actualizar clave de seguridad
+                        </button>
                     </form>
+                </div>
+            </div>
+            <!-- INFO DE LA CUENTA -->
+            <div class="col-lg-12">
+                <div class="table-box">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-person-badge-fill me-2"></i>
+                        Datos de acceso
+                    </h5>
+                    <p><strong>Correo de acceso:</strong> <?= e($cuenta['email']) ?></p>
+                    <p class="text-muted mb-0">
+                        Para cambiar tu correo, nombre u otros datos personales ve a
+                        <a href="editar_perfil.php">Editar Perfil</a>.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php include 'includes/footer.php'; ?>
+<?php include "includes/footer.php"; ?>

@@ -1,3 +1,23 @@
+<?php
+// ----- Datos del administrador para el topbar (nombre y foto), independiente de lo que ya haya cargado la página -----
+$fotoPerfilTopbar = '../assets/img/imagenadministrador.png';
+$nombreTopbar = 'Admin';
+
+if (isset($_SESSION['usuario_id']) && isset($conn)) {
+    $stmtTopbar = $conn->prepare("SELECT nombre_completo, foto_perfil FROM administradores WHERE usuario_id = ?");
+    $stmtTopbar->bind_param('i', $_SESSION['usuario_id']);
+    $stmtTopbar->execute();
+    $datosTopbar = $stmtTopbar->get_result()->fetch_assoc();
+    $stmtTopbar->close();
+
+    if ($datosTopbar) {
+        $nombreTopbar = $datosTopbar['nombre_completo'];
+        if (!empty($datosTopbar['foto_perfil'])) {
+            $fotoPerfilTopbar = '../' . $datosTopbar['foto_perfil'] . '?v=' . time();
+        }
+    }
+}
+?>
 <div class="top-bar mb-4">
     <!-- IZQUIERDA -->
     <div class="d-flex align-items-center">
@@ -22,13 +42,14 @@
         <i class="bi bi-bell-fill me-4 fs-5 text-warning"></i>
         <div class="d-flex align-items-center">
             <img
-                src="../assets/img/imagenadministrador.png"
+                src="<?= htmlspecialchars($fotoPerfilTopbar) ?>"
                 class="rounded-circle me-2"
                 width="40"
                 height="40"
+                style="object-fit:cover;"
                 alt="Administrador">
             <span class="texto fw-semibold">
-                Admin
+                <?= htmlspecialchars($nombreTopbar) ?>
             </span>
         </div>
     </div>

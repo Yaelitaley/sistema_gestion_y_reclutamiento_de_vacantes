@@ -2,6 +2,9 @@
 header('Content-Type: application/json');
 require_once '../../config/config.php';
 require_once '../../config/connection.php';
+require_once '../../config/app_helpers.php';
+
+require_admin_login_json();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido.']);

@@ -483,18 +483,9 @@ document.addEventListener("DOMContentLoaded", function(){
     // ==========================
     // DESCARGAR CV
     // ==========================
-
-    const btnDescargarCV = document.getElementById("btnDescargarCV");
-
-    if(btnDescargarCV){
-
-        btnDescargarCV.addEventListener("click", function(){
-
-            alert("Descargando currículum...");
-
-        });
-
-    }
+    // El botón #btnDescargarCV ahora es un <a href download> real
+    // que apunta directo al PDF (o un botón deshabilitado si no hay CV).
+    // No requiere JS: el navegador maneja la descarga de forma nativa.
 
 
 
@@ -521,7 +512,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
     // ==========================
-    // GUARDAR CAMBIOS
+    // GUARDAR CAMBIOS DEL CURRÍCULUM
     // ==========================
 
     const formularioCV = document.getElementById("formCV");
@@ -532,7 +523,47 @@ document.addEventListener("DOMContentLoaded", function(){
 
             e.preventDefault();
 
-            alert("Los cambios del currículum se guardaron correctamente.");
+            const btnGuardar = formularioCV.querySelector('button[type="submit"]');
+            const textoOriginal = btnGuardar ? btnGuardar.innerHTML : null;
+
+            if(btnGuardar){
+                btnGuardar.disabled = true;
+                btnGuardar.innerHTML = 'Guardando...';
+            }
+
+            const datosFormulario = new FormData(formularioCV);
+
+            fetch(formularioCV.action, {
+                method: "POST",
+                body: datosFormulario
+            })
+            .then(function(respuesta){
+                return respuesta.json();
+            })
+            .then(function(data){
+
+                alert(data.message || (data.success
+                    ? "Los cambios del currículum se guardaron correctamente."
+                    : "Ocurrió un error al guardar los cambios."));
+
+                if(data.success){
+                    window.location.href = "cv.php";
+                }
+
+            })
+            .catch(function(){
+
+                alert("No se pudo conectar con el servidor. Intenta nuevamente.");
+
+            })
+            .finally(function(){
+
+                if(btnGuardar){
+                    btnGuardar.disabled = false;
+                    btnGuardar.innerHTML = textoOriginal;
+                }
+
+            });
 
         });
 
@@ -559,11 +590,144 @@ document.addEventListener("DOMContentLoaded", function(){
 
         archivo.addEventListener("change", function(){
 
-            if(this.files.length > 0){
-
-                alert("Currículum cargado correctamente.");
-
+            if(this.files.length === 0){
+                return;
             }
+
+            const archivoSeleccionado = this.files[0];
+
+            if(archivoSeleccionado.type !== "application/pdf"){
+                alert("Solo se permiten archivos PDF.");
+                archivo.value = "";
+                return;
+            }
+
+            const textoOriginal = botonSubir.innerHTML;
+            botonSubir.disabled = true;
+            botonSubir.innerHTML = "Subiendo...";
+
+            const datosArchivo = new FormData();
+            datosArchivo.append("archivo_cv", archivoSeleccionado);
+
+            fetch("actions/subir_cv.php", {
+                method: "POST",
+                body: datosArchivo
+            })
+            .then(function(respuesta){
+                return respuesta.json();
+            })
+            .then(function(data){
+
+                alert(data.message || (data.success
+                    ? "Currículum cargado correctamente."
+                    : "Ocurrió un error al subir el currículum."));
+
+                if(data.success){
+                    window.location.reload();
+                }
+
+            })
+            .catch(function(){
+
+                alert("No se pudo conectar con el servidor. Intenta nuevamente.");
+
+            })
+            .finally(function(){
+
+                botonSubir.disabled = false;
+                botonSubir.innerHTML = textoOriginal;
+                archivo.value = "";
+
+            });
+
+        });
+
+    }
+
+});
+
+/*==================================================
+=            SUBIR FOTO DE PERFIL
+==================================================*/
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const inputFotoPerfil = document.getElementById("inputFotoPerfil");
+    const previewFotoPerfil = document.getElementById("previewFotoPerfil");
+    const mensajeFotoPerfil = document.getElementById("mensajeFotoPerfil");
+
+    if (inputFotoPerfil && previewFotoPerfil) {
+
+        inputFotoPerfil.addEventListener("change", function () {
+
+            if (this.files.length === 0) {
+                return;
+            }
+
+            const archivo = this.files[0];
+
+            const tiposPermitidos = ["image/jpeg", "image/png"];
+            if (!tiposPermitidos.includes(archivo.type)) {
+                if (mensajeFotoPerfil) {
+                    mensajeFotoPerfil.className = "mt-2 text-danger";
+                    mensajeFotoPerfil.innerHTML = "Solo se permiten imágenes JPG, JPEG o PNG.";
+                }
+                inputFotoPerfil.value = "";
+                return;
+            }
+
+            if (archivo.size > 3 * 1024 * 1024) {
+                if (mensajeFotoPerfil) {
+                    mensajeFotoPerfil.className = "mt-2 text-danger";
+                    mensajeFotoPerfil.innerHTML = "La imagen no debe superar 3 MB.";
+                }
+                inputFotoPerfil.value = "";
+                return;
+            }
+
+            // Vista previa inmediata (antes de subir)
+            const lector = new FileReader();
+            lector.onload = function (e) {
+                previewFotoPerfil.src = e.target.result;
+            };
+            lector.readAsDataURL(archivo);
+
+            // Subida al servidor
+            const datos = new FormData();
+            datos.append("foto", archivo);
+
+            if (mensajeFotoPerfil) {
+                mensajeFotoPerfil.className = "mt-2 text-muted";
+                mensajeFotoPerfil.innerHTML = "Subiendo foto...";
+            }
+            inputFotoPerfil.disabled = true;
+
+            fetch("actions/subir_foto.php", {
+                method: "POST",
+                body: datos
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+
+                if (mensajeFotoPerfil) {
+                    mensajeFotoPerfil.className = "mt-2 " + (data.success ? "text-success" : "text-danger");
+                    mensajeFotoPerfil.innerHTML = data.message;
+                }
+
+                if (data.success && data.foto_perfil) {
+                    previewFotoPerfil.src = "../" + data.foto_perfil + "?v=" + Date.now();
+                }
+
+                inputFotoPerfil.disabled = false;
+
+            })
+            .catch(function () {
+                if (mensajeFotoPerfil) {
+                    mensajeFotoPerfil.className = "mt-2 text-danger";
+                    mensajeFotoPerfil.innerHTML = "Ocurrió un error al conectar con el servidor.";
+                }
+                inputFotoPerfil.disabled = false;
+            });
 
         });
 

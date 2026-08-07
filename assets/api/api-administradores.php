@@ -3,10 +3,6 @@ require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/controllers/BaseController.php';
 
-/**
- * Endpoint: /api/api-administradores.php
- * CRUD completo sobre la tabla `administradores`.
- */
 class AdministradorController extends BaseController
 {
     public function __construct(PDO $db)

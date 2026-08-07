@@ -3,6 +3,8 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../config/connection.php';
 require_once __DIR__ . '/../config/app_helpers.php';
 
+require_admin_login();
+
 $mensaje = '';
 $tipoMensaje = '';
 $valores = [

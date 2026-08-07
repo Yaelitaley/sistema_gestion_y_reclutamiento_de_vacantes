@@ -1,38 +1,12 @@
 <?php
 require_once __DIR__ . '/../config/Response.php';
-
-/**
- * BaseController
- * ----------------
- * Controlador genérico que implementa un CRUD completo y seguro sobre
- * cualquier tabla de la base de datos usando PDO y prepared statements.
- *
- * Cada endpoint concreto (UsuarioController, VacanteController, etc.)
- * extiende esta clase indicando: la tabla, la llave primaria, los
- * campos permitidos para insertar/actualizar y los campos obligatorios.
- *
- * Verbos soportados:
- *  - GET    -> listar (con paginación) o obtener uno (?id=)
- *  - POST   -> crear un registro nuevo
- *  - PUT    -> reemplazo COMPLETO de un registro (?id=), exige los
- *              mismos campos obligatorios que POST
- *  - PATCH  -> actualización PARCIAL de un registro (?id=), solo
- *              modifica los campos que se envíen
- *  - DELETE -> eliminar un registro (?id=)
- *
- * Métodos que las clases hijas pueden sobrescribir (hooks):
- *  - beforeCreate(array $data): array   -> transformar datos antes de INSERT
- *  - beforeUpdate(array $data, $id): array -> transformar datos antes de UPDATE
- *  - sanitizeRow(array $row): array     -> limpiar/ocultar campos en la respuesta (ej. password)
- *  - validate(array $data, string $mode): void -> validaciones extra (lanzar Response::error)
- */
 class BaseController
 {
     protected PDO $db;
     protected string $table;
     protected string $primaryKey;
-    protected array $allowedFields;   // Columnas que se pueden insertar/actualizar
-    protected array $requiredFields;  // Columnas obligatorias al crear (POST)
+    protected array $allowedFields; 
+    protected array $requiredFields;  
 
     public function __construct(
         PDO $db,
@@ -77,9 +51,7 @@ class BaseController
     }
 
     /* ------------------------------------------------------------------ */
-    /*  GET  ->  Listar todos (con paginación y búsqueda opcional)         */
-    /*         o obtener uno solo si se envía ?id=                        */
-    /* ------------------------------------------------------------------ */
+    /*  GET  -> */
     protected function handleGet(): void
     {
         $id = $_GET['id'] ?? null;
@@ -197,9 +169,6 @@ class BaseController
 
     /* ------------------------------------------------------------------ */
     /*  PUT  ->  Reemplazo COMPLETO de un registro existente (?id=)        */
-    /*         Debe enviarse el mismo conjunto de campos obligatorios      */
-    /*         que en un POST (representación completa del recurso).      */
-    /* ------------------------------------------------------------------ */
     protected function handlePut(): void
     {
         $id = $this->requireExistingId('actualizar');
@@ -223,7 +192,6 @@ class BaseController
 
     /* ------------------------------------------------------------------ */
     /*  PATCH  ->  Actualización PARCIAL de un registro existente (?id=)   */
-    /*           Solo se exigen y modifican los campos enviados.           */
     /* ------------------------------------------------------------------ */
     protected function handlePatch(): void
     {
@@ -312,7 +280,6 @@ class BaseController
     /*  Utilidades internas                                                */
     /* ------------------------------------------------------------------ */
 
-    /** Lee y decodifica el cuerpo JSON de la petición (php://input). */
     protected function getJsonInput(): array
     {
         $raw = file_get_contents('php://input');
@@ -330,13 +297,13 @@ class BaseController
         return $input;
     }
 
-    /** Filtra el array de entrada dejando solo las columnas permitidas (whitelist). */
+    /** Filtra el array de entrada dejando solo las columnas permitidas */
     protected function filterFields(array $input): array
     {
         return array_intersect_key($input, array_flip($this->allowedFields));
     }
 
-    /** Maneja errores de escritura comunes (duplicados, FK inexistente, etc.) */
+    /** Maneja errores de escritura comunes  */
     protected function handlePdoWriteError(PDOException $e): void
     {
         if ($e->getCode() === '23000') {
@@ -361,13 +328,13 @@ class BaseController
         return $data;
     }
 
-    /** Hook: limpiar/ocultar campos sensibles antes de responder (ej. password). */
+    /** Hook: limpiar/ocultar campos sensibles antes de responder  */
     protected function sanitizeRow(array $row): array
     {
         return $row;
     }
 
-    /** Hook: validaciones adicionales de negocio. Lanza Response::error si falla. */
+    /** Hook: validaciones adicionales de negocio. */
     protected function validate(array $data, string $mode): void
     {
         // Sin validaciones extra por defecto.
