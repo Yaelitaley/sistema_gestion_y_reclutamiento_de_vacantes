@@ -59,7 +59,8 @@ class PostulacionController extends BaseController
             $sql = "SELECT p.*, v.trabajo, v.ubicacion, v.salario, v.modalidad,
                            e.nombre AS empresa_nombre, ep.nombre AS estado_nombre,
                            c.nombre_completo AS candidato_nombre, c.puesto_deseado AS candidato_puesto_deseado,
-                           c.correo AS candidato_correo, c.telefono AS candidato_telefono
+                           c.correo AS candidato_correo, c.telefono AS candidato_telefono,
+                           c.foto_perfil AS candidato_foto
                     FROM postulaciones p
                     LEFT JOIN vacantes v ON v.id = p.vacante_id
                     LEFT JOIN reclutadores r ON r.id = v.reclutador_id

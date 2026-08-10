@@ -104,6 +104,10 @@ function formatoFecha(fecha) {
     return new Date(fecha).toLocaleDateString('es-MX', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+function fotoCandidatoSrc(fotoPerfil) {
+    return fotoPerfil ? `../${fotoPerfil}` : '../assets/img/candidato02.png';
+}
+
 function renderTabla(postulaciones) {
     const tbody = document.getElementById('tbodyCandidatos');
 
@@ -114,7 +118,7 @@ function renderTabla(postulaciones) {
 
     tbody.innerHTML = postulaciones.map(p => `
         <tr>
-            <td><img src="../assets/img/candidato02.png" width="50" class="rounded-circle"></td>
+            <td><img src="${fotoCandidatoSrc(p.candidato_foto)}" width="50" height="50" class="rounded-circle" style="object-fit:cover;" onerror="this.onerror=null;this.src='../assets/img/candidato02.png';"></td>
             <td>${p.candidato_nombre ?? '-'}</td>
             <td>${p.trabajo ?? '-'}</td>
             <td>${badgeEstado(p.estado_nombre)}</td>

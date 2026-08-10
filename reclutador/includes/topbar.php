@@ -1,5 +1,9 @@
 <?php
 // ----- Datos del reclutador para el topbar (nombre y foto), independiente de lo que ya haya cargado la página -----
+if (!isset($conn)) {
+    require_once __DIR__ . '/../../config/connection.php';
+}
+
 $fotoPerfilTopbar = '../assets/img/imagenreclutador.png';
 $nombreTopbar = 'Reclutador';
 

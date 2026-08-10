@@ -125,7 +125,7 @@ function render(postulacion, candidato, experiencia, formacion, idiomas, certifi
         <div class="candidate-profile mb-4">
             <div class="row align-items-center">
                 <div class="col-lg-3 text-center">
-                    <img src="../assets/img/candidato02.png" class="candidate-photo img-fluid rounded-circle" alt="Candidato">
+                    <img src="${candidato.foto_perfil ? '../' + esc(candidato.foto_perfil) + '?v=' + Date.now() : '../assets/img/candidato02.png'}" class="candidate-photo img-fluid rounded-circle" alt="Candidato" onerror="this.onerror=null;this.src='../assets/img/candidato02.png';">
                 </div>
                 <div class="col-lg-6">
                     <h2 class="fw-bold">${esc(candidato.nombre_completo)}</h2>
