@@ -42,7 +42,25 @@ $stmt->bind_result($candidato_id);
 $stmt->fetch();
 $stmt->close();
 
-// Borrar SOLO si la postulación pertenece al candidato en sesión
+// Verificar que la postulación pertenece al candidato en sesión
+$stmt = $conn->prepare("SELECT id FROM postulaciones WHERE id = ? AND candidato_id = ?");
+$stmt->bind_param('ii', $postulacion_id, $candidato_id);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows === 0) {
+    echo json_encode(['success' => false, 'message' => 'No se encontró esa postulación o no te pertenece.']);
+    $stmt->close();
+    exit;
+}
+$stmt->close();
+
+// Borrar primero el historial de estados (llave foránea) y luego la postulación
+$stmt = $conn->prepare("DELETE FROM historial_estados_postulacion WHERE postulacion_id = ?");
+$stmt->bind_param('i', $postulacion_id);
+$stmt->execute();
+$stmt->close();
+
 $stmt = $conn->prepare("DELETE FROM postulaciones WHERE id = ? AND candidato_id = ?");
 $stmt->bind_param('ii', $postulacion_id, $candidato_id);
 $stmt->execute();

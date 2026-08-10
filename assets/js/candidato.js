@@ -1,5 +1,43 @@
 console.log("JavaScript cargado correctamente");
 
+/*=========================================
+=            CONFIRMAR LOGOUT (MODAL BOOTSTRAP)
+=========================================*/
+document.addEventListener("DOMContentLoaded", function () {
+
+    const logoutTriggers = document.querySelectorAll(".btn-logout-trigger");
+    const modalLogoutEl = document.getElementById("modalConfirmarLogout");
+    const btnConfirmarLogout = document.getElementById("btnConfirmarLogout");
+    let logoutUrl = null;
+
+    if (logoutTriggers.length && modalLogoutEl && btnConfirmarLogout) {
+
+        const modalLogout = new bootstrap.Modal(modalLogoutEl);
+
+        logoutTriggers.forEach(function (trigger) {
+
+            trigger.addEventListener("click", function (e) {
+
+                e.preventDefault();
+                logoutUrl = trigger.getAttribute("href");
+                modalLogout.show();
+
+            });
+
+        });
+
+        btnConfirmarLogout.addEventListener("click", function () {
+
+            if (logoutUrl) {
+                window.location.href = logoutUrl;
+            }
+
+        });
+
+    }
+
+});
+
 
 document.addEventListener("DOMContentLoaded", function(){
 //regstro
@@ -261,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
             }
 
-        });
+            });
 
     });
 
@@ -791,36 +829,6 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
 });
-
-/*==================================================
-=            CERRAR SESIÓN
-==================================================*/
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    const botonesCerrarSesion = document.querySelectorAll(".btnCerrarSesion");
-
-    botonesCerrarSesion.forEach(function(boton){
-
-        boton.addEventListener("click", function(e){
-
-            e.preventDefault();
-
-            const confirmar = confirm("¿Estás seguro de que deseas cerrar sesión?");
-
-            if(confirmar){
-
-                window.location.href = this.href;
-
-            }
-
-        });
-
-    });
-
-});
-
-
 
 /*==================================================
 =            SIDEBAR

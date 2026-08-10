@@ -43,21 +43,34 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /*=========================================
-    =            CONFIRMAR LOGOUT
+    =            CONFIRMAR LOGOUT (MODAL BOOTSTRAP)
     =========================================*/
 
-    const btnLogout = document.getElementById("btnLogout");
+    const logoutTriggers = document.querySelectorAll(".btn-logout-trigger");
+    const modalLogoutEl = document.getElementById("modalConfirmarLogout");
+    const btnConfirmarLogout = document.getElementById("btnConfirmarLogout");
+    let logoutUrl = null;
 
-    if (btnLogout) {
+    if (logoutTriggers.length && modalLogoutEl && btnConfirmarLogout) {
 
-        btnLogout.addEventListener("click", function (e) {
+        const modalLogout = new bootstrap.Modal(modalLogoutEl);
 
-            const confirmar = confirm("¿Deseas cerrar sesión?");
+        logoutTriggers.forEach(function (trigger) {
 
-            if (!confirmar) {
+            trigger.addEventListener("click", function (e) {
 
                 e.preventDefault();
+                logoutUrl = trigger.getAttribute("href");
+                modalLogout.show();
 
+            });
+
+        });
+
+        btnConfirmarLogout.addEventListener("click", function () {
+
+            if (logoutUrl) {
+                window.location.href = logoutUrl;
             }
 
         });

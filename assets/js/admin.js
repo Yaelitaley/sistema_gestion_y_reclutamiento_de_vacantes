@@ -5,32 +5,45 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /*==========================================
-    =            CERRAR SESIÓN
+    =            CERRAR SESIÓN (MODAL BOOTSTRAP)
     ==========================================*/
 
-    const btnLogout = document.getElementById("btnLogout");
+    // Delegado en document: no depende de que el trigger o el modal
+    // ya existan en el DOM en el instante exacto en que corre este script.
+    document.addEventListener("click", function (e) {
 
-    if(btnLogout){
+        const trigger = e.target.closest(".btn-logout-trigger");
+        if (!trigger) return;
 
-        btnLogout.addEventListener("click", function(e){
+        e.preventDefault();
 
-            const confirmar = confirm("¿Deseas cerrar sesión?");
+        const modalLogoutEl = document.getElementById("modalConfirmarLogout");
 
-            if(!confirmar){
+        // Si por algún motivo el modal no existe en esta página, no bloqueamos el logout.
+        if (!modalLogoutEl || typeof bootstrap === "undefined") {
+            window.location.href = trigger.getAttribute("href");
+            return;
+        }
 
-                e.preventDefault();
+        modalLogoutEl.dataset.logoutUrl = trigger.getAttribute("href");
 
-            }
+        const modalLogout = bootstrap.Modal.getOrCreateInstance(modalLogoutEl);
+        modalLogout.show();
 
-        });
+    });
 
-    }
+    document.addEventListener("click", function (e) {
 
+        if (e.target.id !== "btnConfirmarLogout") return;
 
+        const modalLogoutEl = document.getElementById("modalConfirmarLogout");
+        const logoutUrl = modalLogoutEl ? modalLogoutEl.dataset.logoutUrl : null;
 
+        if (logoutUrl) {
+            window.location.href = logoutUrl;
+        }
 
-
-
+    });
 
 
     /*==========================================
@@ -57,9 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     });
-
-
-
 
 
     /*==========================================
@@ -119,9 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     });
-
-
-
 
 
     /*==========================================

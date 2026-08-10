@@ -28,10 +28,6 @@
 
             </li>
 
-
-
-
-
             <li>
 
                 <a href="../reclutador/index_reclutador.php">
@@ -43,10 +39,6 @@
                 </a>
 
             </li>
-
-
-
-
 
             <li>
 
@@ -72,9 +64,6 @@
 
             </li>
 
-
-
-
             <li>
 
                 <a href="../vacantes/vacantes.php">
@@ -87,10 +76,6 @@
 
             </li>
 
-
-
-
-
             <li>
 
                 <a href="reportes.php">
@@ -102,10 +87,6 @@
                 </a>
 
             </li>
-
-
-
-
 
             <li>
 
@@ -123,14 +104,10 @@
 
     </div>
 
-
-
-
-
     <!-- LOGOUT -->
     <div class="logout">
 
-        <a href="../admin/logout.php" id="btnLogout">
+        <a href="../admin/logout.php" class="btn-logout-trigger" data-bs-toggle="modal" data-bs-target="#modalConfirmarLogout">
 
     <i class="bi bi-box-arrow-left"></i>
 

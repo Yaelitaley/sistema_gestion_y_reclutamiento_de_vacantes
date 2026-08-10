@@ -18,7 +18,14 @@ if (empty($correo) || empty($password)) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT id, password FROM usuarios WHERE email = ? AND rol_id = 3");
+// Se une con "reclutadores" para verificar el estado de la solicitud
+// (Activo / Pendiente / Bloqueado / Inactivo) antes de otorgar acceso.
+$stmt = $conn->prepare(
+    "SELECT u.id, u.password, r.estado
+     FROM usuarios u
+     INNER JOIN reclutadores r ON r.usuario_id = u.id
+     WHERE u.email = ? AND u.rol_id = 3"
+);
 $stmt->bind_param('s', $correo);
 $stmt->execute();
 $stmt->store_result();
@@ -29,12 +36,29 @@ if ($stmt->num_rows === 0) {
     exit;
 }
 
-$stmt->bind_result($id, $hash);
+$stmt->bind_result($id, $hash, $estado);
 $stmt->fetch();
 $stmt->close();
 
 if (!password_verify($password, $hash)) {
     echo json_encode(['success' => false, 'message' => 'Credenciales incorrectas.']);
+    exit;
+}
+
+// Verificación de la solicitud/estado del reclutador
+$estado = strtolower(trim((string) $estado));
+
+if ($estado !== 'activo') {
+    $mensajes = [
+        'pendiente' => 'Tu solicitud de reclutador aún está pendiente de aprobación por un administrador.',
+        'bloqueado' => 'Tu cuenta de reclutador ha sido bloqueada. Contacta al administrador.',
+        'inactivo'  => 'Tu cuenta de reclutador está inactiva. Contacta al administrador.',
+    ];
+
+    echo json_encode([
+        'success' => false,
+        'message' => $mensajes[$estado] ?? 'Tu cuenta no tiene permisos para acceder al panel de reclutador.'
+    ]);
     exit;
 }
 

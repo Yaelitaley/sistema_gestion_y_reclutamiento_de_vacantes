@@ -1,4 +1,3 @@
-
 <?php
 require_once __DIR__ . '/config/cors.php';
 require_once __DIR__ . '/config/database.php';
@@ -142,7 +141,8 @@ class PostulacionController extends BaseController
         $input = $this->getJsonInput();
 
         foreach ($this->requiredFields as $field) {
-            if ($field === 'candidato_id') {
+            
+            if ($field === 'candidato_id' || $field === 'estado_id') {
                 continue;
             }
             if (!array_key_exists($field, $input) || $input[$field] === '') {
@@ -191,7 +191,7 @@ class PostulacionController extends BaseController
         }
     }
 
-    // Al actualizar el estado_id, también se agrega una entrada al historial.
+    
     protected function beforeUpdate(array $data, $id): array
     {
         // Solo el reclutador dueño de la vacante o un admin pueden cambiar el estado.
@@ -243,6 +243,9 @@ class PostulacionController extends BaseController
         }
 
         try {
+            $this->db->prepare('DELETE FROM historial_estados_postulacion WHERE postulacion_id = :id')
+                ->execute([':id' => $id]);
+
             $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id");
             $stmt->bindValue(':id', $id);
             $stmt->execute();

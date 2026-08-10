@@ -112,7 +112,7 @@ function seccion_activa($clave, $pagina, $secciones)
     <!-- LOGOUT -->
     <div class="logout">
 
-        <a href="../reclutador/logout.php" id="btnLogout">
+        <a href="../reclutador/logout.php" class="btn-logout-trigger" data-bs-toggle="modal" data-bs-target="#modalConfirmarLogout">
 
     <i class="bi bi-box-arrow-left"></i>
 

@@ -54,21 +54,6 @@ if (isset($_SESSION['usuario_id']) && isset($conn)) {
     <!-- DERECHA -->
     <div class="candidate-profile">
 
-        <!-- NOTIFICACIONES -->
-        <button
-            class="btn position-relative me-4">
-
-            <i class="bi bi-bell-fill fs-5 text-warning"></i>
-
-            <span
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-
-                3
-
-            </span>
-
-        </button>
-
         <!-- PERFIL -->
         <div class="dropdown">
 
@@ -157,9 +142,10 @@ if (isset($_SESSION['usuario_id']) && isset($conn)) {
                 <li>
 
                     <a
-                        class="dropdown-item"
+                        class="dropdown-item btn-logout-trigger"
                         href="../candidatos/logout.php"
-                        id="btnLogout">
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalConfirmarLogout">
 
                         <i class="bi bi-box-arrow-right me-2"></i>
 

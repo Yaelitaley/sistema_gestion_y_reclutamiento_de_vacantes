@@ -81,13 +81,16 @@ try {
     $usuario_id = $conn->insert_id;
     $stmt->close();
 
-    $stmt = $conn->prepare("INSERT INTO reclutadores (usuario_id, empresa_id, nombre_completo, telefono) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param('iiss', $usuario_id, $empresaId, $nombre, $telefono);
+    // El reclutador queda en estado "Pendiente" hasta que un administrador
+    // revise y apruebe la solicitud desde el panel de administración.
+    $estadoInicial = 'Pendiente';
+    $stmt = $conn->prepare("INSERT INTO reclutadores (usuario_id, empresa_id, nombre_completo, telefono, estado) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param('iisss', $usuario_id, $empresaId, $nombre, $telefono, $estadoInicial);
     $stmt->execute();
     $stmt->close();
 
     $conn->commit();
-    echo json_encode(['success' => true, 'message' => 'Reclutador registrado correctamente.']);
+    echo json_encode(['success' => true, 'message' => 'Solicitud enviada correctamente. Un administrador debe aprobar tu cuenta antes de que puedas iniciar sesión.']);
 } catch (Exception $e) {
     $conn->rollback();
     echo json_encode(['success' => false, 'message' => 'Error al registrar: ' . $e->getMessage()]);

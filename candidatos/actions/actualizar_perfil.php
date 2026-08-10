@@ -92,7 +92,7 @@ $stmt = $conn->prepare(
      WHERE id = ?"
 );
 $stmt->bind_param(
-    'ssssssssssssssssiii',
+    'sssssssssssssssssiii',
     $nombre_completo, $correo, $telefono, $fecha_nac, $nacionalidad, $ciudad,
     $genero, $puesto_deseado, $salario_esperado, $disponibilidad, $modalidad,
     $linkedin, $github, $portafolio, $resumen, $objetivos,

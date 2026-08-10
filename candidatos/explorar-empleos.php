@@ -1,9 +1,6 @@
 <?php
 require_once '../config/config.php';
 
-// Esta página ya no consulta "vacantes" directamente: el listado, los
-// filtros y las estadísticas se obtienen desde el navegador a través de
-// la API REST (assets/api/api-vacantes.php y api-postulaciones.php).
 if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 4) {
     header('Location: login.php');
     exit;
@@ -257,8 +254,7 @@ async function cargarVacantes() {
 }
 
 async function cargarBase() {
-    // Trae todas las activas (sin filtros) una sola vez para poblar
-    // los selects de filtro y las tarjetas de estadísticas.
+    
     const { ok, data } = await Api.get('vacantes', { activa: 1, limit: 200 });
     if (ok) {
         todasLasVacantesActivas = data;
@@ -289,10 +285,6 @@ document.getElementById('btnLimpiar').addEventListener('click', function () {
     cargarVacantes();
 });
 
-// El botón "Postularme" se maneja de forma centralizada en candidato.js
-// (usa delegación de eventos, así que funciona también con las tarjetas
-// que esta página genera dinámicamente). Aquí solo refrescamos el estado
-// local para que, tras postularte, la tarjeta ya no muestre el botón.
 document.addEventListener('postulacion:creada', function (e) {
     postuladasIds.push(Number(e.detail.vacanteId));
     cargarVacantes();

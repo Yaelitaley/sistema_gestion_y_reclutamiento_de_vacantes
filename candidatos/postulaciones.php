@@ -1,9 +1,7 @@
 <?php
 require_once '../config/config.php';
 
-// Esta página ya no consulta "postulaciones" directamente: el listado, las
-// tarjetas de resumen, los filtros y la cancelación se hacen desde el
-// navegador contra la API REST (assets/api/api-postulaciones.php).
+
 if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol_id']) || $_SESSION['rol_id'] != 4) {
     header('Location: login.php');
     exit;

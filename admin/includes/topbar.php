@@ -1,5 +1,5 @@
 <?php
-// ----- Datos del administrador para el topbar (nombre y foto), independiente de lo que ya haya cargado la página -----
+
 $fotoPerfilTopbar = '../assets/img/imagenadministrador.png';
 $nombreTopbar = 'Admin';
 
@@ -39,7 +39,6 @@ if (isset($_SESSION['usuario_id']) && isset($conn)) {
     </div>
     <!-- DERECHA -->
     <div class="admin-profile">
-        <i class="bi bi-bell-fill me-4 fs-5 text-warning"></i>
         <div class="d-flex align-items-center">
             <img
                 src="<?= htmlspecialchars($fotoPerfilTopbar) ?>"

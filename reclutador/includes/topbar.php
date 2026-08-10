@@ -56,8 +56,6 @@ if (isset($_SESSION['usuario_id']) && isset($conn)) {
     <!-- PERFIL -->
     <div class="recruiter-profile">
 
-        <i class="bi bi-bell-fill me-4 fs-5 text-warning"></i>
-
         <div class="d-flex align-items-center">
 
             <img

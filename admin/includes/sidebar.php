@@ -97,7 +97,7 @@ function seccion_activa($clave, $pagina, $secciones)
 
     <!-- LOGOUT -->
     <div class="logout">
-        <a href="../admin/logout.php" id="btnLogout">
+        <a href="../admin/logout.php" class="btn-logout-trigger">
             <i class="bi bi-box-arrow-left"></i>
             Cerrar sesión
         </a>

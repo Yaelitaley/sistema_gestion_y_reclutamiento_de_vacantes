@@ -31,7 +31,7 @@ include "includes/header.php";
                 <div class="table-responsive">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="texto fw-bold">Reclutadores recientes</h5>
-                        <a href="../reclutador/register.php" class="btn btn-dashboard btn-purple w-100 mb-3">Ver todos</a>
+                        <a href="../reclutador/index_reclutador.php" class="btn btn-dashboard btn-purple w-100 mb-3">Ver todos</a>
                     </div>
                     <table class="table align-middle">
                         <thead><tr><th>Nombre</th><th>Correo</th><th>Empresa</th><th>Estado</th></tr></thead>

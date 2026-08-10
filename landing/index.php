@@ -30,7 +30,7 @@
 
                     <div class="mt-4">
 
-                        <a href="../reclutador/solicitud.php" class="btn btn-primary me-2">
+                        <a href="../reclutador/login.php" class="btn btn-primary me-2">
                             Soy empresa
                         </a>
 

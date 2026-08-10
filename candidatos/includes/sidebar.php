@@ -75,7 +75,9 @@ function seccion_activa($clave, $pagina, $secciones)
     <!-- CERRAR SESIÓN -->
     <div class="logout">
         <a href="../candidatos/logout.php"
-           id="btnLogout">
+           class="btn-logout-trigger"
+           data-bs-toggle="modal"
+           data-bs-target="#modalConfirmarLogout">
             <i class="bi bi-box-arrow-right me-2"></i>
             Cerrar sesión
         </a>
